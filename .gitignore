@@ -1,0 +1,11 @@
+target/
+node_modules/
+dist/
+*.db
+*.db-shm
+*.db-wal
+.env
+.DS_Store
+src-tauri/gen/
+src-tauri/target/
+frontend/.turbo/

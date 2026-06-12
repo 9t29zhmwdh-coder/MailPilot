@@ -1,0 +1,14 @@
+[package]
+name    = "mp-cli"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "mailpilot"
+path = "src/main.rs"
+
+[dependencies]
+mp-core.path          = "../mp-core"
+tokio.workspace       = true
+anyhow.workspace      = true
+serde_json.workspace  = true

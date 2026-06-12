@@ -1,0 +1,51 @@
+mod commands;
+mod error;
+mod state;
+
+use mp_core::db;
+use state::AppState;
+
+#[tokio::main]
+async fn main() {
+    let db_path = dirs_path();
+    let pool = db::open_db(&db_path).await.expect("Failed to open database");
+    let settings = mp_core::db::queries::load_settings(&pool)
+        .await
+        .unwrap_or_default();
+
+    tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_shell::init())
+        .manage(AppState::new(pool, settings))
+        .invoke_handler(tauri::generate_handler![
+            commands::accounts::list_accounts,
+            commands::accounts::add_account,
+            commands::accounts::update_account,
+            commands::accounts::delete_account,
+            commands::accounts::test_connection,
+            commands::accounts::sync_account,
+            commands::emails::list_emails,
+            commands::emails::get_email,
+            commands::emails::search_emails,
+            commands::emails::mark_read,
+            commands::emails::mark_flagged,
+            commands::classify::classify_email,
+            commands::classify::classify_batch,
+            commands::classify::check_ollama,
+            commands::classify::generate_summary,
+            commands::actions::list_actions,
+            commands::actions::propose_actions,
+            commands::actions::skip_action,
+            commands::actions::skip_all_actions,
+            commands::stats::get_stats,
+            commands::settings::get_settings,
+            commands::settings::save_settings,
+        ])
+        .run(tauri::generate_context!())
+        .expect("MailPilot failed to start");
+}
+
+fn dirs_path() -> String {
+    let home = std::env::var("HOME").unwrap_or_else(|_| ".".to_string());
+    format!("{}/Library/Application Support/com.raystudio.mailpilot/mailpilot.db", home)
+}
