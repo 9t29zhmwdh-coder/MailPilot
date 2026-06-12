@@ -1,67 +1,77 @@
-<p align="center">
-  <img src="RayStudio.png" alt="RayStudio" width="120" />
-</p>
+# MailPilot
 
-<h1 align="center">MailPilot</h1>
-<p align="center"><strong>AI-powered local email organizer — offline, private, cross-platform</strong></p>
-<p align="center">
-  <a href="README.de.md">Deutsch</a> ·
-  <a href="https://github.com/9t29zhmwdh-coder/MailPilot">GitHub</a> ·
-  <a href="LICENSE">MIT License</a>
-</p>
+[🇩🇪 Deutsche Version](README.de.md)
 
----
-
-## What is MailPilot?
+**AI-powered local email organizer — offline, private, cross-platform, built with Rust + Tauri.**
 
 MailPilot automatically recognizes, categorizes, tags, and organizes emails from Outlook, Gmail, Apple Mail, and any IMAP mailbox — **fully offline**, using local AI models. No cloud, no tracking, no complexity.
 
+![Rust](https://img.shields.io/badge/Rust-1.77+-orange?logo=rust)
+![Tauri](https://img.shields.io/badge/Tauri-v2-blue?logo=tauri)
+![Platform](https://img.shields.io/badge/Platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey)
+![License](https://img.shields.io/badge/License-MIT-green)
+
+---
+
 ## Features
 
-| Module | Description |
+| Feature | Description |
 |---|---|
 | **Smart Categorization** | Newsletter, Invoices, Social, Work, Government, Packages, Calendar, Subscriptions, Phishing |
-| **Invoice Detection** | Extracts amount, currency, due date, sender from emails and PDF attachments |
-| **Package Tracking** | Recognizes tracking numbers, shows current status |
+| **Invoice Detection** | Extracts amount, currency, due date, and sender from emails and PDF attachments |
+| **Package Tracking** | Recognizes tracking numbers, shows current delivery status |
 | **Calendar Events** | Extracts dates, times, locations — one-click export |
 | **Subscription Monitor** | Detects recurring senders, renewal dates, cancel links |
 | **Phishing Detection** | Local heuristic + AI-based fraud detection |
 | **Thread Analysis** | Groups conversations, detects duplicates, suggests follow-ups |
-| **Smart Cleanup** | Old newsletters, ads, social — review queue before any delete |
+| **Smart Cleanup** | Old newsletters, ads, social — review queue before any deletion |
 | **Filter Rules** | AI proposes rules, user confirms — no autorun |
 | **Offline Search** | Full-text search across all accounts and attachments |
 | **Multi-Account** | Gmail, Outlook, Apple Mail, any IMAP in one dashboard |
 
-## Privacy
+---
 
-MailPilot processes all emails **locally on your machine**. No data is sent to the cloud. All AI analysis is performed by Ollama models running entirely offline. Passwords are stored in the system keychain (macOS Keychain / Windows DPAPI / Linux SecretService).
+## Requirements
 
-## Tech Stack
+- [Rust](https://rustup.rs/) 1.77+
+- [Node.js](https://nodejs.org/) 20+
+- [Tauri CLI v2](https://tauri.app/): `cargo install tauri-cli`
+- [Ollama](https://ollama.ai): `ollama pull llama3 && ollama pull llava`
+- macOS / Windows / Linux
 
-- **Core** — Rust (imap, mailparse, blake3, regex, rayon, sqlx)
-- **Desktop** — Tauri v2
-- **Frontend** — React, TypeScript, Tailwind CSS, Recharts
-- **AI** — Ollama (llama3 for text, llava for attachments) — 100% offline
+---
 
-## Getting Started
+## Quick Start
 
 ```bash
-# Prerequisites: Rust, Node.js 18+, Ollama (https://ollama.com)
 git clone https://github.com/9t29zhmwdh-coder/MailPilot
 cd MailPilot
 
-# Pull AI models
 ollama pull llama3
 ollama pull llava
 
-npm --prefix frontend install
+cd frontend && npm install && cd ..
 cargo tauri dev
 ```
 
 ---
 
-<p align="right">
-  <sub>by <a href="https://github.com/9t29zhmwdh-coder">RayStudio</a> &nbsp;·&nbsp; MIT License</sub>
-  &nbsp;
-  <img src="RayStudio.png" alt="" width="70" align="right" />
-</p>
+## Privacy
+
+MailPilot processes all emails **locally on your machine**. No data is sent to the cloud. All AI analysis is performed by Ollama models running entirely offline. Passwords are stored in the system keychain (macOS Keychain / Windows DPAPI / Linux SecretService).
+
+---
+
+## Architecture
+
+```
+MailPilot/
+├── crates/mp-core/      — Rust: IMAP client, classifier, DB, AI
+├── crates/mp-cli/       — CLI binary
+├── src-tauri/           — Tauri v2 backend + IPC commands
+└── frontend/            — React + TypeScript + Tailwind + Recharts
+```
+
+---
+
+**Author:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Framework Preview · **Last Updated:** Juni 2026
