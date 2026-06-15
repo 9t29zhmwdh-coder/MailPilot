@@ -39,14 +39,15 @@ pub async fn classify_batch(
     .await?;
 
     let total = emails.len() as u32;
-    let ai = Box::new(OllamaBackend::new(&settings.ollama_url, &settings.text_model));
+    let ollama_url = settings.ollama_url.clone();
+    let text_model = settings.text_model.clone();
 
     tokio::spawn(async move {
-        let ai_shared = std::sync::Arc::new(ai);
         let mut done = 0u32;
         for row in emails {
             if let Ok(Some(email)) = queries::get_email(&pool, &row.id).await {
-                let engine = ClassifierEngine::new(None);
+                let ai = Box::new(OllamaBackend::new(&ollama_url, &text_model));
+                let engine = ClassifierEngine::new(Some(ai));
                 let cls = engine.classify(&email).await;
                 let _ = queries::update_classification(&pool, &row.id, &cls).await;
                 done += 1;
