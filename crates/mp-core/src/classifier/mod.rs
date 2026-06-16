@@ -1,3 +1,4 @@
+#![allow(unused_imports)]
 pub mod rules;
 pub mod thread;
 
