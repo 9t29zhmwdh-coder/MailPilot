@@ -2,7 +2,7 @@ use std::collections::HashMap;
 use uuid::Uuid;
 use crate::models::email_entry::EmailEntry;
 
-pub fn assign_thread_ids(emails: &mut Vec<EmailEntry>) {
+pub fn assign_thread_ids(emails: &mut [EmailEntry]) {
     let mut threads: HashMap<String, String> = HashMap::new();
 
     emails.sort_by_key(|e| e.date);
