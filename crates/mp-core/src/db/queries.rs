@@ -12,12 +12,14 @@ use crate::models::{
 use crate::search::SearchQuery;
 
 pub async fn upsert_account(pool: &SqlitePool, acc: &EmailAccount) -> Result<()> {
+    let imap_port = acc.imap_port as i64;
+    let last_sync = acc.last_sync.map(|t| t.timestamp());
     sqlx::query!(
         "INSERT OR REPLACE INTO email_accounts(id, label, email_address, imap_host, imap_port, username, use_tls, enabled, last_sync)
          VALUES(?,?,?,?,?,?,?,?,?)",
-        acc.id, acc.label, acc.email_address, acc.imap_host, acc.imap_port as i64,
+        acc.id, acc.label, acc.email_address, acc.imap_host, imap_port,
         acc.username, acc.use_tls, acc.enabled,
-        acc.last_sync.map(|t| t.timestamp()),
+        last_sync,
     )
     .execute(pool)
     .await?;
@@ -32,11 +34,11 @@ pub async fn list_accounts(pool: &SqlitePool) -> Result<Vec<EmailAccount>> {
     .await?;
 
     let accounts = rows.into_iter().map(|r| EmailAccount {
-        id: r.id,
-        label: r.label,
-        email_address: r.email_address,
-        imap_host: r.imap_host,
-        imap_port: r.imap_port as u16,
+        id: r.id.unwrap_or_default(),
+        label: r.label.unwrap_or_default(),
+        email_address: r.email_address.unwrap_or_default(),
+        imap_host: r.imap_host.unwrap_or_default(),
+        imap_port: r.imap_port.unwrap_or_default() as u16,
         protocol: crate::models::account::Protocol::Imap,
         username: r.username,
         use_tls: r.use_tls,
@@ -70,9 +72,9 @@ pub async fn insert_email(pool: &SqlitePool, e: &EmailEntry) -> Result<()> {
          is_read, is_flagged, size, hash, thread_id, classification_json,
          date_ts, fetched_ts)
          VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-        e.id, e.account_id, e.message_id, e.uid as i64, e.mailbox, e.subject,
+        e.id, e.account_id, e.message_id, { let uid = e.uid as i64; uid }, e.mailbox, e.subject,
         from_json, to_json, cc_json, e.body_text, e.body_html, att_json,
-        e.is_read, e.is_flagged, e.size as i64, e.hash, e.thread_id, cls_json,
+        e.is_read, e.is_flagged, { let size = e.size as i64; size }, e.hash, e.thread_id, cls_json,
         date_ts, fetched_ts,
     )
     .execute(pool)
@@ -98,22 +100,37 @@ pub async fn list_emails(
     limit: u32,
     offset: u32,
 ) -> Result<Vec<EmailEntry>> {
-    let rows = match (account_id, category) {
-        (Some(aid), None) => sqlx::query!(
+    let limit_i = limit as i64;
+    let offset_i = offset as i64;
+    if let Some(aid) = account_id {
+        let rows = sqlx::query!(
             "SELECT * FROM emails WHERE account_id = ? ORDER BY date_ts DESC LIMIT ? OFFSET ?",
-            aid, limit as i64, offset as i64
-        ).fetch_all(pool).await?,
-        _ => sqlx::query!(
-            "SELECT * FROM emails ORDER BY date_ts DESC LIMIT ? OFFSET ?",
-            limit as i64, offset as i64
-        ).fetch_all(pool).await?,
-    };
-
+            aid, limit_i, offset_i
+        ).fetch_all(pool).await?;
+        return Ok(rows.into_iter().filter_map(|r| deserialize_email_row(
+            r.id.unwrap_or_default(), r.account_id.unwrap_or_default(),
+            r.message_id.unwrap_or_default(), r.uid.unwrap_or_default() as u32,
+            r.mailbox.unwrap_or_default(), r.subject.unwrap_or_default(),
+            r.from_json.unwrap_or_default(), r.to_json.unwrap_or_default(),
+            r.cc_json.unwrap_or_default(), r.body_text, r.body_html,
+            r.attachments_json.unwrap_or_default(), r.is_read.unwrap_or_default(),
+            r.is_flagged.unwrap_or_default(), r.size.unwrap_or_default() as u64,
+            r.hash, r.thread_id, r.classification_json, r.date_ts.unwrap_or_default(), r.fetched_ts.unwrap_or_default(),
+        )).collect());
+    }
+    let rows = sqlx::query!(
+        "SELECT * FROM emails ORDER BY date_ts DESC LIMIT ? OFFSET ?",
+        limit_i, offset_i
+    ).fetch_all(pool).await?;
     Ok(rows.into_iter().filter_map(|r| deserialize_email_row(
-        r.id, r.account_id, r.message_id, r.uid as u32, r.mailbox, r.subject,
-        r.from_json, r.to_json, r.cc_json, r.body_text, r.body_html,
-        r.attachments_json, r.is_read, r.is_flagged, r.size as u64,
-        r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
+        r.id.unwrap_or_default(), r.account_id.unwrap_or_default(),
+        r.message_id.unwrap_or_default(), r.uid.unwrap_or_default() as u32,
+        r.mailbox.unwrap_or_default(), r.subject.unwrap_or_default(),
+        r.from_json.unwrap_or_default(), r.to_json.unwrap_or_default(),
+        r.cc_json.unwrap_or_default(), r.body_text, r.body_html,
+        r.attachments_json.unwrap_or_default(), r.is_read.unwrap_or_default(),
+        r.is_flagged.unwrap_or_default(), r.size.unwrap_or_default() as u64,
+        r.hash, r.thread_id, r.classification_json, r.date_ts.unwrap_or_default(), r.fetched_ts.unwrap_or_default(),
     )).collect())
 }
 
@@ -123,10 +140,14 @@ pub async fn get_email(pool: &SqlitePool, id: &str) -> Result<Option<EmailEntry>
         .await?;
 
     Ok(r.and_then(|r| deserialize_email_row(
-        r.id, r.account_id, r.message_id, r.uid as u32, r.mailbox, r.subject,
-        r.from_json, r.to_json, r.cc_json, r.body_text, r.body_html,
-        r.attachments_json, r.is_read, r.is_flagged, r.size as u64,
-        r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
+        r.id.unwrap_or_default(), r.account_id.unwrap_or_default(),
+        r.message_id.unwrap_or_default(), r.uid.unwrap_or_default() as u32,
+        r.mailbox.unwrap_or_default(), r.subject.unwrap_or_default(),
+        r.from_json.unwrap_or_default(), r.to_json.unwrap_or_default(),
+        r.cc_json.unwrap_or_default(), r.body_text, r.body_html,
+        r.attachments_json.unwrap_or_default(), r.is_read.unwrap_or_default(),
+        r.is_flagged.unwrap_or_default(), r.size.unwrap_or_default() as u64,
+        r.hash, r.thread_id, r.classification_json, r.date_ts.unwrap_or_default(), r.fetched_ts.unwrap_or_default(),
     )))
 }
 
@@ -141,10 +162,14 @@ pub async fn search_emails(pool: &SqlitePool, q: &SearchQuery) -> Result<Vec<Ema
     .await?;
 
     Ok(rows.into_iter().filter_map(|r| deserialize_email_row(
-        r.id, r.account_id, r.message_id, r.uid as u32, r.mailbox, r.subject,
-        r.from_json, r.to_json, r.cc_json, r.body_text, r.body_html,
-        r.attachments_json, r.is_read, r.is_flagged, r.size as u64,
-        r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
+        r.id.unwrap_or_default(), r.account_id.unwrap_or_default(),
+        r.message_id.unwrap_or_default(), r.uid.unwrap_or_default() as u32,
+        r.mailbox.unwrap_or_default(), r.subject.unwrap_or_default(),
+        r.from_json.unwrap_or_default(), r.to_json.unwrap_or_default(),
+        r.cc_json.unwrap_or_default(), r.body_text, r.body_html,
+        r.attachments_json.unwrap_or_default(), r.is_read.unwrap_or_default(),
+        r.is_flagged.unwrap_or_default(), r.size.unwrap_or_default() as u64,
+        r.hash, r.thread_id, r.classification_json, r.date_ts.unwrap_or_default(), r.fetched_ts.unwrap_or_default(),
     )).collect())
 }
 
@@ -175,10 +200,10 @@ pub async fn list_actions(pool: &SqlitePool) -> Result<Vec<OrganizeAction>> {
         let kind = serde_json::from_str(&r.kind_json).ok()?;
         let status = serde_json::from_str(&r.status_json).ok()?;
         Some(OrganizeAction {
-            id: r.id,
-            email_id: r.email_id,
-            email_subject: r.email_subject,
-            from_address: r.from_address,
+            id: r.id.unwrap_or_default(),
+            email_id: r.email_id.unwrap_or_default(),
+            email_subject: r.email_subject.unwrap_or_default(),
+            from_address: r.from_address.unwrap_or_default(),
             kind,
             target_folder: r.target_folder,
             tag: None,
