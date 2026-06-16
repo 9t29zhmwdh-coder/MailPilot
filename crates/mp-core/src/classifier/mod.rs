@@ -47,15 +47,8 @@ fn build_classification_context(entry: &EmailEntry) -> String {
     )
 }
 
-fn build_preview(entry: &EmailEntry) -> String {
-    entry.body_text
-        .as_deref()
-        .unwrap_or("")
-        .chars()
-        .take(800)
-        .collect()
-}
 
+#[allow(dead_code)]
 trait BodyPreview {
     fn body_preview(&self, n: usize) -> String;
 }
