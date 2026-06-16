@@ -19,7 +19,7 @@ pub fn get_password(account_id: &str) -> Result<String> {
 
 pub fn delete_password(account_id: &str) -> Result<()> {
     let entry = keyring::Entry::new(keyring_service(), account_id)?;
-    entry.delete_password()?;
+    entry.delete_credential()?;
     Ok(())
 }
 
@@ -28,7 +28,7 @@ pub fn test_connection(account: &EmailAccount, password: &str) -> Result<Vec<Str
     let mailboxes: Vec<String> = session
         .list(None, Some("*"))?
         .iter()
-        .filter_map(|mb| mb.name().ok().map(|s| s.to_string()))
+        .map(|mb| mb.name().to_string())
         .collect();
     let _ = session.logout();
     Ok(mailboxes)
