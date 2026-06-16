@@ -35,10 +35,10 @@ pub async fn list_accounts(pool: &SqlitePool) -> Result<Vec<EmailAccount>> {
 
     let accounts = rows.into_iter().map(|r| EmailAccount {
         id: r.id.unwrap_or_default(),
-        label: r.label.unwrap_or_default(),
-        email_address: r.email_address.unwrap_or_default(),
-        imap_host: r.imap_host.unwrap_or_default(),
-        imap_port: r.imap_port.unwrap_or_default() as u16,
+        label: r.label,
+        email_address: r.email_address,
+        imap_host: r.imap_host,
+        imap_port: r.imap_port as u16,
         protocol: crate::models::account::Protocol::Imap,
         username: r.username,
         use_tls: r.use_tls,
@@ -65,6 +65,8 @@ pub async fn insert_email(pool: &SqlitePool, e: &EmailEntry) -> Result<()> {
     let cls_json = e.classification.as_ref().map(|c| serde_json::to_string(c).ok()).flatten();
     let date_ts = e.date.timestamp();
     let fetched_ts = e.fetched_at.timestamp();
+    let uid = e.uid as i64;
+    let size = e.size as i64;
 
     sqlx::query!(
         "INSERT OR IGNORE INTO emails(id, account_id, message_id, uid, mailbox, subject,
@@ -72,9 +74,9 @@ pub async fn insert_email(pool: &SqlitePool, e: &EmailEntry) -> Result<()> {
          is_read, is_flagged, size, hash, thread_id, classification_json,
          date_ts, fetched_ts)
          VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-        e.id, e.account_id, e.message_id, { let uid = e.uid as i64; uid }, e.mailbox, e.subject,
+        e.id, e.account_id, e.message_id, uid, e.mailbox, e.subject,
         from_json, to_json, cc_json, e.body_text, e.body_html, att_json,
-        e.is_read, e.is_flagged, { let size = e.size as i64; size }, e.hash, e.thread_id, cls_json,
+        e.is_read, e.is_flagged, size, e.hash, e.thread_id, cls_json,
         date_ts, fetched_ts,
     )
     .execute(pool)
@@ -108,14 +110,14 @@ pub async fn list_emails(
             aid, limit_i, offset_i
         ).fetch_all(pool).await?;
         return Ok(rows.into_iter().filter_map(|r| deserialize_email_row(
-            r.id.unwrap_or_default(), r.account_id.unwrap_or_default(),
-            r.message_id.unwrap_or_default(), r.uid.unwrap_or_default() as u32,
-            r.mailbox.unwrap_or_default(), r.subject.unwrap_or_default(),
-            r.from_json.unwrap_or_default(), r.to_json.unwrap_or_default(),
-            r.cc_json.unwrap_or_default(), r.body_text, r.body_html,
-            r.attachments_json.unwrap_or_default(), r.is_read.unwrap_or_default(),
-            r.is_flagged.unwrap_or_default(), r.size.unwrap_or_default() as u64,
-            r.hash, r.thread_id, r.classification_json, r.date_ts.unwrap_or_default(), r.fetched_ts.unwrap_or_default(),
+            r.id.unwrap_or_default(), r.account_id,
+            r.message_id, r.uid as u32,
+            r.mailbox, r.subject,
+            r.from_json, r.to_json,
+            r.cc_json, r.body_text, r.body_html,
+            r.attachments_json, r.is_read,
+            r.is_flagged, r.size as u64,
+            r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
         )).collect());
     }
     let rows = sqlx::query!(
@@ -123,14 +125,14 @@ pub async fn list_emails(
         limit_i, offset_i
     ).fetch_all(pool).await?;
     Ok(rows.into_iter().filter_map(|r| deserialize_email_row(
-        r.id.unwrap_or_default(), r.account_id.unwrap_or_default(),
-        r.message_id.unwrap_or_default(), r.uid.unwrap_or_default() as u32,
-        r.mailbox.unwrap_or_default(), r.subject.unwrap_or_default(),
-        r.from_json.unwrap_or_default(), r.to_json.unwrap_or_default(),
-        r.cc_json.unwrap_or_default(), r.body_text, r.body_html,
-        r.attachments_json.unwrap_or_default(), r.is_read.unwrap_or_default(),
-        r.is_flagged.unwrap_or_default(), r.size.unwrap_or_default() as u64,
-        r.hash, r.thread_id, r.classification_json, r.date_ts.unwrap_or_default(), r.fetched_ts.unwrap_or_default(),
+        r.id.unwrap_or_default(), r.account_id,
+        r.message_id, r.uid as u32,
+        r.mailbox, r.subject,
+        r.from_json, r.to_json,
+        r.cc_json, r.body_text, r.body_html,
+        r.attachments_json, r.is_read,
+        r.is_flagged, r.size as u64,
+        r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
     )).collect())
 }
 
@@ -140,14 +142,14 @@ pub async fn get_email(pool: &SqlitePool, id: &str) -> Result<Option<EmailEntry>
         .await?;
 
     Ok(r.and_then(|r| deserialize_email_row(
-        r.id.unwrap_or_default(), r.account_id.unwrap_or_default(),
-        r.message_id.unwrap_or_default(), r.uid.unwrap_or_default() as u32,
-        r.mailbox.unwrap_or_default(), r.subject.unwrap_or_default(),
-        r.from_json.unwrap_or_default(), r.to_json.unwrap_or_default(),
-        r.cc_json.unwrap_or_default(), r.body_text, r.body_html,
-        r.attachments_json.unwrap_or_default(), r.is_read.unwrap_or_default(),
-        r.is_flagged.unwrap_or_default(), r.size.unwrap_or_default() as u64,
-        r.hash, r.thread_id, r.classification_json, r.date_ts.unwrap_or_default(), r.fetched_ts.unwrap_or_default(),
+        r.id.unwrap_or_default(), r.account_id,
+        r.message_id, r.uid as u32,
+        r.mailbox, r.subject,
+        r.from_json, r.to_json,
+        r.cc_json, r.body_text, r.body_html,
+        r.attachments_json, r.is_read,
+        r.is_flagged, r.size as u64,
+        r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
     )))
 }
 
@@ -162,14 +164,14 @@ pub async fn search_emails(pool: &SqlitePool, q: &SearchQuery) -> Result<Vec<Ema
     .await?;
 
     Ok(rows.into_iter().filter_map(|r| deserialize_email_row(
-        r.id.unwrap_or_default(), r.account_id.unwrap_or_default(),
-        r.message_id.unwrap_or_default(), r.uid.unwrap_or_default() as u32,
-        r.mailbox.unwrap_or_default(), r.subject.unwrap_or_default(),
-        r.from_json.unwrap_or_default(), r.to_json.unwrap_or_default(),
-        r.cc_json.unwrap_or_default(), r.body_text, r.body_html,
-        r.attachments_json.unwrap_or_default(), r.is_read.unwrap_or_default(),
-        r.is_flagged.unwrap_or_default(), r.size.unwrap_or_default() as u64,
-        r.hash, r.thread_id, r.classification_json, r.date_ts.unwrap_or_default(), r.fetched_ts.unwrap_or_default(),
+        r.id.unwrap_or_default(), r.account_id,
+        r.message_id, r.uid as u32,
+        r.mailbox, r.subject,
+        r.from_json, r.to_json,
+        r.cc_json, r.body_text, r.body_html,
+        r.attachments_json, r.is_read,
+        r.is_flagged, r.size as u64,
+        r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
     )).collect())
 }
 
