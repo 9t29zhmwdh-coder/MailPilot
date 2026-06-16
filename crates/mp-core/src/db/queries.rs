@@ -98,7 +98,7 @@ pub async fn update_classification(pool: &SqlitePool, email_id: &str, cls: &Clas
 pub async fn list_emails(
     pool: &SqlitePool,
     account_id: Option<&str>,
-    category: Option<&str>,
+    _category: Option<&str>,
     limit: u32,
     offset: u32,
 ) -> Result<Vec<EmailEntry>> {
@@ -155,10 +155,12 @@ pub async fn get_email(pool: &SqlitePool, id: &str) -> Result<Option<EmailEntry>
 
 pub async fn search_emails(pool: &SqlitePool, q: &SearchQuery) -> Result<Vec<EmailEntry>> {
     let pattern = format!("%{}%", q.text);
+    let limit = q.limit as i64;
+    let offset = q.offset as i64;
     let rows = sqlx::query!(
         "SELECT * FROM emails WHERE (subject LIKE ? OR body_text LIKE ? OR from_json LIKE ?)
          ORDER BY date_ts DESC LIMIT ? OFFSET ?",
-        pattern, pattern, pattern, q.limit as i64, q.offset as i64
+        pattern, pattern, pattern, limit, offset
     )
     .fetch_all(pool)
     .await?;
@@ -203,9 +205,9 @@ pub async fn list_actions(pool: &SqlitePool) -> Result<Vec<OrganizeAction>> {
         let status = serde_json::from_str(&r.status_json).ok()?;
         Some(OrganizeAction {
             id: r.id.unwrap_or_default(),
-            email_id: r.email_id.unwrap_or_default(),
-            email_subject: r.email_subject.unwrap_or_default(),
-            from_address: r.from_address.unwrap_or_default(),
+            email_id: r.email_id,
+            email_subject: r.email_subject,
+            from_address: r.from_address,
             kind,
             target_folder: r.target_folder,
             tag: None,
