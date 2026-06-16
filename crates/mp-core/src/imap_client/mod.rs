@@ -149,7 +149,7 @@ fn extract_body_parts(
     let mut attachments = Vec::new();
 
     if parsed.subparts.is_empty() {
-        let ct = parsed.get_content_type();
+        let ct = &parsed.ctype;
         if ct.mimetype == "text/plain" {
             text = parsed.get_body().ok();
         } else if ct.mimetype == "text/html" {
@@ -159,7 +159,7 @@ fn extract_body_parts(
     }
 
     for part in &parsed.subparts {
-        let ct = part.get_content_type();
+        let ct = &part.ctype;
         let disposition = part.headers.get_first_value("Content-Disposition").unwrap_or_default();
 
         if disposition.contains("attachment") {
@@ -222,9 +222,5 @@ fn parse_addresses(raw: &str) -> Vec<EmailAddress> {
 }
 
 fn decode_header_value(raw: &str) -> String {
-    if let Ok(decoded) = mailparse::decode_latin1(raw.as_bytes()) {
-        decoded.into_owned()
-    } else {
-        raw.to_string()
-    }
+    raw.bytes().map(|b| b as char).collect()
 }
