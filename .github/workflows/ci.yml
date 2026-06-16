@@ -9,6 +9,7 @@ on:
 env:
   CARGO_TERM_COLOR: always
   RUSTFLAGS: "-D warnings"
+  SQLX_OFFLINE: "true"
 
 jobs:
   check:
@@ -20,6 +21,15 @@ jobs:
         with:
           components: clippy
       - uses: Swatinem/rust-cache@v2.9.1
+      - name: Install sqlx-cli
+        run: cargo install sqlx-cli --no-default-features --features sqlite
+      - name: Prepare sqlx offline data
+        run: |
+          sqlx database create
+          sqlx migrate run --source crates/mp-core/src/db/migrations
+          cargo sqlx prepare --workspace
+        env:
+          DATABASE_URL: sqlite:./ci_check.db
       - name: cargo check
         run: cargo check --workspace --exclude mailpilot
       - name: cargo clippy
