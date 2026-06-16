@@ -1,3 +1,4 @@
+#![allow(unused_imports)]
 use anyhow::{Context, Result};
 use async_trait::async_trait;
 use chrono::NaiveDate;
