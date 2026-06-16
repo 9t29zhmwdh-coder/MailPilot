@@ -1,4 +1,4 @@
-#![allow(unused_imports)]
+#![allow(unused_imports, dead_code)]
 use chrono::{DateTime, NaiveDate, Utc};
 use once_cell::sync::Lazy;
 use regex::Regex;
