@@ -62,7 +62,7 @@ pub async fn insert_email(pool: &SqlitePool, e: &EmailEntry) -> Result<()> {
     let to_json = serde_json::to_string(&e.to)?;
     let cc_json = serde_json::to_string(&e.cc)?;
     let att_json = serde_json::to_string(&e.attachments)?;
-    let cls_json = e.classification.as_ref().map(|c| serde_json::to_string(c).ok()).flatten();
+    let cls_json = e.classification.as_ref().and_then(|c| serde_json::to_string(c).ok());
     let date_ts = e.date.timestamp();
     let fetched_ts = e.fetched_at.timestamp();
     let uid = e.uid as i64;
