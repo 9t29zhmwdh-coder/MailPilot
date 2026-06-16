@@ -27,7 +27,7 @@ jobs:
         run: |
           sqlx database create
           sqlx migrate run --source crates/mp-core/src/db/migrations
-          cargo sqlx prepare --workspace
+          cargo sqlx prepare -- -p mp-core
         env:
           DATABASE_URL: sqlite:./ci_check.db
       - name: cargo check
