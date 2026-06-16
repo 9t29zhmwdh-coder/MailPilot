@@ -87,7 +87,7 @@ pub fn fetch_since_uid(
         .take(max as usize)
         .collect();
 
-    entries.sort_by(|a, b| b.date.cmp(&a.date));
+    entries.sort_by_key(|e| std::cmp::Reverse(e.date));
     let _ = session.logout();
     Ok(entries)
 }
