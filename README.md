@@ -6,9 +6,9 @@
 
 [🇩🇪 Deutsche Version](README.de.md)
 
-**AI-powered local email organizer — offline, private, cross-platform, built with Rust + Tauri.**
+**AI-powered local email organizer. Offline, private, cross-platform, built with Rust and Tauri.**
 
-MailPilot automatically recognizes, categorizes, tags, and organizes emails from Outlook, Gmail, Apple Mail, and any IMAP mailbox — **fully offline**, using local AI models. No cloud, no tracking, no complexity.
+MailPilot automatically recognizes, categorizes, tags, and organizes emails from Outlook, Gmail, Apple Mail, and any IMAP mailbox; **fully offline**, using local AI models. No cloud, no tracking, no complexity.
 
 [![CI](https://github.com/9t29zhmwdh-coder/MailPilot/actions/workflows/ci.yml/badge.svg)](https://github.com/9t29zhmwdh-coder/MailPilot/actions/workflows/ci.yml)
 ![Rust](https://img.shields.io/badge/Rust-1.77+-orange?logo=rust)
@@ -25,12 +25,12 @@ MailPilot automatically recognizes, categorizes, tags, and organizes emails from
 | **Smart Categorization** | Newsletter, Invoices, Social, Work, Government, Packages, Calendar, Subscriptions, Phishing |
 | **Invoice Detection** | Extracts amount, currency, due date, and sender from emails and PDF attachments |
 | **Package Tracking** | Recognizes tracking numbers, shows current delivery status |
-| **Calendar Events** | Extracts dates, times, locations — one-click export |
+| **Calendar Events** | Extracts dates, times, locations: one-click export |
 | **Subscription Monitor** | Detects recurring senders, renewal dates, cancel links |
 | **Phishing Detection** | Local heuristic + AI-based fraud detection |
 | **Thread Analysis** | Groups conversations, detects duplicates, suggests follow-ups |
-| **Smart Cleanup** | Old newsletters, ads, social — review queue before any deletion |
-| **Filter Rules** | AI proposes rules, user confirms — no autorun |
+| **Smart Cleanup** | Old newsletters, ads, social: review queue before any deletion |
+| **Filter Rules** | AI proposes rules, user confirms: no autorun |
 | **Offline Search** | Full-text search across all accounts and attachments |
 | **Multi-Account** | Gmail, Outlook, Apple Mail, any IMAP in one dashboard |
 
