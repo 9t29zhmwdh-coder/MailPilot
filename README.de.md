@@ -6,9 +6,9 @@
 
 [🇬🇧 English Version](README.md)
 
-**KI-gestützter lokaler E-Mail-Organizer — offline, privat, plattformübergreifend, entwickelt mit Rust + Tauri.**
+**KI-gestützter lokaler E-Mail-Organizer. Offline, privat, plattformübergreifend, entwickelt mit Rust und Tauri.**
 
-MailPilot erkennt, kategorisiert, taggt und sortiert E-Mails aus Outlook, Gmail, Apple Mail und beliebigen IMAP-Postfächern automatisch — **vollständig offline**, mit lokalen KI-Modellen. Keine Cloud, kein Tracking, keine Komplexität.
+MailPilot erkennt, kategorisiert, taggt und sortiert E-Mails aus Outlook, Gmail, Apple Mail und beliebigen IMAP-Postfächern automatisch; **vollständig offline**, mit lokalen KI-Modellen. Keine Cloud, kein Tracking, keine Komplexität.
 
 ![Rust](https://img.shields.io/badge/Rust-1.77+-orange?logo=rust)
 ![Tauri](https://img.shields.io/badge/Tauri-v2-blue?logo=tauri)
@@ -24,12 +24,12 @@ MailPilot erkennt, kategorisiert, taggt und sortiert E-Mails aus Outlook, Gmail,
 | **Intelligente Kategorisierung** | Newsletter, Rechnungen, Social, Arbeit, Behörden, Pakete, Termine, Abos, Phishing |
 | **Rechnungserkennung** | Extrahiert Betrag, Währung, Fälligkeit und Absender aus E-Mails und PDF-Anhängen |
 | **Paketverfolgung** | Erkennt Tracking-Nummern, zeigt aktuellen Lieferstatus |
-| **Kalendertermine** | Extrahiert Datum, Uhrzeit, Ort — Ein-Klick-Export |
+| **Kalendertermine** | Extrahiert Datum, Uhrzeit, Ort: Ein-Klick-Export |
 | **Abo-Monitor** | Erkennt wiederkehrende Absender, Verlängerungsdaten, Kündigungslinks |
 | **Phishing-Erkennung** | Lokale Heuristik + KI-basierte Betrugserkennung |
 | **Thread-Analyse** | Gruppiert Konversationen, erkennt Duplikate, schlägt Follow-ups vor |
-| **Smart Cleanup** | Alte Newsletter, Werbung, Social — Review-Ordner vor jeder Löschung |
-| **Filterregeln** | KI schlägt Regeln vor, Nutzer bestätigt — kein Autorun |
+| **Smart Cleanup** | Alte Newsletter, Werbung, Social: Review-Ordner vor jeder Löschung |
+| **Filterregeln** | KI schlägt Regeln vor, Nutzer bestätigt: kein Autorun |
 | **Offline-Suche** | Volltextsuche über alle Konten und Anhänge |
 | **Multi-Account** | Gmail, Outlook, Apple Mail, beliebiger IMAP in einem Dashboard |
 
