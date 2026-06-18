@@ -1,10 +1,10 @@
-# Privacy Policy — MailPilot
+# Privacy Policy : MailPilot
 
 ## Summary
 
 MailPilot processes all data locally. No data ever leaves your device except the IMAP connections you configure.
 
-## What We Collect
+## What I Collect
 
 **Nothing.** MailPilot does not collect, store, transmit, or share any user data with third parties.
 
@@ -18,14 +18,14 @@ MailPilot processes all data locally. No data ever leaves your device except the
 ## Storage
 
 - Emails and tags are stored in SQLite in the OS application data directory
-- IMAP credentials are stored exclusively in the OS keyring — never written to disk in plaintext
+- IMAP credentials are stored exclusively in the OS keyring : never written to disk in plaintext
 - No personal information is transmitted outside your configured IMAP servers
 - No cloud sync
 
 ## Network Access
 
 MailPilot connects only to:
-1. Your configured IMAP servers (Outlook, Gmail, Apple Mail) — user-initiated
+1. Your configured IMAP servers (Outlook, Gmail, Apple Mail) : user-initiated
 2. `localhost:11434` (Ollama, local AI inference)
 
 No other outbound connections are made.
