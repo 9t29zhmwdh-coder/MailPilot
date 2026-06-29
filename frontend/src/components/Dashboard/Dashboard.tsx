@@ -7,10 +7,19 @@ interface Props { onNavigate: (tab: 'emails' | 'actions' | 'settings') => void }
 
 const AUTO_SYNC_INTERVAL_MS = 60_000
 
-function relativeTime(unixSeconds: number | string | undefined): string {
-  if (!unixSeconds) return ''
-  const ts = typeof unixSeconds === 'string' ? parseFloat(unixSeconds) : unixSeconds
-  const diff = Math.floor((Date.now() / 1000) - ts)
+function relativeTime(raw: number | string | undefined): string {
+  if (!raw) return ''
+  // ISO-String ("2026-06-29T10:54:32Z") oder Unix-Timestamp (Zahl oder Zahl-String)
+  let ms: number
+  if (typeof raw === 'string' && raw.includes('T')) {
+    ms = new Date(raw).getTime()
+  } else {
+    const n = typeof raw === 'string' ? parseFloat(raw) : raw
+    // Rust speichert als Unix-Sekunden; Millisekunden sind >1e11
+    ms = n < 1e11 ? n * 1000 : n
+  }
+  if (isNaN(ms)) return ''
+  const diff = Math.floor((Date.now() - ms) / 1000)
   if (diff < 10) return 'gerade eben'
   if (diff < 60) return `vor ${diff} Sek.`
   if (diff < 3600) return `vor ${Math.floor(diff / 60)} Min.`
