@@ -34,7 +34,7 @@ pub async fn list_accounts(pool: &SqlitePool) -> Result<Vec<EmailAccount>> {
     .await?;
 
     let accounts = rows.into_iter().map(|r| EmailAccount {
-        id: r.id.unwrap_or_default(),
+        id: r.id,
         label: r.label,
         email_address: r.email_address,
         imap_host: r.imap_host,
@@ -226,7 +226,7 @@ pub async fn list_actions(pool: &SqlitePool) -> Result<Vec<OrganizeAction>> {
         let kind = serde_json::from_str(&r.kind_json).ok()?;
         let status = serde_json::from_str(&r.status_json).ok()?;
         Some(OrganizeAction {
-            id: r.id.unwrap_or_default(),
+            id: r.id,
             email_id: r.email_id,
             email_subject: r.email_subject,
             from_address: r.from_address,

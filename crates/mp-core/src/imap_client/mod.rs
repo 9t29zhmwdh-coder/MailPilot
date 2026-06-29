@@ -56,6 +56,26 @@ pub fn fetch_emails(
     Ok(entries)
 }
 
+pub fn list_mailboxes(account: &EmailAccount, password: &str) -> Result<Vec<String>> {
+    let mut session = connect_tls(account, password)?;
+    let mailboxes = session
+        .list(None, Some("*"))?
+        .iter()
+        .map(|mb| mb.name().to_string())
+        .collect();
+    let _ = session.logout();
+    Ok(mailboxes)
+}
+
+pub fn delete_email_imap(account: &EmailAccount, password: &str, mailbox: &str, uid: u32) -> Result<()> {
+    let mut session = connect_tls(account, password)?;
+    session.select(mailbox)?;
+    session.uid_store(uid.to_string(), "+FLAGS (\\Deleted)")?;
+    session.expunge()?;
+    let _ = session.logout();
+    Ok(())
+}
+
 pub fn fetch_since_uid(
     account: &EmailAccount,
     password: &str,

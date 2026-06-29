@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT account_id, uid, mailbox FROM emails WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "account_id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "uid",
+        "ordinal": 1,
+        "type_info": "Integer"
+      },
+      {
+        "name": "mailbox",
+        "ordinal": 2,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "8de8a7d15a9b4ec171684776c25e7a42f6b02a88466b83a082e5c9fb50fe7b75"
+}

@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT\n             CAST(json_extract(classification_json, '$.category') AS TEXT) AS \"cat: String\",\n             COUNT(*) AS \"cnt!: i64\"\n           FROM emails\n           WHERE account_id = ? AND classification_json IS NOT NULL\n           GROUP BY json_extract(classification_json, '$.category')\n           ORDER BY COUNT(*) DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "cat: String",
+        "ordinal": 0,
+        "type_info": "Null"
+      },
+      {
+        "name": "cnt!: i64",
+        "ordinal": 1,
+        "type_info": "Null"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      null,
+      null
+    ]
+  },
+  "hash": "b5c2e74a2afadeac0e652f8d4dc7294647358775e96e6f954bb16b295aaad12d"
+}

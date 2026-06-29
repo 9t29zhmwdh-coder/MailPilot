@@ -87,6 +87,13 @@ export interface AppSettings {
   max_emails_per_sync: number
 }
 
+export interface FolderSuggestion {
+  action: 'merge' | 'rename' | 'create' | 'delete' | string
+  folder: string
+  target: string | null
+  reason: string
+}
+
 export interface OrganizeAction {
   id: string
   email_id: string
@@ -122,6 +129,7 @@ export const api = {
   updateAccount: (account: EmailAccount)         => invoke<void>('update_account', { account }),
   deleteAccount: (id: string)                    => invoke<void>('delete_account', { id }),
   testConnection: (account: EmailAccount, password: string) => invoke<string[]>('test_connection', { account, password }),
+  listMailboxes: (accountId: string)             => invoke<string[]>('list_mailboxes', { accountId }),
   syncAccount: (accountId: string)               => invoke<number>('sync_account', { accountId }),
 
   // emails
@@ -131,12 +139,14 @@ export const api = {
   searchEmails: (query: string, limit?: number)  => invoke<EmailEntry[]>('search_emails', { query, limit }),
   markRead: (id: string, read: boolean)          => invoke<void>('mark_read', { id, read }),
   markFlagged: (id: string, flagged: boolean)    => invoke<void>('mark_flagged', { id, flagged }),
+  deleteEmail: (id: string)                      => invoke<void>('delete_email', { id }),
 
   // classify
   classifyEmail: (emailId: string)               => invoke<void>('classify_email', { emailId }),
   classifyBatch: (limit?: number)                => invoke<number>('classify_batch', { limit }),
   checkClaude: ()                                => invoke<boolean>('check_ollama'),
   generateSummary: (emailId: string)             => invoke<string>('generate_summary', { emailId }),
+  suggestFolderReorganization: (accountId: string) => invoke<FolderSuggestion[]>('suggest_folder_reorganization', { accountId }),
 
   // claude key
   setClaudeKey: (key: string)                    => invoke<void>('set_claude_key', { key }),

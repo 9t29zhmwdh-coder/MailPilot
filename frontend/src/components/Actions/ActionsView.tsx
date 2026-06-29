@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { api, categoryEmoji, categoryLabel, type EmailEntry, type EmailCategory } from '../../lib/tauri'
+import { api, categoryEmoji, categoryLabel, type EmailEntry, type EmailCategory, type FolderSuggestion } from '../../lib/tauri'
+import { useEmailStore } from '../../stores/emailStore'
 
 const ALL_CATEGORIES: EmailCategory[] = [
   'Important', 'Work', 'Private', 'Invoice', 'Package', 'Calendar',
@@ -12,7 +13,7 @@ export function ActionsView() {
   const [loading, setLoading] = useState(true)
   const [dismissed, setDismissed] = useState<Set<string>>(new Set())
   const [correcting, setCorrecting] = useState<string | null>(null)
-  const [tab, setTab] = useState<'review' | 'regeln'>('review')
+  const [tab, setTab] = useState<'review' | 'ordner' | 'regeln'>('review')
 
   const load = async () => {
     setLoading(true)
@@ -74,6 +75,12 @@ export function ActionsView() {
         >
           🔍 KI überprüfen
           {visible.length > 0 && <span className="ml-1.5 text-xs bg-[#1f6feb] text-white px-1.5 py-0.5 rounded-full">{visible.length}</span>}
+        </button>
+        <button
+          onClick={() => setTab('ordner')}
+          className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'ordner' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:text-[#e6edf3]'}`}
+        >
+          📁 Ordner
         </button>
         <button
           onClick={() => setTab('regeln')}
@@ -151,6 +158,7 @@ export function ActionsView() {
         </>
       )}
 
+      {tab === 'ordner' && <OrdnerTab />}
       {tab === 'regeln' && <RegelnTab />}
     </div>
   )
@@ -262,6 +270,164 @@ function ReviewCard({ email, correcting, onOk, onCorrecting, onCorrect, onCancel
               </button>
             ))}
           </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+const ACTION_LABELS: Record<string, { label: string; color: string }> = {
+  merge:  { label: 'Zusammenfuehren', color: '#58a6ff' },
+  rename: { label: 'Umbenennen',      color: '#d29922' },
+  create: { label: 'Erstellen',       color: '#3fb950' },
+  delete: { label: 'Loeschen',        color: '#f85149' },
+}
+
+function OrdnerTab() {
+  const accounts = useEmailStore(s => s)
+  const [accountId, setAccountId] = useState<string>('')
+  const [accountList, setAccountList] = useState<{ id: string; label: string }[]>([])
+  const [folders, setFolders] = useState<string[]>([])
+  const [suggestions, setSuggestions] = useState<FolderSuggestion[]>([])
+  const [loadingFolders, setLoadingFolders] = useState(false)
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    api.listAccounts().then(accs => {
+      setAccountList(accs.map(a => ({ id: a.id, label: a.label || a.email_address })))
+      if (accs.length > 0) setAccountId(accs[0].id)
+    })
+  }, [])
+
+  const loadFolders = async () => {
+    if (!accountId) return
+    setLoadingFolders(true)
+    setError(null)
+    try {
+      const result = await api.listMailboxes(accountId)
+      setFolders(result.sort())
+    } catch (e: any) {
+      setError(e?.message ?? 'Fehler beim Laden der Ordner')
+    } finally {
+      setLoadingFolders(false)
+    }
+  }
+
+  const loadSuggestions = async () => {
+    if (!accountId) return
+    setLoadingSuggestions(true)
+    setError(null)
+    try {
+      const result = await api.suggestFolderReorganization(accountId)
+      setSuggestions(result)
+    } catch (e: any) {
+      setError(e?.message ?? 'KI-Analyse fehlgeschlagen')
+    } finally {
+      setLoadingSuggestions(false)
+    }
+  }
+
+  return (
+    <div>
+      <div className="mb-4 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#8b949e] flex gap-3">
+        <span className="text-lg">📁</span>
+        <div>
+          <div className="font-medium text-[#e6edf3] mb-0.5">IMAP-Ordner und KI-Reorganisation</div>
+          Sieh alle Ordner deines Postfachs und lass die KI Vorschlaege zur Vereinfachung machen.
+        </div>
+      </div>
+
+      {accountList.length > 1 && (
+        <select
+          value={accountId}
+          onChange={e => { setAccountId(e.target.value); setFolders([]); setSuggestions([]) }}
+          className="w-full mb-3 bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm text-[#e6edf3] focus:outline-none focus:border-[#58a6ff]"
+        >
+          {accountList.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
+        </select>
+      )}
+
+      {error && (
+        <div className="mb-3 p-2 bg-[#f8514920] border border-[#f85149] rounded text-xs text-[#f85149]">{error}</div>
+      )}
+
+      <div className="flex gap-2 mb-4">
+        <button
+          onClick={loadFolders}
+          disabled={!accountId || loadingFolders}
+          className="flex-1 py-2 text-xs bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] rounded-md transition-colors disabled:opacity-50"
+        >
+          {loadingFolders ? 'Lade...' : '📁 Ordner laden'}
+        </button>
+        <button
+          onClick={loadSuggestions}
+          disabled={!accountId || loadingSuggestions}
+          className="flex-1 py-2 text-xs bg-[#1f6feb] hover:bg-[#388bfd] text-white rounded-md transition-colors disabled:opacity-50"
+        >
+          {loadingSuggestions ? 'KI analysiert...' : '✨ KI-Vorschlaege'}
+        </button>
+      </div>
+
+      {folders.length > 0 && (
+        <div className="mb-5">
+          <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-2">
+            Aktuelle Ordner ({folders.length})
+          </div>
+          <div className="bg-[#161b22] border border-[#30363d] rounded-lg divide-y divide-[#21262d]">
+            {folders.map(f => (
+              <div key={f} className="flex items-center gap-2 px-3 py-2 text-sm text-[#c9d1d9]">
+                <span className="text-[#484f58]">📂</span>
+                {f}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {suggestions.length > 0 && (
+        <div>
+          <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-2">
+            KI-Vorschlaege
+          </div>
+          <div className="space-y-2">
+            {suggestions.map((s, i) => {
+              const meta = ACTION_LABELS[s.action] ?? { label: s.action, color: '#8b949e' }
+              return (
+                <div key={i} className="p-3 bg-[#161b22] border border-[#30363d] rounded-lg">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span
+                          className="text-xs px-2 py-0.5 rounded-full font-medium"
+                          style={{ background: meta.color + '20', color: meta.color }}
+                        >
+                          {meta.label}
+                        </span>
+                        <span className="text-sm text-[#e6edf3] font-medium truncate">{s.folder}</span>
+                        {s.target && (
+                          <>
+                            <span className="text-[#484f58] text-xs">→</span>
+                            <span className="text-sm text-[#8b949e] truncate">{s.target}</span>
+                          </>
+                        )}
+                      </div>
+                      <div className="text-xs text-[#8b949e]">{s.reason}</div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <p className="mt-3 text-xs text-[#484f58]">
+            Vorschlaege werden noch nicht automatisch ausgefuehrt. IMAP-Aktionen kommen in einer zukuenftigen Version.
+          </p>
+        </div>
+      )}
+
+      {folders.length === 0 && suggestions.length === 0 && !loadingFolders && !loadingSuggestions && (
+        <div className="text-center text-[#484f58] text-sm py-8">
+          Ordner laden oder KI-Vorschlaege anfordern
         </div>
       )}
     </div>

@@ -1,5 +1,6 @@
 use mp_core::{
     db::queries,
+    imap_client::account_manager,
     models::email_entry::EmailEntry,
     search::{search, SearchQuery},
 };
@@ -55,6 +56,33 @@ pub async fn mark_read(state: State<'_, AppState>, id: String, read: bool) -> Mp
 #[tauri::command]
 pub async fn mark_flagged(state: State<'_, AppState>, id: String, flagged: bool) -> MpResult<()> {
     sqlx::query!("UPDATE emails SET is_flagged = ? WHERE id = ?", flagged, id)
+        .execute(&state.pool)
+        .await?;
+    Ok(())
+}
+
+#[tauri::command]
+pub async fn delete_email(state: State<'_, AppState>, id: String) -> MpResult<()> {
+    let row = sqlx::query!(
+        "SELECT account_id, uid, mailbox FROM emails WHERE id = ?", id
+    )
+    .fetch_optional(&state.pool)
+    .await?
+    .ok_or_else(|| crate::error::MpError::Other("E-Mail nicht gefunden".to_string()))?;
+
+    let accounts = queries::list_accounts(&state.pool).await?;
+    if let Some(account) = accounts.into_iter().find(|a| a.id == row.account_id) {
+        if let Ok(password) = account_manager::get_password(&row.account_id) {
+            let uid = row.uid as u32;
+            let mailbox = row.mailbox.clone();
+            let _ = tokio::task::spawn_blocking(move || {
+                mp_core::imap_client::delete_email_imap(&account, &password, &mailbox, uid)
+            })
+            .await;
+        }
+    }
+
+    sqlx::query!("DELETE FROM emails WHERE id = ?", id)
         .execute(&state.pool)
         .await?;
     Ok(())

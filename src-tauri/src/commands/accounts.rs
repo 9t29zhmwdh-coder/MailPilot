@@ -38,6 +38,24 @@ pub async fn delete_account(state: State<'_, AppState>, id: String) -> MpResult<
 }
 
 #[tauri::command]
+pub async fn list_mailboxes(
+    state: State<'_, AppState>,
+    account_id: String,
+) -> MpResult<Vec<String>> {
+    let accounts = queries::list_accounts(&state.pool).await?;
+    let account = accounts.into_iter().find(|a| a.id == account_id)
+        .ok_or_else(|| crate::error::MpError::Other("Account nicht gefunden".to_string()))?;
+    let password = account_manager::get_password(&account_id)
+        .map_err(|e| crate::error::MpError::Keyring(e.to_string()))?;
+    tokio::task::spawn_blocking(move || {
+        mp_core::imap_client::list_mailboxes(&account, &password)
+            .map_err(|e| crate::error::MpError::Imap(e.to_string()))
+    })
+    .await
+    .map_err(|e| crate::error::MpError::Other(e.to_string()))?
+}
+
+#[tauri::command]
 pub async fn test_connection(account: EmailAccount, password: String) -> MpResult<Vec<String>> {
     tokio::task::spawn_blocking(move || {
         account_manager::test_connection(&account, &password)
