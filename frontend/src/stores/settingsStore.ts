@@ -5,6 +5,7 @@ const DEFAULT_SETTINGS: AppSettings = {
   ollama_url: 'http://localhost:11434',
   text_model: 'llama3',
   vision_model: 'llava',
+  claude_model: 'claude-haiku-4-5-20251001',
   auto_classify: true,
   auto_sync: false,
   sync_interval_minutes: 30,

@@ -8,6 +8,14 @@ use sqlx::{
 use std::str::FromStr;
 
 pub async fn open_db(path: &str) -> Result<SqlitePool> {
+    // Uebergeordnetes Verzeichnis anlegen; SQLite legt nur die Datei an, nicht den Ordner.
+    let fs_path = path.trim_start_matches("sqlite://").trim_start_matches("sqlite:");
+    if let Some(parent) = std::path::Path::new(fs_path).parent() {
+        if !parent.as_os_str().is_empty() {
+            std::fs::create_dir_all(parent)?;
+        }
+    }
+
     let opts = SqliteConnectOptions::from_str(path)?
         .create_if_missing(true)
         .journal_mode(SqliteJournalMode::Wal);

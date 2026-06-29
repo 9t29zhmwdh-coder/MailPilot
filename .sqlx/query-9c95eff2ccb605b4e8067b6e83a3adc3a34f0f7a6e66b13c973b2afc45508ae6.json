@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE emails SET classification_json = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "9c95eff2ccb605b4e8067b6e83a3adc3a34f0f7a6e66b13c973b2afc45508ae6"
+}

@@ -1,25 +1,35 @@
-use anyhow::Result;
+use anyhow::{bail, Result};
+use std::process::Command;
 use crate::models::account::EmailAccount;
 
-pub fn keyring_service() -> &'static str {
-    "com.raystudio.mailpilot"
-}
+const SERVICE: &str = "com.raystudio.mailpilot";
 
 pub fn store_password(account_id: &str, password: &str) -> Result<()> {
-    let entry = keyring::Entry::new(keyring_service(), account_id)?;
-    entry.set_password(password)?;
+    // Bestehenden Eintrag zuerst loeschen (add schlaegt fehl wenn er schon existiert)
+    let _ = delete_password(account_id);
+    let status = Command::new("security")
+        .args(["add-generic-password", "-s", SERVICE, "-a", account_id, "-w", password])
+        .status()?;
+    if !status.success() {
+        bail!("security add-generic-password schlug fehl");
+    }
     Ok(())
 }
 
 pub fn get_password(account_id: &str) -> Result<String> {
-    let entry = keyring::Entry::new(keyring_service(), account_id)?;
-    let pw = entry.get_password()?;
-    Ok(pw)
+    let out = Command::new("security")
+        .args(["find-generic-password", "-s", SERVICE, "-a", account_id, "-w"])
+        .output()?;
+    if !out.status.success() {
+        bail!("Kein Eintrag gefunden fuer '{}'", account_id);
+    }
+    Ok(String::from_utf8_lossy(&out.stdout).trim().to_string())
 }
 
 pub fn delete_password(account_id: &str) -> Result<()> {
-    let entry = keyring::Entry::new(keyring_service(), account_id)?;
-    entry.delete_credential()?;
+    Command::new("security")
+        .args(["delete-generic-password", "-s", SERVICE, "-a", account_id])
+        .status()?;
     Ok(())
 }
 

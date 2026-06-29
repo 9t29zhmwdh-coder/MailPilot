@@ -3,7 +3,7 @@ use mp_core::{
     imap_client::account_manager,
     models::account::EmailAccount,
 };
-use tauri::State;
+use tauri::{Emitter, State};
 use crate::{error::MpResult, state::AppState};
 
 #[tauri::command]

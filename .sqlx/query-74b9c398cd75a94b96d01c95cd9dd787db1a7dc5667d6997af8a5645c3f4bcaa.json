@@ -1,0 +1,74 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", email_id, email_subject, from_address, kind_json, target_folder, reason, status_json, undoable, created_ts\n         FROM organize_actions ORDER BY created_ts DESC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "email_id",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "email_subject",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "from_address",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "kind_json",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "target_folder",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "reason",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "status_json",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "undoable",
+        "ordinal": 8,
+        "type_info": "Bool"
+      },
+      {
+        "name": "created_ts",
+        "ordinal": 9,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "74b9c398cd75a94b96d01c95cd9dd787db1a7dc5667d6997af8a5645c3f4bcaa"
+}

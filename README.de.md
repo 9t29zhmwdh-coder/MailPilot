@@ -1,46 +1,40 @@
 <div align="center">
-  <img src="RayStudio.png" alt="RayStudio Logo" width="120"/>
-
+  <img src="RayStudio.png" alt="MailPilot" width="100"/>
   <h1>MailPilot</h1>
+  <p>KI-gestuetzter E-Mail-Organizer — intelligente Kategorisierung, Review-Workflow, Multi-Account IMAP</p>
 </div>
 
 [🇬🇧 English Version](README.md)
 
-**KI-gestützter lokaler E-Mail-Organizer. Offline, privat, plattformübergreifend, entwickelt mit Rust und Tauri.**
-
-MailPilot erkennt, kategorisiert, taggt und sortiert E-Mails aus Outlook, Gmail, Apple Mail und beliebigen IMAP-Postfächern automatisch; **vollständig offline**, mit lokalen KI-Modellen. Keine Cloud, kein Tracking, keine Komplexität.
-
-[![CI](https://github.com/9t29zhmwdh-coder/MailPilot/actions/workflows/ci.yml/badge.svg)](https://github.com/9t29zhmwdh-coder/MailPilot/actions) ![Platform](https://img.shields.io/badge/Platform-macOS_%7C_Windows-lightgrey) ![Rust](https://img.shields.io/badge/Rust-CE422B?logo=rust&logoColor=white) ![Tauri](https://img.shields.io/badge/Tauri-24C8D8?logo=tauri&logoColor=white) ![AI | Claude Code](https://img.shields.io/badge/AI-Claude_Code-black?logo=anthropic&logoColor=white) ![AI | Copilot](https://img.shields.io/badge/AI-Copilot-black?logo=github&logoColor=white) ![AI | Ollama](https://img.shields.io/badge/AI-Ollama-black?logo=ollama&logoColor=white)
-![Plattform](https://img.shields.io/badge/Plattform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey)
-![Lizenz](https://img.shields.io/badge/Lizenz-MIT-green)
+[![CI](https://github.com/9t29zhmwdh-coder/MailPilot/actions/workflows/ci.yml/badge.svg)](https://github.com/9t29zhmwdh-coder/MailPilot/actions) ![Rust](https://img.shields.io/badge/Rust-1.96+-CE422B?logo=rust&logoColor=white) ![Tauri](https://img.shields.io/badge/Tauri-v2-24C8D8?logo=tauri&logoColor=white) ![Plattform](https://img.shields.io/badge/Plattform-macOS-lightgrey) ![KI](https://img.shields.io/badge/KI-Claude_API-black?logo=anthropic&logoColor=white)
 
 ---
 
+MailPilot verbindet sich mit deinen IMAP-Postfaechern, klassifiziert jede E-Mail mit Claude KI und laesst dich alle Entscheidungen pruefen und korrigieren, bevor etwas verschoben oder geloescht wird. Schnell-Login fuer iCloud, Microsoft 365, Gmail und Fastmail, ohne manuelle Servereinstellungen.
+
 ## Funktionen
 
-| Funktion | Beschreibung |
-|---|---|
-| **Intelligente Kategorisierung** | Newsletter, Rechnungen, Social, Arbeit, Behörden, Pakete, Termine, Abos, Phishing |
-| **Rechnungserkennung** | Extrahiert Betrag, Währung, Fälligkeit und Absender aus E-Mails und PDF-Anhängen |
-| **Paketverfolgung** | Erkennt Tracking-Nummern, zeigt aktuellen Lieferstatus |
-| **Kalendertermine** | Extrahiert Datum, Uhrzeit, Ort: Ein-Klick-Export |
-| **Abo-Monitor** | Erkennt wiederkehrende Absender, Verlängerungsdaten, Kündigungslinks |
-| **Phishing-Erkennung** | Lokale Heuristik + KI-basierte Betrugserkennung |
-| **Thread-Analyse** | Gruppiert Konversationen, erkennt Duplikate, schlägt Follow-ups vor |
-| **Smart Cleanup** | Alte Newsletter, Werbung, Social: Review-Ordner vor jeder Löschung |
-| **Filterregeln** | KI schlägt Regeln vor, Nutzer bestätigt: kein Autorun |
-| **Offline-Suche** | Volltextsuche über alle Konten und Anhänge |
-| **Multi-Account** | Gmail, Outlook, Apple Mail, beliebiger IMAP in einem Dashboard |
+| | Funktion | Status |
+|---|---|---|
+| **Sync** | iCloud, M365, Gmail, Fastmail, beliebiger IMAP | Fertig |
+| **Kategorisierung** | 16 Kategorien: Newsletter, Rechnung, Paket, Arbeit, Phishing... | Fertig |
+| **KI-Review** | Jede KI-Entscheidung pruefen und korrigieren, bevor sie gilt | Fertig |
+| **Dashboard** | Stats, Kategorienverteilung, Sync pro Konto | Fertig |
+| **Suche** | Volltextsuche ueber alle synchronisierten E-Mails | Fertig |
+| **Multi-Account** | Mehrere IMAP-Konten in einem Dashboard | Fertig |
+| **Keychain** | Passwoerter nur im macOS-Schluessel bund gespeichert | Fertig |
+| **Regeln** | Automatische Regeln pro Kategorie (Newsletter archivieren, Spam loeschen...) | Geplant |
+| **IMAP-Aktionen** | Tatsaechliches Verschieben/Loeschen auf dem Server nach Bestaetigung | Geplant |
 
 ---
 
 ## Voraussetzungen
 
-- [Rust](https://rustup.rs/) 1.77+
+- [Rust](https://rustup.rs/) 1.96+
 - [Node.js](https://nodejs.org/) 20+
 - [Tauri CLI v2](https://tauri.app/): `cargo install tauri-cli`
-- [Ollama](https://ollama.ai): `ollama pull llama3 && ollama pull llava`
-- macOS / Windows / Linux
+- Ein [Claude API-Schluessel](https://console.anthropic.com/) (Haiku ist am guenstigsten)
+- macOS 13+
 
 ---
 
@@ -50,18 +44,32 @@ MailPilot erkennt, kategorisiert, taggt und sortiert E-Mails aus Outlook, Gmail,
 git clone https://github.com/9t29zhmwdh-coder/MailPilot
 cd MailPilot
 
-ollama pull llama3
-ollama pull llava
-
 cd frontend && npm install && cd ..
-cargo tauri dev
+
+SQLX_OFFLINE=true cargo tauri dev
 ```
+
+Beim ersten Start: **Einstellungen** oeffnen, Claude API-Schluessel einfuegen, IMAP-Konto hinzufuegen. Auf dem Dashboard **Sync** klicken, dann **KI klassifizieren**.
+
+---
+
+## KI-Backend
+
+MailPilot nutzt die [Claude API](https://docs.anthropic.com/) direkt per HTTP. Kein lokaler GPU, kein Ollama noetig. Unterstuetzte Modelle:
+
+| Modell | Geschwindigkeit | Kosten |
+|---|---|---|
+| `claude-haiku-4-5-20251001` | Schnell | Am guenstigsten |
+| `claude-sonnet-4-6` | Ausgewogen | Mittel |
+| `claude-opus-4-8` | Bestes | Hoeher |
+
+E-Mails werden serverseitig von Anthropic verarbeitet. Passwoerter und Schluessel werden ausschliesslich im macOS-Schluessel bund gespeichert und nie an Claude uebermittelt.
 
 ---
 
 ## Datenschutz
 
-MailPilot verarbeitet alle E-Mails **lokal auf deinem Gerät**. Es werden keine Daten in die Cloud hochgeladen. Alle KI-Analysen werden durch Ollama-Modelle durchgeführt, die vollständig offline laufen. Passwörter werden im System-Schlüsselbund gespeichert (macOS Keychain / Windows DPAPI / Linux SecretService).
+E-Mail-Inhalte werden zur Klassifizierung an die Anthropic API gesendet. Passwoerter und API-Schluessel werden ausschliesslich im macOS-Schluessel bund gespeichert und verlassen dein Geraet nie. Die lokale SQLite-Datenbank speichert klassifizierte Metadaten.
 
 ---
 
@@ -69,12 +77,12 @@ MailPilot verarbeitet alle E-Mails **lokal auf deinem Gerät**. Es werden keine 
 
 ```
 MailPilot/
-├── crates/mp-core/      — Rust: IMAP-Client, Klassifizierung, DB, KI
-├── crates/mp-cli/       — CLI-Binary
-├── src-tauri/           — Tauri v2 Backend + IPC-Commands
-└── frontend/            — React + TypeScript + Tailwind + Recharts
+├── crates/mp-core/      Rust: IMAP-Client, Klassifizierung, DB, KI-Backend
+├── crates/mp-cli/       CLI-Binary
+├── src-tauri/           Tauri v2 Backend + IPC-Commands
+└── frontend/            React + TypeScript + Tailwind + Recharts
 ```
 
 ---
 
-**Autor:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Active · v0.1.0 · **Lizenz:** MIT
+**Autor:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Aktiv · v0.1.0

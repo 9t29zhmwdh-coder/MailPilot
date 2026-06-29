@@ -10,10 +10,16 @@ export function Dashboard({ onNavigate }: Props) {
   const [classifying, setClassifying] = useState(false)
   const [classifyProgress, setClassifyProgress] = useState<{ done: number; total: number } | null>(null)
 
+  const [syncError, setSyncError] = useState<string | null>(null)
+
   const handleSync = async (accountId: string) => {
     setSyncing(accountId)
+    setSyncError(null)
     try {
-      await api.syncAccount(accountId)
+      const count = await api.syncAccount(accountId)
+      if (count === 0) setSyncError('Sync fertig — 0 neue E-Mails gefunden')
+    } catch (e: any) {
+      setSyncError(String(e))
     } finally {
       setSyncing(null)
       loadStats()
@@ -151,6 +157,12 @@ export function Dashboard({ onNavigate }: Props) {
             </button>
           </div>
         ) : (
+          <div>
+          {syncError && (
+            <div className="mb-2 text-xs text-[#f85149] bg-[#f8514922] border border-[#f8514944] rounded px-3 py-2">
+              {syncError}
+            </div>
+          )}
           <div className="space-y-2">
             {accounts.map(acc => (
               <div key={acc.id} className="flex items-center justify-between p-2 bg-[#0d1117] rounded-md">
@@ -172,6 +184,7 @@ export function Dashboard({ onNavigate }: Props) {
                 </button>
               </div>
             ))}
+          </div>
           </div>
         )}
       </div>

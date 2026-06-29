@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE organize_actions SET status_json = ? WHERE status_json = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "aaa323a2217ea0ec17875f41ab823c92bfc1cade22f9d59c810dba8f8af2d3c5"
+}

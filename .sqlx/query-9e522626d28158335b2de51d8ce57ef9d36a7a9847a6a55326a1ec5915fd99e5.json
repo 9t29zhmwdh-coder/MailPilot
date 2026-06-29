@@ -1,0 +1,134 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT * FROM emails WHERE account_id = ? ORDER BY date_ts DESC LIMIT ? OFFSET ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "account_id",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "message_id",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "uid",
+        "ordinal": 3,
+        "type_info": "Integer"
+      },
+      {
+        "name": "mailbox",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "subject",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "from_json",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "to_json",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "cc_json",
+        "ordinal": 8,
+        "type_info": "Text"
+      },
+      {
+        "name": "body_text",
+        "ordinal": 9,
+        "type_info": "Text"
+      },
+      {
+        "name": "body_html",
+        "ordinal": 10,
+        "type_info": "Text"
+      },
+      {
+        "name": "attachments_json",
+        "ordinal": 11,
+        "type_info": "Text"
+      },
+      {
+        "name": "is_read",
+        "ordinal": 12,
+        "type_info": "Bool"
+      },
+      {
+        "name": "is_flagged",
+        "ordinal": 13,
+        "type_info": "Bool"
+      },
+      {
+        "name": "size",
+        "ordinal": 14,
+        "type_info": "Integer"
+      },
+      {
+        "name": "hash",
+        "ordinal": 15,
+        "type_info": "Text"
+      },
+      {
+        "name": "thread_id",
+        "ordinal": 16,
+        "type_info": "Text"
+      },
+      {
+        "name": "classification_json",
+        "ordinal": 17,
+        "type_info": "Text"
+      },
+      {
+        "name": "date_ts",
+        "ordinal": 18,
+        "type_info": "Integer"
+      },
+      {
+        "name": "fetched_ts",
+        "ordinal": 19,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "9e522626d28158335b2de51d8ce57ef9d36a7a9847a6a55326a1ec5915fd99e5"
+}

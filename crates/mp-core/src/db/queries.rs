@@ -28,7 +28,7 @@ pub async fn upsert_account(pool: &SqlitePool, acc: &EmailAccount) -> Result<()>
 
 pub async fn list_accounts(pool: &SqlitePool) -> Result<Vec<EmailAccount>> {
     let rows = sqlx::query!(
-        "SELECT id, label, email_address, imap_host, imap_port, username, use_tls, enabled, last_sync FROM email_accounts"
+        r#"SELECT id AS "id!", label, email_address, imap_host, imap_port, username, use_tls, enabled, last_sync FROM email_accounts"#
     )
     .fetch_all(pool)
     .await?;
@@ -98,42 +98,72 @@ pub async fn update_classification(pool: &SqlitePool, email_id: &str, cls: &Clas
 pub async fn list_emails(
     pool: &SqlitePool,
     account_id: Option<&str>,
-    _category: Option<&str>,
+    category: Option<&str>,
     limit: u32,
     offset: u32,
 ) -> Result<Vec<EmailEntry>> {
-    let limit_i = limit as i64;
-    let offset_i = offset as i64;
-    if let Some(aid) = account_id {
-        let rows = sqlx::query!(
-            "SELECT * FROM emails WHERE account_id = ? ORDER BY date_ts DESC LIMIT ? OFFSET ?",
-            aid, limit_i, offset_i
-        ).fetch_all(pool).await?;
-        return Ok(rows.into_iter().filter_map(|r| deserialize_email_row(
-            r.id.unwrap_or_default(), r.account_id,
-            r.message_id, r.uid as u32,
-            r.mailbox, r.subject,
-            r.from_json, r.to_json,
-            r.cc_json, r.body_text, r.body_html,
-            r.attachments_json, r.is_read,
-            r.is_flagged, r.size as u64,
+    let lim = limit as i64;
+    let off = offset as i64;
+    let emails = match (account_id, category) {
+        (Some(aid), Some(cat)) => sqlx::query!(
+            "SELECT * FROM emails WHERE account_id = ? AND json_extract(classification_json, '$.category') = ? ORDER BY date_ts DESC LIMIT ? OFFSET ?",
+            aid, cat, lim, off
+        )
+        .fetch_all(pool)
+        .await?
+        .into_iter()
+        .filter_map(|r| deserialize_email_row(
+            r.id.expect("emails.id is PK"), r.account_id, r.message_id, r.uid as u32, r.mailbox, r.subject,
+            r.from_json, r.to_json, r.cc_json, r.body_text, r.body_html,
+            r.attachments_json, r.is_read, r.is_flagged, r.size as u64,
             r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
-        )).collect());
-    }
-    let rows = sqlx::query!(
-        "SELECT * FROM emails ORDER BY date_ts DESC LIMIT ? OFFSET ?",
-        limit_i, offset_i
-    ).fetch_all(pool).await?;
-    Ok(rows.into_iter().filter_map(|r| deserialize_email_row(
-        r.id.unwrap_or_default(), r.account_id,
-        r.message_id, r.uid as u32,
-        r.mailbox, r.subject,
-        r.from_json, r.to_json,
-        r.cc_json, r.body_text, r.body_html,
-        r.attachments_json, r.is_read,
-        r.is_flagged, r.size as u64,
-        r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
-    )).collect())
+        ))
+        .collect(),
+        (Some(aid), None) => sqlx::query!(
+            "SELECT * FROM emails WHERE account_id = ? ORDER BY date_ts DESC LIMIT ? OFFSET ?",
+            aid, lim, off
+        )
+        .fetch_all(pool)
+        .await?
+        .into_iter()
+        .filter_map(|r| deserialize_email_row(
+            r.id.expect("emails.id is PK"), r.account_id, r.message_id, r.uid as u32, r.mailbox, r.subject,
+            r.from_json, r.to_json, r.cc_json, r.body_text, r.body_html,
+            r.attachments_json, r.is_read, r.is_flagged, r.size as u64,
+            r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
+        ))
+        .collect(),
+        (None, Some(cat)) => sqlx::query!(
+            "SELECT * FROM emails WHERE json_extract(classification_json, '$.category') = ? ORDER BY date_ts DESC LIMIT ? OFFSET ?",
+            cat, lim, off
+        )
+        .fetch_all(pool)
+        .await?
+        .into_iter()
+        .filter_map(|r| deserialize_email_row(
+            r.id.expect("emails.id is PK"), r.account_id, r.message_id, r.uid as u32, r.mailbox, r.subject,
+            r.from_json, r.to_json, r.cc_json, r.body_text, r.body_html,
+            r.attachments_json, r.is_read, r.is_flagged, r.size as u64,
+            r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
+        ))
+        .collect(),
+        (None, None) => sqlx::query!(
+            "SELECT * FROM emails ORDER BY date_ts DESC LIMIT ? OFFSET ?",
+            lim, off
+        )
+        .fetch_all(pool)
+        .await?
+        .into_iter()
+        .filter_map(|r| deserialize_email_row(
+            r.id.expect("emails.id is PK"), r.account_id, r.message_id, r.uid as u32, r.mailbox, r.subject,
+            r.from_json, r.to_json, r.cc_json, r.body_text, r.body_html,
+            r.attachments_json, r.is_read, r.is_flagged, r.size as u64,
+            r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
+        ))
+        .collect(),
+    };
+
+    Ok(emails)
 }
 
 pub async fn get_email(pool: &SqlitePool, id: &str) -> Result<Option<EmailEntry>> {
@@ -142,37 +172,29 @@ pub async fn get_email(pool: &SqlitePool, id: &str) -> Result<Option<EmailEntry>
         .await?;
 
     Ok(r.and_then(|r| deserialize_email_row(
-        r.id.unwrap_or_default(), r.account_id,
-        r.message_id, r.uid as u32,
-        r.mailbox, r.subject,
-        r.from_json, r.to_json,
-        r.cc_json, r.body_text, r.body_html,
-        r.attachments_json, r.is_read,
-        r.is_flagged, r.size as u64,
+        r.id.expect("emails.id is PK"), r.account_id, r.message_id, r.uid as u32, r.mailbox, r.subject,
+        r.from_json, r.to_json, r.cc_json, r.body_text, r.body_html,
+        r.attachments_json, r.is_read, r.is_flagged, r.size as u64,
         r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
     )))
 }
 
 pub async fn search_emails(pool: &SqlitePool, q: &SearchQuery) -> Result<Vec<EmailEntry>> {
     let pattern = format!("%{}%", q.text);
-    let limit = q.limit as i64;
-    let offset = q.offset as i64;
+    let lim = q.limit as i64;
+    let off = q.offset as i64;
     let rows = sqlx::query!(
         "SELECT * FROM emails WHERE (subject LIKE ? OR body_text LIKE ? OR from_json LIKE ?)
          ORDER BY date_ts DESC LIMIT ? OFFSET ?",
-        pattern, pattern, pattern, limit, offset
+        pattern, pattern, pattern, lim, off
     )
     .fetch_all(pool)
     .await?;
 
     Ok(rows.into_iter().filter_map(|r| deserialize_email_row(
-        r.id.unwrap_or_default(), r.account_id,
-        r.message_id, r.uid as u32,
-        r.mailbox, r.subject,
-        r.from_json, r.to_json,
-        r.cc_json, r.body_text, r.body_html,
-        r.attachments_json, r.is_read,
-        r.is_flagged, r.size as u64,
+        r.id.expect("emails.id is PK"), r.account_id, r.message_id, r.uid as u32, r.mailbox, r.subject,
+        r.from_json, r.to_json, r.cc_json, r.body_text, r.body_html,
+        r.attachments_json, r.is_read, r.is_flagged, r.size as u64,
         r.hash, r.thread_id, r.classification_json, r.date_ts, r.fetched_ts,
     )).collect())
 }
@@ -182,7 +204,7 @@ pub async fn insert_action(pool: &SqlitePool, action: &OrganizeAction) -> Result
     let status_json = serde_json::to_string(&action.status)?;
     let created_ts = action.created_at.timestamp();
     sqlx::query!(
-        "INSERT INTO organize_actions(id, email_id, email_subject, from_address, kind_json, target_folder, reason, status_json, undoable, created_ts)
+        "INSERT OR IGNORE INTO organize_actions(id, email_id, email_subject, from_address, kind_json, target_folder, reason, status_json, undoable, created_ts)
          VALUES(?,?,?,?,?,?,?,?,?,?)",
         action.id, action.email_id, action.email_subject, action.from_address,
         kind_json, action.target_folder, action.reason, status_json, action.undoable, created_ts,
@@ -194,8 +216,8 @@ pub async fn insert_action(pool: &SqlitePool, action: &OrganizeAction) -> Result
 
 pub async fn list_actions(pool: &SqlitePool) -> Result<Vec<OrganizeAction>> {
     let rows = sqlx::query!(
-        "SELECT id, email_id, email_subject, from_address, kind_json, target_folder, reason, status_json, undoable, created_ts
-         FROM organize_actions ORDER BY created_ts DESC"
+        r#"SELECT id AS "id!", email_id, email_subject, from_address, kind_json, target_folder, reason, status_json, undoable, created_ts
+         FROM organize_actions ORDER BY created_ts DESC"#
     )
     .fetch_all(pool)
     .await?;

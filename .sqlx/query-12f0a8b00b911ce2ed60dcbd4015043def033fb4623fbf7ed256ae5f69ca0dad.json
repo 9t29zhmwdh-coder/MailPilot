@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT OR REPLACE INTO email_accounts(id, label, email_address, imap_host, imap_port, username, use_tls, enabled, last_sync)\n         VALUES(?,?,?,?,?,?,?,?,?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 9
+    },
+    "nullable": []
+  },
+  "hash": "12f0a8b00b911ce2ed60dcbd4015043def033fb4623fbf7ed256ae5f69ca0dad"
+}

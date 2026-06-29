@@ -1,0 +1,68 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", label, email_address, imap_host, imap_port, username, use_tls, enabled, last_sync FROM email_accounts",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "label",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "email_address",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "imap_host",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "imap_port",
+        "ordinal": 4,
+        "type_info": "Integer"
+      },
+      {
+        "name": "username",
+        "ordinal": 5,
+        "type_info": "Text"
+      },
+      {
+        "name": "use_tls",
+        "ordinal": 6,
+        "type_info": "Bool"
+      },
+      {
+        "name": "enabled",
+        "ordinal": 7,
+        "type_info": "Bool"
+      },
+      {
+        "name": "last_sync",
+        "ordinal": 8,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "69fb3c71703167d3f975291a3a8249c947d2a974f862f908f204e2db2a517850"
+}

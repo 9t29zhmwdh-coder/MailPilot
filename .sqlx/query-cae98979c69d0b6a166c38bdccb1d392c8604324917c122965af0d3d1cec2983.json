@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT classification_json FROM emails WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "classification_json",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "cae98979c69d0b6a166c38bdccb1d392c8604324917c122965af0d3d1cec2983"
+}

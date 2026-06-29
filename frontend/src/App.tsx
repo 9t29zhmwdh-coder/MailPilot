@@ -21,7 +21,7 @@ export default function App() {
     loadAccounts()
     loadStats()
     loadSettings()
-    api.checkOllama().then(setOllamaOnline).catch(() => {})
+    api.checkClaude().then(setOllamaOnline).catch(() => {})
 
     const cleanup: Array<() => void> = []
     events.onSyncDone(count => {
@@ -65,7 +65,7 @@ export default function App() {
           </div>
           <div className="flex items-center gap-1.5 mt-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${ollamaOnline ? 'bg-[#3fb950]' : 'bg-[#f85149]'}`} />
-            <span className="text-xs text-[#8b949e]">{ollamaOnline ? 'Ollama online' : 'Ollama offline'}</span>
+            <span className="text-xs text-[#8b949e]">{ollamaOnline ? 'Claude online' : 'Claude offline'}</span>
           </div>
         </div>
 

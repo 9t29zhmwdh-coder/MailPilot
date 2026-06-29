@@ -33,9 +33,10 @@ pub async fn get_stats(state: State<'_, AppState>) -> MpResult<EmailStats> {
         .await?;
 
     let category_rows = sqlx::query!(
-        "SELECT json_extract(classification_json, '$.category') as cat, COUNT(*) as cnt
+        r#"SELECT json_extract(classification_json, '$.category') as "cat: String", COUNT(*) as "cnt!: i64"
          FROM emails WHERE classification_json IS NOT NULL
-         GROUP BY cat ORDER BY cnt DESC"
+         GROUP BY json_extract(classification_json, '$.category')
+         ORDER BY COUNT(*) DESC"#
     )
     .fetch_all(&state.pool)
     .await?;

@@ -36,7 +36,10 @@ export const useEmailStore = create<EmailStore>((set, get) => ({
   loadEmails: async (accountId, category) => {
     set({ loading: true })
     try {
-      const emails = await api.listEmails(accountId, category, 200)
+      const all = await api.listEmails(accountId, undefined, 500)
+      const emails = category
+        ? all.filter(e => e.classification?.category === category)
+        : all
       set({ emails, loading: false })
     } catch {
       set({ loading: false })

@@ -1,44 +1,40 @@
 <div align="center">
-  <img src="RayStudio.png" alt="RayStudio Logo" width="120"/>
-
+  <img src="RayStudio.png" alt="MailPilot" width="100"/>
   <h1>MailPilot</h1>
+  <p>AI-powered email organizer — smart categorization, review workflow, multi-account IMAP</p>
 </div>
 
 [🇩🇪 Deutsche Version](README.de.md)
 
-**AI-powered local email organizer. Offline, private, cross-platform, built with Rust and Tauri.**
-
-MailPilot automatically recognizes, categorizes, tags, and organizes emails from Outlook, Gmail, Apple Mail, and any IMAP mailbox; **fully offline**, using local AI models. No cloud, no tracking, no complexity.
-
-[![CI](https://github.com/9t29zhmwdh-coder/MailPilot/actions/workflows/ci.yml/badge.svg)](https://github.com/9t29zhmwdh-coder/MailPilot/actions) ![Platform](https://img.shields.io/badge/Platform-macOS_%7C_Windows-lightgrey) ![Rust](https://img.shields.io/badge/Rust-CE422B?logo=rust&logoColor=white) ![Tauri](https://img.shields.io/badge/Tauri-24C8D8?logo=tauri&logoColor=white) ![AI | Claude Code](https://img.shields.io/badge/AI-Claude_Code-black?logo=anthropic&logoColor=white) ![AI | Copilot](https://img.shields.io/badge/AI-Copilot-black?logo=github&logoColor=white) ![AI | Ollama](https://img.shields.io/badge/AI-Ollama-black?logo=ollama&logoColor=white)
+[![CI](https://github.com/9t29zhmwdh-coder/MailPilot/actions/workflows/ci.yml/badge.svg)](https://github.com/9t29zhmwdh-coder/MailPilot/actions) ![Rust](https://img.shields.io/badge/Rust-1.96+-CE422B?logo=rust&logoColor=white) ![Tauri](https://img.shields.io/badge/Tauri-v2-24C8D8?logo=tauri&logoColor=white) ![Platform](https://img.shields.io/badge/Platform-macOS-lightgrey) ![AI](https://img.shields.io/badge/AI-Claude_API-black?logo=anthropic&logoColor=white)
 
 ---
 
+MailPilot connects to your IMAP mailboxes, classifies every email using Claude AI, and lets you review and correct the results before anything is moved or deleted. Quick login for iCloud, Microsoft 365, Gmail, and Fastmail — no manual server setup required.
+
 ## Features
 
-| Feature | Description |
-|---|---|
-| **Smart Categorization** | Newsletter, Invoices, Social, Work, Government, Packages, Calendar, Subscriptions, Phishing |
-| **Invoice Detection** | Extracts amount, currency, due date, and sender from emails and PDF attachments |
-| **Package Tracking** | Recognizes tracking numbers, shows current delivery status |
-| **Calendar Events** | Extracts dates, times, locations: one-click export |
-| **Subscription Monitor** | Detects recurring senders, renewal dates, cancel links |
-| **Phishing Detection** | Local heuristic + AI-based fraud detection |
-| **Thread Analysis** | Groups conversations, detects duplicates, suggests follow-ups |
-| **Smart Cleanup** | Old newsletters, ads, social: review queue before any deletion |
-| **Filter Rules** | AI proposes rules, user confirms: no autorun |
-| **Offline Search** | Full-text search across all accounts and attachments |
-| **Multi-Account** | Gmail, Outlook, Apple Mail, any IMAP in one dashboard |
+| | Feature | Status |
+|---|---|---|
+| **Sync** | iCloud, M365, Gmail, Fastmail, any IMAP | Done |
+| **Categorization** | 16 categories: Newsletter, Invoice, Package, Work, Phishing... | Done |
+| **AI Review** | Confirm or correct every AI decision before it takes effect | Done |
+| **Dashboard** | Stats, category distribution, per-account sync | Done |
+| **Search** | Full-text across all synced emails | Done |
+| **Multi-Account** | Multiple IMAP accounts in one view | Done |
+| **Keychain** | Passwords stored in macOS Keychain | Done |
+| **Rules** | Automatic rules per category (newsletter archive, spam delete...) | Planned |
+| **IMAP actions** | Actually move/delete on server after confirmation | Planned |
 
 ---
 
 ## Requirements
 
-- [Rust](https://rustup.rs/) 1.77+
+- [Rust](https://rustup.rs/) 1.96+
 - [Node.js](https://nodejs.org/) 20+
 - [Tauri CLI v2](https://tauri.app/): `cargo install tauri-cli`
-- [Ollama](https://ollama.ai): `ollama pull llama3 && ollama pull llava`
-- macOS / Windows / Linux
+- A [Claude API key](https://console.anthropic.com/) (Haiku is cheapest, works well)
+- macOS 13+
 
 ---
 
@@ -48,18 +44,32 @@ MailPilot automatically recognizes, categorizes, tags, and organizes emails from
 git clone https://github.com/9t29zhmwdh-coder/MailPilot
 cd MailPilot
 
-ollama pull llama3
-ollama pull llava
-
 cd frontend && npm install && cd ..
-cargo tauri dev
+
+SQLX_OFFLINE=true cargo tauri dev
 ```
+
+On first launch, go to **Settings**, paste your Claude API key, and add an IMAP account. Click **Sync** on the Dashboard, then **KI klassifizieren** to classify emails.
+
+---
+
+## AI Backend
+
+MailPilot uses the [Claude API](https://docs.anthropic.com/) directly via HTTP. No local GPU or Ollama required. Supported models:
+
+| Model | Speed | Cost |
+|---|---|---|
+| `claude-haiku-4-5-20251001` | Fast | Cheapest |
+| `claude-sonnet-4-6` | Balanced | Medium |
+| `claude-opus-4-8` | Best | Higher |
+
+All emails are processed server-side by Anthropic. Passwords and keys are stored in macOS Keychain only, never sent to Claude.
 
 ---
 
 ## Privacy
 
-MailPilot processes all emails **locally on your machine**. No data is sent to the cloud. All AI analysis is performed by Ollama models running entirely offline. Passwords are stored in the system keychain (macOS Keychain / Windows DPAPI / Linux SecretService).
+Email content is sent to the Anthropic API for classification. Passwords and API keys are stored exclusively in macOS Keychain and never leave your device. The local SQLite database stores classified metadata.
 
 ---
 
@@ -67,12 +77,12 @@ MailPilot processes all emails **locally on your machine**. No data is sent to t
 
 ```
 MailPilot/
-├── crates/mp-core/      — Rust: IMAP client, classifier, DB, AI
-├── crates/mp-cli/       — CLI binary
-├── src-tauri/           — Tauri v2 backend + IPC commands
-└── frontend/            — React + TypeScript + Tailwind + Recharts
+├── crates/mp-core/      Rust: IMAP client, classifier, DB, AI backend
+├── crates/mp-cli/       CLI binary
+├── src-tauri/           Tauri v2 backend + IPC commands
+└── frontend/            React + TypeScript + Tailwind + Recharts
 ```
 
 ---
 
-**Author:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Active · v0.1.0 · **License:** MIT
+**Author:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Active · v0.1.0

@@ -55,11 +55,17 @@ impl EmailAccount {
     }
 }
 
+fn default_claude_model() -> String {
+    "claude-haiku-4-5-20251001".to_string()
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppSettings {
     pub ollama_url: String,
     pub text_model: String,
     pub vision_model: String,
+    #[serde(default = "default_claude_model")]
+    pub claude_model: String,
     pub auto_classify: bool,
     pub auto_sync: bool,
     pub sync_interval_minutes: u32,
@@ -74,6 +80,7 @@ impl Default for AppSettings {
             ollama_url: "http://localhost:11434".to_string(),
             text_model: "llama3".to_string(),
             vision_model: "llava".to_string(),
+            claude_model: default_claude_model(),
             auto_classify: true,
             auto_sync: false,
             sync_interval_minutes: 30,

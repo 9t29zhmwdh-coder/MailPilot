@@ -2,11 +2,8 @@
 pub mod account_manager;
 
 use anyhow::Result;
-use base64::{engine::general_purpose, Engine};
 use imap::Session;
 use mailparse::{MailHeaderMap, parse_mail};
-use native_tls::TlsConnector;
-use std::net::TcpStream;
 use chrono::Utc;
 use uuid::Uuid;
 
@@ -15,18 +12,15 @@ use crate::models::{
     account::EmailAccount,
 };
 
-pub type TlsSession = Session<native_tls::TlsStream<TcpStream>>;
+pub type TlsSession = Session<imap::Connection>;
 
 pub fn connect_tls(account: &EmailAccount, password: &str) -> Result<TlsSession> {
-    let tls = TlsConnector::builder().build()?;
-    let client = imap::connect(
-        (account.imap_host.as_str(), account.imap_port),
-        account.imap_host.as_str(),
-        &tls,
-    )?;
+    let client = imap::ClientBuilder::new(&account.imap_host, account.imap_port)
+        .connect()
+        .map_err(|e| anyhow::anyhow!("IMAP Verbindung fehlgeschlagen: {}", e))?;
     let session = client
         .login(&account.username, password)
-        .map_err(|e| anyhow::anyhow!("IMAP login failed: {:?}", e.0))?;
+        .map_err(|e| anyhow::anyhow!("IMAP Login fehlgeschlagen: {:?}", e.0))?;
     Ok(session)
 }
 
@@ -44,19 +38,15 @@ pub fn fetch_emails(
         return Ok(vec![]);
     }
 
-    let start = if exists > max { exists - max + 1 } else { 1 };
+    let batch = max.min(200);
+    let start = if exists > batch { exists - batch + 1 } else { 1 };
     let seq_set = format!("{}:{}", start, exists);
-    let messages = session.fetch(&seq_set, "RFC822 FLAGS UID")?;
+    let messages = session.fetch(&seq_set, "(UID FLAGS BODY.PEEK[])")?;
 
     let mut entries = Vec::new();
     for msg in messages.iter() {
-        if let Some(body) = msg.body() {
-            if let Ok(entry) = parse_email_message(
-                body,
-                msg.uid.unwrap_or(0),
-                mailbox,
-                &account.id,
-            ) {
+        if let Some(raw) = msg.body() {
+            if let Ok(entry) = parse_email_message(raw, msg.uid.unwrap_or(0), mailbox, &account.id) {
                 entries.push(entry);
             }
         }
@@ -76,7 +66,7 @@ pub fn fetch_since_uid(
     let mut session = connect_tls(account, password)?;
     session.select(mailbox)?;
     let uid_range = format!("{}:*", since_uid + 1);
-    let messages = session.uid_fetch(&uid_range, "RFC822 FLAGS UID")?;
+    let messages = session.uid_fetch(&uid_range, "(UID FLAGS BODY.PEEK[])")?;
 
     let mut entries: Vec<EmailEntry> = messages
         .iter()
@@ -223,5 +213,8 @@ fn parse_addresses(raw: &str) -> Vec<EmailAddress> {
 }
 
 fn decode_header_value(raw: &str) -> String {
-    raw.bytes().map(|b| b as char).collect()
+    match mailparse::parse_header(format!("X: {raw}").as_bytes()) {
+        Ok((header, _)) => header.get_value(),
+        Err(_) => raw.to_string(),
+    }
 }

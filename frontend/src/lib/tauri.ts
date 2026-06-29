@@ -78,6 +78,7 @@ export interface AppSettings {
   ollama_url: string
   text_model: string
   vision_model: string
+  claude_model: string
   auto_classify: boolean
   auto_sync: boolean
   sync_interval_minutes: number
@@ -134,12 +135,20 @@ export const api = {
   // classify
   classifyEmail: (emailId: string)               => invoke<void>('classify_email', { emailId }),
   classifyBatch: (limit?: number)                => invoke<number>('classify_batch', { limit }),
-  checkOllama: ()                                => invoke<boolean>('check_ollama'),
+  checkClaude: ()                                => invoke<boolean>('check_ollama'),
   generateSummary: (emailId: string)             => invoke<string>('generate_summary', { emailId }),
 
+  // claude key
+  setClaudeKey: (key: string)                    => invoke<void>('set_claude_key', { key }),
+  getClaudeKeyStatus: ()                         => invoke<boolean>('get_claude_key_status'),
+
   // actions
+  updateCategory: (id: string, category: string) => invoke<void>('update_category', { id, category }),
+
   listActions: ()                                => invoke<OrganizeAction[]>('list_actions'),
   proposeActions: ()                             => invoke<number>('propose_actions'),
+  applyAction: (actionId: string)                => invoke<void>('apply_action', { actionId }),
+  applyAllActions: ()                            => invoke<number>('apply_all_actions'),
   skipAction: (actionId: string)                 => invoke<void>('skip_action', { actionId }),
   skipAllActions: ()                             => invoke<number>('skip_all_actions'),
 

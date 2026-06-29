@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", subject, from_json, classification_json FROM emails WHERE classification_json IS NOT NULL",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "subject",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "from_json",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "classification_json",
+        "ordinal": 3,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "a139103721c444e72f4e2bba5bfd7ccfec40c0e813607372872c63e8979c0854"
+}

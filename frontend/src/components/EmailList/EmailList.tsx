@@ -108,7 +108,7 @@ function EmailRow({ email, selected, onClick }: { email: EmailEntry; selected: b
           <span className="text-xs text-[#484f58]">📎 {email.attachments.length}</span>
         )}
         {email.is_flagged && <span className="text-xs">⭐</span>}
-        {email.classification?.phishing_score > 0.5 && (
+        {(email.classification?.phishing_score ?? 0) > 0.5 && (
           <span className="text-xs text-[#f85149]">⚠️</span>
         )}
       </div>

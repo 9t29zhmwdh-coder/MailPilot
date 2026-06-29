@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT DISTINCT email_id FROM organize_actions",
+  "describe": {
+    "columns": [
+      {
+        "name": "email_id",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "d4a9a4f070afd9e61eec8e3ff00ee4c6e0aaefc1b35028f82c49f6f7b201994a"
+}

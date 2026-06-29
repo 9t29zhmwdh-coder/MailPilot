@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE email_accounts SET last_sync = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "e807e79e0245ef3e858e7026aac4ac506e7de3b14fd3a6190cc9cf7ca52cdaeb"
+}

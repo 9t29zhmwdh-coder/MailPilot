@@ -59,3 +59,20 @@ pub async fn mark_flagged(state: State<'_, AppState>, id: String, flagged: bool)
         .await?;
     Ok(())
 }
+
+#[tauri::command]
+pub async fn update_category(state: State<'_, AppState>, id: String, category: String) -> MpResult<()> {
+    // Bestehende Klassifizierung lesen, Kategorie überschreiben und zurückschreiben
+    let row = sqlx::query!("SELECT classification_json FROM emails WHERE id = ?", id)
+        .fetch_optional(&state.pool)
+        .await?;
+    let existing_json = row.and_then(|r| r.classification_json).unwrap_or_else(|| "{}".to_string());
+    let mut cls: serde_json::Value = serde_json::from_str(&existing_json).unwrap_or(serde_json::json!({}));
+    cls["category"] = serde_json::Value::String(category);
+    cls["classified_by"] = serde_json::Value::String("user".to_string());
+    let updated = serde_json::to_string(&cls).map_err(|e| crate::error::MpError::Other(e.to_string()))?;
+    sqlx::query!("UPDATE emails SET classification_json = ? WHERE id = ?", updated, id)
+        .execute(&state.pool)
+        .await?;
+    Ok(())
+}

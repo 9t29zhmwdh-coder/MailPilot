@@ -29,17 +29,22 @@ async fn main() {
             commands::emails::search_emails,
             commands::emails::mark_read,
             commands::emails::mark_flagged,
+            commands::emails::update_category,
             commands::classify::classify_email,
             commands::classify::classify_batch,
             commands::classify::check_ollama,
             commands::classify::generate_summary,
             commands::actions::list_actions,
             commands::actions::propose_actions,
+            commands::actions::apply_action,
+            commands::actions::apply_all_actions,
             commands::actions::skip_action,
             commands::actions::skip_all_actions,
             commands::stats::get_stats,
             commands::settings::get_settings,
             commands::settings::save_settings,
+            commands::settings::set_claude_key,
+            commands::settings::get_claude_key_status,
         ])
         .run(tauri::generate_context!())
         .expect("MailPilot failed to start");

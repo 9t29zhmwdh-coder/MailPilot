@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT OR IGNORE INTO organize_actions(id, email_id, email_subject, from_address, kind_json, target_folder, reason, status_json, undoable, created_ts)\n         VALUES(?,?,?,?,?,?,?,?,?,?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 10
+    },
+    "nullable": []
+  },
+  "hash": "29cffa3f6ac73d157d7337ce161a978a31a7182253623eb5afa70fc6a15e0ae9"
+}

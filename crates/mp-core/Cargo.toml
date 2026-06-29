@@ -15,13 +15,11 @@ anyhow.workspace      = true
 tracing.workspace     = true
 async-trait.workspace = true
 
-imap       = "2"
-native-tls = "0.2"
+imap       = "3.0.0-alpha.15"
 mailparse  = "0.15"
 base64     = "0.22"
 regex      = "1"
 rayon      = "1"
 blake3     = "1"
 once_cell  = "1"
-keyring    = "3"
 sqlx       = { version = "0.8", features = ["sqlite", "runtime-tokio", "chrono", "uuid", "migrate"] }
