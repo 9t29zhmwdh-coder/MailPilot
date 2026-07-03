@@ -5,6 +5,25 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.2.0] (2026-07-03)
+
+### Added
+
+- IMAP folder browser with folder-level navigation
+- Email deletion and AI-assisted folder suggestions
+- Sync UX: relative timestamps, auto-sync toggle, per-account result display
+- Unit and integration tests for `mp-core` with coverage reporting
+
+### Changed
+
+- AI backend switched to local Ollama (offline-first)
+
+### Fixed
+
+- ISO date-string handling in relative-time formatting
+- CI security audit: documented ignores for quick-xml advisories
+  (RUSTSEC-2026-0194/-0195, transitive via plist/tauri, no upstream fix yet)
+
 ## [0.1.0] — 2026-06-12
 
 ### Added
