@@ -130,3 +130,50 @@ pub struct Classification {
     pub reply_suggestion: Option<String>,
     pub classified_by: String,
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn phishing_has_highest_priority() {
+        assert_eq!(EmailCategory::Phishing.priority(), 100);
+        assert!(EmailCategory::Phishing.priority() > EmailCategory::Important.priority());
+    }
+
+    #[test]
+    fn folder_name_returns_correct_string() {
+        assert_eq!(EmailCategory::Invoice.folder_name(), "Rechnungen");
+        assert_eq!(EmailCategory::Phishing.folder_name(), "Review/Phishing");
+        assert_eq!(EmailCategory::Newsletter.folder_name(), "Newsletter");
+    }
+
+    #[test]
+    fn all_categories_have_unique_priorities() {
+        let categories = [
+            EmailCategory::Phishing,
+            EmailCategory::Important,
+            EmailCategory::FollowUp,
+            EmailCategory::Work,
+            EmailCategory::Invoice,
+            EmailCategory::Calendar,
+            EmailCategory::Package,
+            EmailCategory::Government,
+            EmailCategory::Private,
+            EmailCategory::Subscription,
+            EmailCategory::Social,
+            EmailCategory::Newsletter,
+            EmailCategory::Ads,
+        ];
+        for (i, a) in categories.iter().enumerate() {
+            for (j, b) in categories.iter().enumerate() {
+                if i != j {
+                    assert_ne!(
+                        a.priority(), b.priority(),
+                        "{:?} and {:?} have same priority", a, b
+                    );
+                }
+            }
+        }
+    }
+}
