@@ -70,3 +70,76 @@ impl EmailEntry {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use chrono::Utc;
+
+    fn make_entry(body: &str) -> EmailEntry {
+        EmailEntry {
+            id: "1".into(),
+            account_id: "acc".into(),
+            message_id: "<1@test>".into(),
+            uid: 1,
+            mailbox: "INBOX".into(),
+            subject: "Test".into(),
+            from: EmailAddress { name: None, address: "a@b.com".into() },
+            to: vec![],
+            cc: vec![],
+            date: Utc::now(),
+            body_text: Some(body.into()),
+            body_html: None,
+            attachments: vec![],
+            kind: EmailKind::Plain,
+            in_reply_to: None,
+            references: vec![],
+            is_read: false,
+            is_flagged: false,
+            size: body.len() as u64,
+            hash: None,
+            thread_id: None,
+            classification: None,
+            fetched_at: Utc::now(),
+        }
+    }
+
+    #[test]
+    fn email_address_display_with_name() {
+        let addr = EmailAddress { name: Some("Rafael".into()), address: "r@example.com".into() };
+        assert_eq!(addr.display(), "Rafael <r@example.com>");
+    }
+
+    #[test]
+    fn email_address_display_without_name() {
+        let addr = EmailAddress { name: None, address: "r@example.com".into() };
+        assert_eq!(addr.display(), "r@example.com");
+    }
+
+    #[test]
+    fn email_address_display_empty_name_falls_back_to_address() {
+        let addr = EmailAddress { name: Some("".into()), address: "r@example.com".into() };
+        assert_eq!(addr.display(), "r@example.com");
+    }
+
+    #[test]
+    fn body_preview_short_text_returns_full() {
+        let entry = make_entry("Hello World");
+        assert_eq!(entry.body_preview(100), "Hello World");
+    }
+
+    #[test]
+    fn body_preview_truncates_long_text_with_ellipsis() {
+        let entry = make_entry("Hello World this is a long email body");
+        let preview = entry.body_preview(10);
+        assert!(preview.ends_with('…'), "Expected ellipsis at end");
+        assert!(preview.len() < 20);
+    }
+
+    #[test]
+    fn body_preview_empty_body_returns_empty() {
+        let mut entry = make_entry("");
+        entry.body_text = None;
+        assert_eq!(entry.body_preview(100), "");
+    }
+}
