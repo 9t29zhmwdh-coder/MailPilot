@@ -1,7 +1,7 @@
 <div align="center">
   <img src="RayStudio.png" alt="MailPilot" width="100"/>
   <h1>MailPilot</h1>
-  <p>Local AI email organizer — smart categorization, review workflow, multi-account IMAP</p>
+  <p>Local AI email organizer with smart categorization, a review workflow and multi-account IMAP</p>
 </div>
 
 [🇩🇪 Deutsche Version](README.de.md)
@@ -10,9 +10,9 @@
 
 ---
 
-MailPilot connects to your IMAP mailboxes, classifies every email using a **local AI model**, and lets you review and correct every decision before anything is moved or deleted. Everything runs on your device — no cloud, no API key, no tracking.
+MailPilot connects to your IMAP mailboxes, classifies every email using a **local AI model**, and lets you review and correct every decision before anything is moved or deleted. Everything runs on your device, with no cloud, no API key and no tracking.
 
-Quick login for iCloud, Microsoft 365, Gmail, and Fastmail — no manual server setup.
+Quick login for iCloud, Microsoft 365, Gmail and Fastmail, with no manual server setup.
 
 ## Features
 
