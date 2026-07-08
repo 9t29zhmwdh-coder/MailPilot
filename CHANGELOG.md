@@ -1,9 +1,22 @@
-# Changelog — MailPilot
+# Changelog, MailPilot
 
 All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
+
+## [0.2.1] - 2026-07-08
+
+### Fixed
+
+- CI excluded the `mailpilot` app crate from all checks, hiding the crate's own bugs
+- Missing English/German UI translation (the app was previously German-only)
+- README claimed a local, offline, no-API-key AI backend; the app actually uses Claude via the Anthropic API (API key stored in Keychain). Corrected across both READMEs, badges, requirements, quick start and privacy sections
+- German README had ASCII-transliterated umlauts (`fuer`, `koennen`, ...) throughout instead of proper `ü`/`ö`/`ä`
+
+### Added
+
+- README onboarding sections: how it runs, screenshot, in practice, uninstall/cleanup
 
 ## [0.2.0] (2026-07-03)
 
@@ -24,13 +37,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - CI security audit: documented ignores for quick-xml advisories
   (RUSTSEC-2026-0194/-0195, transitive via plist/tauri, no upstream fix yet)
 
-## [0.1.0] — 2026-06-12
+## [0.1.0] - 2026-06-12
 
 ### Added
 
 - IMAP client with TLS support (Outlook, Gmail, Apple Mail)
 - Incremental sync engine with UID tracking and flag handling
-- OS keyring integration (`keyring` crate) — credentials never written to disk
+- OS keyring integration (`keyring` crate), credentials never written to disk
 - `ClassifierEngine` with `OllamaBackend` for local AI email classification
 - Smart tagging and folder mapping based on classifier output
 - Server-side IMAP MOVE for organised folder structure
