@@ -3,6 +3,7 @@ import { useAccountStore } from './stores/accountStore'
 import { useSettingsStore } from './stores/settingsStore'
 import { useEmailStore } from './stores/emailStore'
 import { api, events } from './lib/tauri'
+import { useT, useLangStore } from './lib/i18n'
 import { Dashboard } from './components/Dashboard/Dashboard'
 import { EmailList } from './components/EmailList/EmailList'
 import { CategorySidebar } from './components/Categories/CategorySidebar'
@@ -16,6 +17,8 @@ export default function App() {
   const { ollamaOnline, setOllamaOnline, loadAccounts, loadStats } = useAccountStore()
   const { loadSettings } = useSettingsStore()
   const { loadEmails, filterCategory } = useEmailStore()
+  const t = useT()
+  const { lang, toggle } = useLangStore()
 
   useEffect(() => {
     loadAccounts()
@@ -65,15 +68,15 @@ export default function App() {
           </div>
           <div className="flex items-center gap-1.5 mt-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${ollamaOnline ? 'bg-[#3fb950]' : 'bg-[#f85149]'}`} />
-            <span className="text-xs text-[#8b949e]">{ollamaOnline ? 'Claude online' : 'Claude offline'}</span>
+            <span className="text-xs text-[#8b949e]">{ollamaOnline ? t('nav.claudeOnline') : t('nav.claudeOffline')}</span>
           </div>
         </div>
 
         <nav className="flex-1 p-2 space-y-0.5">
-          {navItem('dashboard', '📊', 'Übersicht')}
-          {navItem('emails', '📧', 'E-Mails')}
-          {navItem('actions', '⚡', 'Aktionen')}
-          {navItem('settings', '⚙️', 'Einstellungen')}
+          {navItem('dashboard', '📊', t('nav.dashboard'))}
+          {navItem('emails', '📧', t('nav.emails'))}
+          {navItem('actions', '⚡', t('nav.actions'))}
+          {navItem('settings', '⚙️', t('nav.settings'))}
         </nav>
 
         {tab === 'emails' && (
@@ -81,6 +84,13 @@ export default function App() {
             <CategorySidebar />
           </div>
         )}
+
+        <button
+          onClick={toggle}
+          className="m-2 px-2 py-1.5 text-xs text-[#8b949e] hover:text-[#e6edf3] border border-[#30363d] rounded-md transition-colors"
+        >
+          {lang === 'en' ? 'DE' : 'EN'}
+        </button>
       </div>
 
       {/* Main Content */}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { api, formatBytes, categoryLabel, categoryEmoji, type EmailEntry } from '../../lib/tauri'
+import { useT, dateLocale } from '../../lib/i18n'
 
 interface Props { email: EmailEntry }
 
@@ -7,6 +8,7 @@ export function EmailDetail({ email }: Props) {
   const [summary, setSummary] = useState<string | null>(null)
   const [loadingSummary, setLoadingSummary] = useState(false)
   const [flagged, setFlagged] = useState(email.is_flagged)
+  const t = useT()
 
   const cls = email.classification
 
@@ -32,7 +34,7 @@ export function EmailDetail({ email }: Props) {
       <div className="p-4 border-b border-[#30363d] bg-[#161b22]">
         <div className="flex items-start justify-between gap-3 mb-3">
           <h2 className="text-base font-medium text-[#e6edf3] flex-1">
-            {email.subject || '(kein Betreff)'}
+            {email.subject || t('emailList.noSubject')}
           </h2>
           <div className="flex items-center gap-1.5 flex-shrink-0">
             <button
@@ -40,7 +42,7 @@ export function EmailDetail({ email }: Props) {
               disabled={loadingSummary}
               className="px-2.5 py-1 text-xs bg-[#21262d] hover:bg-[#30363d] text-[#8b949e] hover:text-[#e6edf3] rounded transition-colors disabled:opacity-50"
             >
-              {loadingSummary ? '…' : '🤖 Zusammenfassen'}
+              {loadingSummary ? '…' : `🤖 ${t('emailDetail.summarize')}`}
             </button>
             <button
               onClick={handleFlag}
@@ -55,23 +57,23 @@ export function EmailDetail({ email }: Props) {
 
         <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
           <div>
-            <span className="text-[#8b949e]">Von: </span>
+            <span className="text-[#8b949e]">{t('emailDetail.from')}: </span>
             <span className="text-[#c9d1d9]">{email.from.name ? `${email.from.name} <${email.from.address}>` : email.from.address}</span>
           </div>
           <div>
-            <span className="text-[#8b949e]">Datum: </span>
-            <span className="text-[#c9d1d9]">{new Date(email.date).toLocaleString('de-CH')}</span>
+            <span className="text-[#8b949e]">{t('emailDetail.date')}: </span>
+            <span className="text-[#c9d1d9]">{new Date(email.date).toLocaleString(dateLocale())}</span>
           </div>
           {email.to.length > 0 && (
             <div>
-              <span className="text-[#8b949e]">An: </span>
+              <span className="text-[#8b949e]">{t('emailDetail.to')}: </span>
               <span className="text-[#c9d1d9]">{email.to.map(a => a.address).join(', ')}</span>
             </div>
           )}
           {email.attachments.length > 0 && (
             <div>
-              <span className="text-[#8b949e]">Anhänge: </span>
-              <span className="text-[#c9d1d9]">{email.attachments.length} Datei(en)</span>
+              <span className="text-[#8b949e]">{t('emailDetail.attachments')}: </span>
+              <span className="text-[#c9d1d9]">{email.attachments.length} {t('emailDetail.files')}</span>
             </div>
           )}
         </div>
@@ -92,12 +94,12 @@ export function EmailDetail({ email }: Props) {
             ))}
             {cls.phishing_score > 0.5 && (
               <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#3d1a1a] border border-[#f85149] rounded-full text-xs text-[#f85149]">
-                ⚠️ Phishing-Verdacht ({Math.round(cls.phishing_score * 100)}%)
+                ⚠️ {t('emailDetail.phishingSuspicion')} ({Math.round(cls.phishing_score * 100)}%)
               </span>
             )}
             {cls.is_subscription && cls.cancel_link && (
               <span className="px-2 py-0.5 bg-[#161b22] border border-[#d29922] rounded-full text-xs text-[#d29922]">
-                🔄 Abo · Kündigen: {cls.cancel_link.substring(0, 40)}…
+                🔄 {t('emailDetail.subscription')} · {t('emailDetail.cancel')}: {cls.cancel_link.substring(0, 40)}…
               </span>
             )}
           </div>
@@ -108,7 +110,7 @@ export function EmailDetail({ email }: Props) {
               {cls.extracted_amount != null && (
                 <span className="text-[#3fb950]">
                   💰 {cls.extracted_amount.toFixed(2)} {cls.extracted_currency ?? ''}
-                  {cls.extracted_due_date && ` · Fällig: ${cls.extracted_due_date}`}
+                  {cls.extracted_due_date && ` · ${t('emailDetail.due')}: ${cls.extracted_due_date}`}
                 </span>
               )}
               {cls.tracking_number && (
@@ -129,7 +131,7 @@ export function EmailDetail({ email }: Props) {
           {/* Reply suggestion */}
           {cls.reply_suggestion && (
             <div className="mt-2 text-xs text-[#58a6ff] bg-[#0d2044] px-3 py-2 rounded-md">
-              ↩️ Vorschlag: <em>{cls.reply_suggestion}</em>
+              ↩️ {t('emailDetail.replySuggestion')}: <em>{cls.reply_suggestion}</em>
             </div>
           )}
 
@@ -149,14 +151,14 @@ export function EmailDetail({ email }: Props) {
             {email.body_text}
           </pre>
         ) : (
-          <div className="text-sm text-[#8b949e] italic">Kein Text-Inhalt verfügbar.</div>
+          <div className="text-sm text-[#8b949e] italic">{t('emailDetail.noBodyText')}</div>
         )}
       </div>
 
       {/* Attachments */}
       {email.attachments.length > 0 && (
         <div className="p-4 border-t border-[#30363d]">
-          <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-2">Anhänge</div>
+          <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-2">{t('emailDetail.attachments')}</div>
           <div className="flex flex-wrap gap-2">
             {email.attachments.map((att, i) => (
               <div key={i} className="flex items-center gap-2 bg-[#161b22] border border-[#30363d] rounded-md px-3 py-1.5">
