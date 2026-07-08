@@ -1,5 +1,6 @@
 import { invoke } from '@tauri-apps/api/core'
 import { listen } from '@tauri-apps/api/event'
+import { t, dateLocale } from './i18n'
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -192,14 +193,7 @@ export function formatBytes(bytes: number): string {
 }
 
 export function categoryLabel(cat: EmailCategory): string {
-  const labels: Record<EmailCategory, string> = {
-    Important: 'Wichtig', Work: 'Arbeit', Private: 'Privat',
-    Invoice: 'Rechnung', Newsletter: 'Newsletter', Social: 'Social',
-    Ads: 'Werbung', Government: 'Behörde', Package: 'Paket',
-    Calendar: 'Termin', Subscription: 'Abo', Spam: 'Spam',
-    Phishing: 'Phishing', FollowUp: 'Follow-Up', Review: 'Review', Other: 'Sonstiges',
-  }
-  return labels[cat] ?? cat
+  return t(`category.${cat}`)
 }
 
 export function categoryEmoji(cat: EmailCategory): string {
@@ -226,8 +220,9 @@ export function formatDate(iso: string): string {
   const now = new Date()
   const diff = now.getTime() - d.getTime()
   const days = Math.floor(diff / 86400000)
-  if (days === 0) return d.toLocaleTimeString('de-CH', { hour: '2-digit', minute: '2-digit' })
-  if (days === 1) return 'Gestern'
-  if (days < 7) return d.toLocaleDateString('de-CH', { weekday: 'short' })
-  return d.toLocaleDateString('de-CH', { day: '2-digit', month: '2-digit' })
+  const locale = dateLocale()
+  if (days === 0) return d.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit' })
+  if (days === 1) return t('date.yesterday')
+  if (days < 7) return d.toLocaleDateString(locale, { weekday: 'short' })
+  return d.toLocaleDateString(locale, { day: '2-digit', month: '2-digit' })
 }

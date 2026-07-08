@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api, categoryEmoji, categoryLabel, type EmailEntry, type EmailCategory, type FolderSuggestion } from '../../lib/tauri'
 import { useEmailStore } from '../../stores/emailStore'
+import { useT } from '../../lib/i18n'
 
 const ALL_CATEGORIES: EmailCategory[] = [
   'Important', 'Work', 'Private', 'Invoice', 'Package', 'Calendar',
@@ -14,6 +15,7 @@ export function ActionsView() {
   const [dismissed, setDismissed] = useState<Set<string>>(new Set())
   const [correcting, setCorrecting] = useState<string | null>(null)
   const [tab, setTab] = useState<'review' | 'ordner' | 'regeln'>('review')
+  const t = useT()
 
   const load = async () => {
     setLoading(true)
@@ -60,9 +62,9 @@ export function ActionsView() {
     <div className="h-full overflow-y-auto p-6">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h2 className="text-xl font-semibold text-[#e6edf3]">Aktionen</h2>
+          <h2 className="text-xl font-semibold text-[#e6edf3]">{t('actions.title')}</h2>
           <p className="text-xs text-[#8b949e] mt-0.5">
-            KI-Klassifizierungen prüfen und korrigieren
+            {t('actions.subtitle')}
           </p>
         </div>
       </div>
@@ -73,20 +75,20 @@ export function ActionsView() {
           onClick={() => setTab('review')}
           className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'review' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:text-[#e6edf3]'}`}
         >
-          🔍 KI überprüfen
+          🔍 {t('actions.reviewTab')}
           {visible.length > 0 && <span className="ml-1.5 text-xs bg-[#1f6feb] text-white px-1.5 py-0.5 rounded-full">{visible.length}</span>}
         </button>
         <button
           onClick={() => setTab('ordner')}
           className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'ordner' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:text-[#e6edf3]'}`}
         >
-          📁 Ordner
+          📁 {t('actions.foldersTab')}
         </button>
         <button
           onClick={() => setTab('regeln')}
           className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'regeln' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:text-[#e6edf3]'}`}
         >
-          📋 Regeln
+          📋 {t('actions.rulesTab')}
         </button>
       </div>
 
@@ -96,29 +98,29 @@ export function ActionsView() {
           <div className="mb-5 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#8b949e] flex gap-3 items-start">
             <span className="text-lg mt-0.5">💡</span>
             <div>
-              <div className="font-medium text-[#e6edf3] mb-0.5">So funktioniert die KI-Überprüfung</div>
-              Die KI hat deine E-Mails automatisch kategorisiert. Hier kannst du prüfen ob das stimmt.
+              <div className="font-medium text-[#e6edf3] mb-0.5">{t('actions.howReviewWorks')}</div>
+              {t('actions.reviewExplain')}
               <br />
-              <span className="text-[#58a6ff]">✓ Stimmt</span> = Kategorie ist korrekt, E-Mail verschwindet aus der Liste.
+              <span className="text-[#58a6ff]">✓ {t('actions.correctChecks')}</span> {t('actions.correctChecksExplain')}
               <br />
-              <span className="text-[#d29922]">Kategorie ändern</span> = Du korrigierst die Einordnung.
+              <span className="text-[#d29922]">{t('actions.changeCategory')}</span> {t('actions.changeCategoryExplain')}
             </div>
           </div>
 
           {loading ? (
-            <div className="text-center text-[#8b949e] py-12">Lade…</div>
+            <div className="text-center text-[#8b949e] py-12">{t('actions.loading')}</div>
           ) : visible.length === 0 ? (
             <div className="text-center text-[#8b949e] py-16">
               <div className="text-4xl mb-3">✅</div>
-              <div className="text-sm text-[#e6edf3] mb-1">Alles überprüft!</div>
+              <div className="text-sm text-[#e6edf3] mb-1">{t('actions.allReviewed')}</div>
               <div className="text-xs text-[#484f58]">
-                {dismissed.size > 0 ? `${dismissed.size} E-Mails bestätigt.` : 'Noch keine klassifizierten E-Mails — erst "KI klassifizieren" im Dashboard.'}
+                {dismissed.size > 0 ? `${dismissed.size} ${t('actions.confirmedCount')}` : t('actions.noClassifiedYetReview')}
               </div>
             </div>
           ) : (
             <>
               {phishing.length > 0 && (
-                <Section title="⚠️ Phishing-Verdacht" color="red" onAllOk={() => phishing.forEach(e => handleOk(e.id))}>
+                <Section title={`⚠️ ${t('actions.phishingSuspected')}`} color="red" onAllOk={() => phishing.forEach(e => handleOk(e.id))}>
                   {phishing.map(e => (
                     <ReviewCard key={e.id} email={e} correcting={correcting === e.id}
                       onOk={() => handleOk(e.id)}
@@ -130,7 +132,7 @@ export function ActionsView() {
                 </Section>
               )}
               {lowConf.length > 0 && (
-                <Section title="🤔 Unsichere Einordnung" color="yellow" onAllOk={() => lowConf.forEach(e => handleOk(e.id))}>
+                <Section title={`🤔 ${t('actions.uncertain')}`} color="yellow" onAllOk={() => lowConf.forEach(e => handleOk(e.id))}>
                   {lowConf.map(e => (
                     <ReviewCard key={e.id} email={e} correcting={correcting === e.id}
                       onOk={() => handleOk(e.id)}
@@ -142,7 +144,7 @@ export function ActionsView() {
                 </Section>
               )}
               {rest.length > 0 && (
-                <Section title="✅ Sicher eingeordnet" color="green" onAllOk={() => rest.forEach(e => handleOk(e.id))}>
+                <Section title={`✅ ${t('actions.confident')}`} color="green" onAllOk={() => rest.forEach(e => handleOk(e.id))}>
                   {rest.map(e => (
                     <ReviewCard key={e.id} email={e} correcting={correcting === e.id}
                       onOk={() => handleOk(e.id)}
@@ -167,6 +169,7 @@ export function ActionsView() {
 function Section({ title, color, children, onAllOk }: {
   title: string; color: 'red' | 'yellow' | 'green'; children: React.ReactNode; onAllOk: () => void
 }) {
+  const t = useT()
   const borderColor = { red: '#f85149', yellow: '#d29922', green: '#3fb950' }[color]
   return (
     <div className="mb-6">
@@ -174,7 +177,7 @@ function Section({ title, color, children, onAllOk }: {
         <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider"
           style={{ color: borderColor }}>{title}</div>
         <button onClick={onAllOk} className="text-xs text-[#8b949e] hover:text-[#e6edf3] transition-colors">
-          Alle bestätigen
+          {t('actions.confirmAll')}
         </button>
       </div>
       <div className="space-y-2">{children}</div>
@@ -190,6 +193,7 @@ function ReviewCard({ email, correcting, onOk, onCorrecting, onCorrect, onCancel
   onCorrect: (cat: EmailCategory) => void
   onCancelCorrect: () => void
 }) {
+  const t = useT()
   const cls = email.classification!
   const conf = Math.round((cls.confidence ?? 0) * 100)
   const preview = email.body_text?.slice(0, 120).trim().replace(/\s+/g, ' ')
@@ -207,7 +211,7 @@ function ReviewCard({ email, correcting, onOk, onCorrecting, onCorrect, onCancel
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-sm font-medium text-[#e6edf3] truncate">{email.subject || '(kein Betreff)'}</span>
+            <span className="text-sm font-medium text-[#e6edf3] truncate">{email.subject || t('emailList.noSubject')}</span>
             {(cls.phishing_score ?? 0) > 0.5 && (
               <span className="text-xs text-[#f85149] bg-[#f8514920] px-1.5 py-0.5 rounded flex-shrink-0">⚠️ Phishing</span>
             )}
@@ -227,9 +231,9 @@ function ReviewCard({ email, correcting, onOk, onCorrecting, onCorrect, onCancel
             <span className="text-xs px-2 py-0.5 rounded-full bg-[#21262d] text-[#58a6ff]">
               {categoryEmoji(cls.category)} {categoryLabel(cls.category)}
             </span>
-            <span className="text-xs text-[#484f58]">{conf}% Konfidenz</span>
+            <span className="text-xs text-[#484f58]">{conf}% {t('emailDetail.confidence')}</span>
             {cls.classified_by === 'user' && (
-              <span className="text-xs text-[#3fb950]">vom Nutzer korrigiert</span>
+              <span className="text-xs text-[#3fb950]">{t('actions.correctedByUser')}</span>
             )}
           </div>
         </div>
@@ -240,13 +244,13 @@ function ReviewCard({ email, correcting, onOk, onCorrecting, onCorrect, onCancel
             onClick={onOk}
             className="px-3 py-1 text-xs bg-[#238636] hover:bg-[#2ea043] text-white rounded transition-colors whitespace-nowrap"
           >
-            ✓ Stimmt
+            ✓ {t('actions.matches')}
           </button>
           <button
             onClick={correcting ? onCancelCorrect : onCorrecting}
             className="px-3 py-1 text-xs bg-[#21262d] hover:bg-[#30363d] text-[#8b949e] hover:text-[#e6edf3] rounded transition-colors whitespace-nowrap"
           >
-            {correcting ? '✕ Abbrechen' : '✏️ Ändern'}
+            {correcting ? `✕ ${t('actions.cancelBtn')}` : `✏️ ${t('actions.changed')}`}
           </button>
         </div>
       </div>
@@ -254,7 +258,7 @@ function ReviewCard({ email, correcting, onOk, onCorrecting, onCorrect, onCancel
       {/* Kategorie-Auswahl */}
       {correcting && (
         <div className="mt-3 pt-3 border-t border-[#30363d]">
-          <div className="text-xs text-[#8b949e] mb-2">Richtige Kategorie wählen:</div>
+          <div className="text-xs text-[#8b949e] mb-2">{t('actions.chooseCorrectCategory')}</div>
           <div className="grid grid-cols-4 gap-1.5">
             {ALL_CATEGORIES.map(cat => (
               <button
@@ -276,13 +280,6 @@ function ReviewCard({ email, correcting, onOk, onCorrecting, onCorrect, onCancel
   )
 }
 
-const ACTION_LABELS: Record<string, { label: string; color: string }> = {
-  merge:  { label: 'Zusammenfuehren', color: '#58a6ff' },
-  rename: { label: 'Umbenennen',      color: '#d29922' },
-  create: { label: 'Erstellen',       color: '#3fb950' },
-  delete: { label: 'Loeschen',        color: '#f85149' },
-}
-
 function OrdnerTab() {
   const accounts = useEmailStore(s => s)
   const [accountId, setAccountId] = useState<string>('')
@@ -292,6 +289,13 @@ function OrdnerTab() {
   const [loadingFolders, setLoadingFolders] = useState(false)
   const [loadingSuggestions, setLoadingSuggestions] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const t = useT()
+  const ACTION_LABELS: Record<string, { label: string; color: string }> = {
+    merge:  { label: t('actions.actionMerge'),  color: '#58a6ff' },
+    rename: { label: t('actions.actionRename'), color: '#d29922' },
+    create: { label: t('actions.actionCreate'), color: '#3fb950' },
+    delete: { label: t('actions.actionDelete'), color: '#f85149' },
+  }
 
   useEffect(() => {
     api.listAccounts().then(accs => {
@@ -308,7 +312,7 @@ function OrdnerTab() {
       const result = await api.listMailboxes(accountId)
       setFolders(result.sort())
     } catch (e: any) {
-      setError(e?.message ?? 'Fehler beim Laden der Ordner')
+      setError(e?.message ?? t('actions.folderLoadError'))
     } finally {
       setLoadingFolders(false)
     }
@@ -322,7 +326,7 @@ function OrdnerTab() {
       const result = await api.suggestFolderReorganization(accountId)
       setSuggestions(result)
     } catch (e: any) {
-      setError(e?.message ?? 'KI-Analyse fehlgeschlagen')
+      setError(e?.message ?? t('actions.aiAnalysisError'))
     } finally {
       setLoadingSuggestions(false)
     }
@@ -333,8 +337,8 @@ function OrdnerTab() {
       <div className="mb-4 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#8b949e] flex gap-3">
         <span className="text-lg">📁</span>
         <div>
-          <div className="font-medium text-[#e6edf3] mb-0.5">IMAP-Ordner und KI-Reorganisation</div>
-          Sieh alle Ordner deines Postfachs und lass die KI Vorschlaege zur Vereinfachung machen.
+          <div className="font-medium text-[#e6edf3] mb-0.5">{t('actions.folderIntroTitle')}</div>
+          {t('actions.folderIntroText')}
         </div>
       </div>
 
@@ -358,21 +362,21 @@ function OrdnerTab() {
           disabled={!accountId || loadingFolders}
           className="flex-1 py-2 text-xs bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] rounded-md transition-colors disabled:opacity-50"
         >
-          {loadingFolders ? 'Lade...' : '📁 Ordner laden'}
+          {loadingFolders ? t('actions.loadingFolders') : `📁 ${t('actions.loadFolders')}`}
         </button>
         <button
           onClick={loadSuggestions}
           disabled={!accountId || loadingSuggestions}
           className="flex-1 py-2 text-xs bg-[#1f6feb] hover:bg-[#388bfd] text-white rounded-md transition-colors disabled:opacity-50"
         >
-          {loadingSuggestions ? 'KI analysiert...' : '✨ KI-Vorschlaege'}
+          {loadingSuggestions ? t('actions.aiAnalyzing') : `✨ ${t('actions.aiSuggestions')}`}
         </button>
       </div>
 
       {folders.length > 0 && (
         <div className="mb-5">
           <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-2">
-            Aktuelle Ordner ({folders.length})
+            {t('actions.currentFolders')} ({folders.length})
           </div>
           <div className="bg-[#161b22] border border-[#30363d] rounded-lg divide-y divide-[#21262d]">
             {folders.map(f => (
@@ -388,7 +392,7 @@ function OrdnerTab() {
       {suggestions.length > 0 && (
         <div>
           <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-2">
-            KI-Vorschlaege
+            {t('actions.aiSuggestions')}
           </div>
           <div className="space-y-2">
             {suggestions.map((s, i) => {
@@ -420,38 +424,38 @@ function OrdnerTab() {
             })}
           </div>
           <p className="mt-3 text-xs text-[#484f58]">
-            Vorschlaege werden noch nicht automatisch ausgefuehrt. IMAP-Aktionen kommen in einer zukuenftigen Version.
+            {t('actions.suggestionsNotAutoExecuted')}
           </p>
         </div>
       )}
 
       {folders.length === 0 && suggestions.length === 0 && !loadingFolders && !loadingSuggestions && (
         <div className="text-center text-[#484f58] text-sm py-8">
-          Ordner laden oder KI-Vorschlaege anfordern
+          {t('actions.loadFoldersOrSuggestions')}
         </div>
       )}
     </div>
   )
 }
 
-const REGEL_VORLAGEN = [
-  { emoji: '📰', label: 'Newsletter', desc: 'Newsletter automatisch archivieren' },
-  { emoji: '🗑️', label: 'Werbung', desc: 'Werbemails direkt löschen' },
-  { emoji: '🧾', label: 'Rechnungen', desc: 'In Ordner "Rechnungen" verschieben' },
-  { emoji: '📦', label: 'Pakete', desc: 'In Ordner "Pakete" verschieben' },
-  { emoji: '⚠️', label: 'Phishing', desc: 'Als Spam markieren und löschen' },
-  { emoji: '🔄', label: 'Abos', desc: 'In Ordner "Abos" verschieben' },
-]
-
 function RegelnTab() {
   const [on, setOn] = useState<Record<string, boolean>>({})
+  const t = useT()
+  const REGEL_VORLAGEN = [
+    { emoji: '📰', label: t('actions.ruleNewsletterLabel'), desc: t('actions.ruleNewsletterDesc') },
+    { emoji: '🗑️', label: t('actions.ruleAdsLabel'), desc: t('actions.ruleAdsDesc') },
+    { emoji: '🧾', label: t('actions.ruleInvoiceLabel'), desc: t('actions.ruleInvoiceDesc') },
+    { emoji: '📦', label: t('actions.rulePackageLabel'), desc: t('actions.rulePackageDesc') },
+    { emoji: '⚠️', label: t('actions.rulePhishingLabel'), desc: t('actions.rulePhishingDesc') },
+    { emoji: '🔄', label: t('actions.ruleSubscriptionLabel'), desc: t('actions.ruleSubscriptionDesc') },
+  ]
   return (
     <div>
       <div className="mb-4 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#8b949e] flex gap-3">
         <span className="text-lg">📋</span>
         <div>
-          <div className="font-medium text-[#e6edf3] mb-0.5">Automatische Regeln (in Entwicklung)</div>
-          Regeln werden nach jedem Sync automatisch angewendet. Aktiviere hier Vorlagen oder erstelle eigene.
+          <div className="font-medium text-[#e6edf3] mb-0.5">{t('actions.rulesInDev')}</div>
+          {t('actions.rulesIntroText')}
         </div>
       </div>
 
@@ -476,7 +480,7 @@ function RegelnTab() {
       </div>
 
       <button className="w-full p-3 border border-dashed border-[#30363d] rounded-lg text-xs text-[#8b949e] hover:border-[#58a6ff] hover:text-[#58a6ff] transition-colors">
-        + Eigene Regel erstellen (kommt bald)
+        + {t('actions.createOwnRule')}
       </button>
     </div>
   )

@@ -1,6 +1,7 @@
 import { useEmailStore } from '../../stores/emailStore'
 import { useAccountStore } from '../../stores/accountStore'
 import { categoryLabel, categoryEmoji, type EmailCategory } from '../../lib/tauri'
+import { useT } from '../../lib/i18n'
 
 const CATEGORIES: EmailCategory[] = [
   'Important', 'Work', 'Private', 'Invoice', 'Package', 'Calendar',
@@ -11,6 +12,7 @@ const CATEGORIES: EmailCategory[] = [
 export function CategorySidebar() {
   const { filterCategory, setFilterCategory, loadEmails } = useEmailStore()
   const { stats } = useAccountStore()
+  const t = useT()
 
   const select = (cat: EmailCategory | null) => {
     setFilterCategory(cat)
@@ -20,7 +22,7 @@ export function CategorySidebar() {
   return (
     <div className="p-2">
       <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider px-2 mb-1">
-        Kategorien
+        {t('categorySidebar.categories')}
       </div>
       <button
         onClick={() => select(null)}
@@ -29,7 +31,7 @@ export function CategorySidebar() {
       >
         <div className="flex items-center gap-1.5">
           <span>📥</span>
-          <span>Alle</span>
+          <span>{t('categorySidebar.all')}</span>
         </div>
         {stats && (
           <span className="text-xs text-[#8b949e]">{stats.total_emails}</span>

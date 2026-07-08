@@ -3,8 +3,9 @@ import QRCode from 'qrcode'
 import { api, type AppSettings, type EmailAccount } from '../../lib/tauri'
 import { useSettingsStore } from '../../stores/settingsStore'
 import { useAccountStore } from '../../stores/accountStore'
+import { useT, getLang } from '../../lib/i18n'
 
-// ─── Provider-Definitionen ───────────────────────────────────────────────────
+// ─── Provider definitions ───────────────────────────────────────────────────
 
 type ProviderKey = 'icloud' | 'm365' | 'gmail' | 'fastmail' | 'custom'
 
@@ -17,58 +18,76 @@ interface Provider {
   appPasswordSteps?: string[]
 }
 
-const PROVIDERS: Record<ProviderKey, Provider> = {
-  icloud: {
-    label: 'iCloud',
-    icon: '☁️',
-    host: 'imap.mail.me.com',
-    port: '993',
-    appPasswordUrl: 'https://appleid.apple.com/account/manage',
-    appPasswordSteps: [
-      'Melde dich auf appleid.apple.com an',
-      'Sicherheit → App-Passwörter',
-      'Klick (+) → Name: MailPilot',
-      'Kopieres das generierte Passwort',
-    ],
-  },
-  m365: {
-    label: 'Microsoft 365',
-    icon: '🪟',
-    host: 'outlook.office365.com',
-    port: '993',
-    appPasswordUrl: 'https://mysignins.microsoft.com/security-info',
-    appPasswordSteps: [
-      'Öffne mysignins.microsoft.com',
-      'Sicherheitsinformationen → Methode hinzufügen',
-      'App-Passwort → Name: MailPilot',
-      'Kopieres das generierte Passwort',
-    ],
-  },
-  gmail: {
-    label: 'Gmail',
-    icon: '✉️',
-    host: 'imap.gmail.com',
-    port: '993',
-    appPasswordUrl: 'https://myaccount.google.com/apppasswords',
-    appPasswordSteps: [
-      'Öffne myaccount.google.com',
-      'Sicherheit → App-Passwörter',
-      'App: MailPilot → Erstellen',
-      'Kopieres das 16-stellige Passwort',
-    ],
-  },
-  fastmail: {
-    label: 'Fastmail',
-    icon: '⚡',
-    host: 'imap.fastmail.com',
-    port: '993',
-  },
-  custom: {
-    label: 'Benutzerdefiniert',
-    icon: '⚙️',
-    host: '',
-    port: '993',
-  },
+function getProviders(): Record<ProviderKey, Provider> {
+  const de = getLang() === 'de'
+  return {
+    icloud: {
+      label: 'iCloud',
+      icon: '☁️',
+      host: 'imap.mail.me.com',
+      port: '993',
+      appPasswordUrl: 'https://appleid.apple.com/account/manage',
+      appPasswordSteps: de ? [
+        'Melde dich auf appleid.apple.com an',
+        'Sicherheit → App-Passwörter',
+        'Klick (+) → Name: MailPilot',
+        'Kopiere das generierte Passwort',
+      ] : [
+        'Sign in at appleid.apple.com',
+        'Security → App-Specific Passwords',
+        'Click (+) → Name: MailPilot',
+        'Copy the generated password',
+      ],
+    },
+    m365: {
+      label: 'Microsoft 365',
+      icon: '🪟',
+      host: 'outlook.office365.com',
+      port: '993',
+      appPasswordUrl: 'https://mysignins.microsoft.com/security-info',
+      appPasswordSteps: de ? [
+        'Öffne mysignins.microsoft.com',
+        'Sicherheitsinformationen → Methode hinzufügen',
+        'App-Passwort → Name: MailPilot',
+        'Kopiere das generierte Passwort',
+      ] : [
+        'Open mysignins.microsoft.com',
+        'Security info → Add method',
+        'App password → Name: MailPilot',
+        'Copy the generated password',
+      ],
+    },
+    gmail: {
+      label: 'Gmail',
+      icon: '✉️',
+      host: 'imap.gmail.com',
+      port: '993',
+      appPasswordUrl: 'https://myaccount.google.com/apppasswords',
+      appPasswordSteps: de ? [
+        'Öffne myaccount.google.com',
+        'Sicherheit → App-Passwörter',
+        'App: MailPilot → Erstellen',
+        'Kopiere das 16-stellige Passwort',
+      ] : [
+        'Open myaccount.google.com',
+        'Security → App passwords',
+        'App: MailPilot → Create',
+        'Copy the 16-character password',
+      ],
+    },
+    fastmail: {
+      label: 'Fastmail',
+      icon: '⚡',
+      host: 'imap.fastmail.com',
+      port: '993',
+    },
+    custom: {
+      label: de ? 'Benutzerdefiniert' : 'Custom',
+      icon: '⚙️',
+      host: '',
+      port: '993',
+    },
+  }
 }
 
 function detectProvider(email: string): ProviderKey | null {
@@ -88,6 +107,8 @@ export function SettingsView() {
   const [draft, setDraft] = useState<AppSettings>({ ...settings })
   const [saved, setSaved] = useState(false)
   const [activeModal, setActiveModal] = useState<ProviderKey | null>(null)
+  const t = useT()
+  const PROVIDERS = getProviders()
 
   const set = <K extends keyof AppSettings>(k: K, v: AppSettings[K]) =>
     setDraft(d => ({ ...d, [k]: v }))
@@ -101,10 +122,10 @@ export function SettingsView() {
 
   return (
     <div className="h-full overflow-y-auto p-6 max-w-2xl">
-      <h2 className="text-xl font-semibold text-[#e6edf3] mb-6">Einstellungen</h2>
+      <h2 className="text-xl font-semibold text-[#e6edf3] mb-6">{t('settings.title')}</h2>
 
       {/* Accounts */}
-      <Section title="E-Mail Konten">
+      <Section title={t('settings.emailAccounts')}>
         {accounts.length > 0 && (
           <div className="space-y-2 mb-4">
             {accounts.map(acc => (
@@ -112,7 +133,7 @@ export function SettingsView() {
             ))}
           </div>
         )}
-        <div className="text-xs text-[#8b949e] mb-2">Konto hinzufügen</div>
+        <div className="text-xs text-[#8b949e] mb-2">{t('settings.addAccount')}</div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {(Object.entries(PROVIDERS) as [ProviderKey, Provider][]).map(([key, p]) => (
             <button
@@ -131,20 +152,20 @@ export function SettingsView() {
       <ClaudeSection draft={draft} set={set} />
 
       {/* Sync */}
-      <Section title="Sync-Optionen">
-        <Label>Maximale E-Mails pro Sync</Label>
+      <Section title={t('settings.syncOptions')}>
+        <Label>{t('settings.maxEmailsPerSync')}</Label>
         <Input
           value={String(draft.max_emails_per_sync)}
           onChange={v => set('max_emails_per_sync', parseInt(v) || 500)}
           placeholder="500"
         />
         <Toggle
-          label="Automatisch klassifizieren nach Sync"
+          label={t('settings.autoClassifyAfterSync')}
           value={draft.auto_classify}
           onChange={v => set('auto_classify', v)}
         />
         <Toggle
-          label="Vor Löschen immer Review-Ordner"
+          label={t('settings.reviewBeforeDelete')}
           value={draft.review_before_delete}
           onChange={v => set('review_before_delete', v)}
         />
@@ -154,7 +175,7 @@ export function SettingsView() {
         onClick={handleSave}
         className="w-full py-2.5 bg-[#238636] hover:bg-[#2ea043] text-white text-sm rounded-lg transition-colors"
       >
-        {saved ? 'Gespeichert!' : 'Einstellungen speichern'}
+        {saved ? `${t('settings.saved')}` : t('settings.save')}
       </button>
 
       {activeModal && (
@@ -188,7 +209,8 @@ function AccountModal({
     return () => document.removeEventListener('keydown', handleKey)
   }, [handleKey])
 
-  const provider = PROVIDERS[providerKey]
+  const t = useT()
+  const provider = getProviders()[providerKey]
   const needsAppPassword = !!provider.appPasswordUrl
 
   return (
@@ -204,7 +226,7 @@ function AccountModal({
         <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[#30363d]">
           <div className="flex items-center gap-2">
             <span className="text-xl">{provider.icon}</span>
-            <h3 className="text-sm font-semibold text-[#e6edf3]">{provider.label} hinzufügen</h3>
+            <h3 className="text-sm font-semibold text-[#e6edf3]">{provider.label} {t('settings.addProviderTitle')}</h3>
           </div>
           <button onClick={onClose} className="text-[#8b949e] hover:text-[#e6edf3] transition-colors text-lg">
             ✕
@@ -230,7 +252,8 @@ function AccountModal({
 // ─── App-Passwort Flow (iCloud, M365, Gmail) ──────────────────────────────────
 
 function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; onDone: () => void }) {
-  const provider = PROVIDERS[providerKey]
+  const t = useT()
+  const provider = getProviders()[providerKey]
   const [step, setStep] = useState<'email' | 'qr' | 'password'>('email')
   const [email, setEmail] = useState('')
   const [appPassword, setAppPassword] = useState('')
@@ -277,10 +300,10 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
     return (
       <div className="space-y-4">
         <p className="text-sm text-[#8b949e]">
-          Für {provider.label} wird ein App-Passwort benötigt, kein normales Passwort.
+          {provider.label} {t('settings.appPasswordNeeded')}
         </p>
         <div>
-          <Label>E-Mail-Adresse</Label>
+          <Label>{t('settings.emailAddress')}</Label>
           <input
             type="email"
             value={email}
@@ -295,7 +318,7 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
           disabled={!email.includes('@')}
           className="w-full py-2 bg-[#1f6feb] hover:bg-[#388bfd] text-white text-sm rounded-lg transition-colors disabled:opacity-40"
         >
-          Weiter → App-Passwort generieren
+          {t('settings.continueGeneratePassword')} →
         </button>
       </div>
     )
@@ -305,7 +328,7 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
     return (
       <div className="space-y-4">
         <p className="text-sm text-[#e6edf3] font-medium">
-          Scanne den QR-Code mit deinem iPhone
+          {t('settings.scanQr')}
         </p>
         <div className="flex gap-4 items-start">
           {qrDataUrl && (
@@ -323,14 +346,14 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
           </ol>
         </div>
         <div className="text-xs text-[#484f58]">
-          oder direkt:{' '}
+          {t('settings.orDirect')}{' '}
           <span className="text-[#58a6ff] font-mono">{provider.appPasswordUrl}</span>
         </div>
         <button
           onClick={() => setStep('password')}
           className="w-full py-2 bg-[#238636] hover:bg-[#2ea043] text-white text-sm rounded-lg transition-colors"
         >
-          Ich habe das App-Passwort →
+          {t('settings.haveAppPassword')} →
         </button>
       </div>
     )
@@ -340,10 +363,10 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
   return (
     <div className="space-y-4">
       <p className="text-sm text-[#8b949e]">
-        Füge das generierte App-Passwort für <span className="text-[#e6edf3]">{email}</span> ein.
+        {t('settings.pasteAppPassword')} <span className="text-[#e6edf3]">{email}</span>.
       </p>
       <div>
-        <Label>App-Passwort</Label>
+        <Label>{t('settings.appPassword')}</Label>
         <input
           type="password"
           value={appPassword}
@@ -360,14 +383,14 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
           onClick={() => setStep('qr')}
           className="px-4 py-2 text-sm text-[#8b949e] hover:text-[#e6edf3] transition-colors"
         >
-          Zurück
+          {t('settings.back')}
         </button>
         <button
           onClick={handleConnect}
           disabled={testing || !appPassword}
           className="flex-1 py-2 bg-[#1f6feb] hover:bg-[#388bfd] text-white text-sm rounded-lg transition-colors disabled:opacity-40"
         >
-          {testing ? 'Verbinde…' : 'Verbinden'}
+          {testing ? t('settings.connecting') : t('settings.connect')}
         </button>
       </div>
     </div>
@@ -395,14 +418,16 @@ function GenericAccountForm({
   const [password, setPassword] = useState('')
   const [testing, setTesting] = useState(false)
   const [error, setError] = useState('')
+  const t = useT()
 
   const handleEmailChange = (v: string) => {
     setEmail(v)
     if (!username) setUsername(v)
     const detected = detectProvider(v)
-    if (detected && PROVIDERS[detected]) {
-      setHost(PROVIDERS[detected].host)
-      setPort(PROVIDERS[detected].port)
+    const providers = getProviders()
+    if (detected && providers[detected]) {
+      setHost(providers[detected].host)
+      setPort(providers[detected].port)
     }
   }
 
@@ -429,12 +454,12 @@ function GenericAccountForm({
   return (
     <div className="space-y-3">
       <div className="grid grid-cols-2 gap-3">
-        <div><Label>Bezeichnung</Label><Input value={label} onChange={setLabel} placeholder="Mein Konto" /></div>
-        <div><Label>E-Mail</Label><Input value={email} onChange={handleEmailChange} placeholder="user@example.com" /></div>
-        <div><Label>IMAP Host</Label><Input value={host} onChange={setHost} placeholder="imap.example.com" /></div>
-        <div><Label>Port</Label><Input value={port} onChange={setPort} placeholder="993" /></div>
-        <div><Label>Benutzername</Label><Input value={username} onChange={setUsername} placeholder="user@example.com" /></div>
-        <div><Label>Passwort</Label><PasswordInput value={password} onChange={setPassword} /></div>
+        <div><Label>{t('settings.label')}</Label><Input value={label} onChange={setLabel} placeholder={t('settings.myAccount')} /></div>
+        <div><Label>{t('settings.email')}</Label><Input value={email} onChange={handleEmailChange} placeholder="user@example.com" /></div>
+        <div><Label>{t('settings.imapHost')}</Label><Input value={host} onChange={setHost} placeholder="imap.example.com" /></div>
+        <div><Label>{t('settings.port')}</Label><Input value={port} onChange={setPort} placeholder="993" /></div>
+        <div><Label>{t('settings.username')}</Label><Input value={username} onChange={setUsername} placeholder="user@example.com" /></div>
+        <div><Label>{t('settings.password')}</Label><PasswordInput value={password} onChange={setPassword} /></div>
       </div>
       {error && <div className="text-xs text-[#f85149]">{error}</div>}
       <button
@@ -442,7 +467,7 @@ function GenericAccountForm({
         disabled={testing || !host || !email || !password}
         className="w-full py-2 bg-[#1f6feb] hover:bg-[#388bfd] text-white text-sm rounded-lg transition-colors disabled:opacity-40"
       >
-        {testing ? 'Verbindung testen…' : 'Konto speichern'}
+        {testing ? t('settings.testingConnection') : t('settings.saveAccount')}
       </button>
     </div>
   )
@@ -451,8 +476,9 @@ function GenericAccountForm({
 // ─── Account Row ────────────────────────────────────────────────────────────
 
 function AccountRow({ account, onDelete }: { account: EmailAccount; onDelete: () => void }) {
+  const t = useT()
   const handleDelete = async () => {
-    if (confirm(`Konto "${account.label}" wirklich entfernen?`)) {
+    if (confirm(`"${account.label}" ${t('settings.removeAccountConfirm')}`)) {
       await api.deleteAccount(account.id)
       onDelete()
     }
@@ -466,7 +492,7 @@ function AccountRow({ account, onDelete }: { account: EmailAccount; onDelete: ()
         </div>
       </div>
       <button onClick={handleDelete} className="text-xs text-[#f85149] hover:underline">
-        Entfernen
+        {t('settings.remove')}
       </button>
     </div>
   )
@@ -486,6 +512,7 @@ function ClaudeSection({
   const [keyStatus, setKeyStatus] = useState<boolean | null>(null)
   const [pendingKey, setPendingKey] = useState('')
   const [savingKey, setSavingKey] = useState(false)
+  const t = useT()
 
   useEffect(() => {
     api.getClaudeKeyStatus().then(ok => setKeyStatus(ok)).catch(() => setKeyStatus(false))
@@ -494,7 +521,7 @@ function ClaudeSection({
   const handleCheck = async () => {
     setChecking(true); setClaudeMsg('')
     const ok = await api.checkClaude().catch(() => false)
-    setClaudeMsg(ok ? 'Claude erreichbar ✓' : 'Claude nicht erreichbar — API-Key fehlt oder ungültig')
+    setClaudeMsg(ok ? `${t('settings.claudeReachable')} ✓` : t('settings.claudeUnreachable'))
     setChecking(false)
   }
 
@@ -505,19 +532,19 @@ function ClaudeSection({
       await api.setClaudeKey(pendingKey.trim())
       setKeyStatus(true)
       setPendingKey('')
-      setClaudeMsg('API-Key gespeichert ✓')
+      setClaudeMsg(`${t('settings.apiKeySaved')} ✓`)
     } catch {
-      setClaudeMsg('Fehler beim Speichern des API-Keys')
+      setClaudeMsg(t('settings.apiKeySaveError'))
     }
     setSavingKey(false)
   }
 
   return (
-    <Section title="KI — Claude">
+    <Section title={t('settings.claudeSection')}>
       <div className="mb-3 flex items-center gap-2">
-        <span className="text-xs text-[#8b949e]">API-Key (Keychain):</span>
-        {keyStatus === true && <span className="text-xs text-[#3fb950] font-medium">Gesetzt ✓</span>}
-        {keyStatus === false && <span className="text-xs text-[#f85149]">Nicht gesetzt</span>}
+        <span className="text-xs text-[#8b949e]">{t('settings.apiKeyLabel')}</span>
+        {keyStatus === true && <span className="text-xs text-[#3fb950] font-medium">{t('settings.keySet')} ✓</span>}
+        {keyStatus === false && <span className="text-xs text-[#f85149]">{t('settings.keyNotSet')}</span>}
       </div>
       {(keyStatus === false || keyStatus === null) && (
         <div className="flex gap-2 mb-3">
@@ -533,31 +560,31 @@ function ClaudeSection({
             disabled={savingKey || !pendingKey.trim()}
             className="px-3 py-1.5 text-xs bg-[#1f6feb] hover:bg-[#388bfd] text-white rounded transition-colors disabled:opacity-50"
           >
-            {savingKey ? 'Speichern…' : 'Speichern'}
+            {savingKey ? t('settings.saving') : t('settings.save2')}
           </button>
         </div>
       )}
       {keyStatus === true && (
         <button onClick={() => setKeyStatus(false)} className="text-xs text-[#8b949e] hover:text-[#e6edf3] mb-3">
-          Key ersetzen
+          {t('settings.replaceKey')}
         </button>
       )}
-      <Label>Modell</Label>
+      <Label>{t('settings.model')}</Label>
       <select
         value={draft.claude_model ?? 'claude-haiku-4-5-20251001'}
         onChange={e => set('claude_model', e.target.value)}
         className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm text-[#e6edf3] font-mono focus:outline-none focus:border-[#58a6ff] mb-3"
       >
-        <option value="claude-haiku-4-5-20251001">claude-haiku-4-5 (schnell, günstig)</option>
-        <option value="claude-sonnet-4-6">claude-sonnet-4-6 (ausgewogen)</option>
-        <option value="claude-opus-4-8">claude-opus-4-8 (am stärksten)</option>
+        <option value="claude-haiku-4-5-20251001">claude-haiku-4-5 ({t('settings.modelFast')})</option>
+        <option value="claude-sonnet-4-6">claude-sonnet-4-6 ({t('settings.modelBalanced')})</option>
+        <option value="claude-opus-4-8">claude-opus-4-8 ({t('settings.modelStrongest')})</option>
       </select>
       <button
         onClick={handleCheck}
         disabled={checking}
         className="mt-1 px-3 py-1.5 text-xs bg-[#21262d] hover:bg-[#30363d] text-[#8b949e] hover:text-[#e6edf3] rounded transition-colors"
       >
-        {checking ? 'Teste…' : 'Verbindung testen'}
+        {checking ? t('settings.testing') : t('settings.testConnection')}
       </button>
       {claudeMsg && (
         <div className={`mt-1 text-xs ${claudeMsg.includes('✓') ? 'text-[#3fb950]' : 'text-[#f85149]'}`}>

@@ -2,9 +2,11 @@ import { useState } from 'react'
 import { useEmailStore } from '../../stores/emailStore'
 import { EmailDetail } from '../EmailDetail/EmailDetail'
 import { api, formatDate, categoryEmoji, categoryLabel, type EmailEntry } from '../../lib/tauri'
+import { useT } from '../../lib/i18n'
 
 export function EmailList() {
   const { emails, selected, selectEmail, markAsRead, loading, searchQuery, setSearch, loadEmails } = useEmailStore()
+  const t = useT()
 
   const handleSearch = async (q: string) => {
     setSearch(q)
@@ -36,16 +38,16 @@ export function EmailList() {
           <input
             value={searchQuery}
             onChange={e => handleSearch(e.target.value)}
-            placeholder="Suchen..."
+            placeholder={t('emailList.searchPlaceholder')}
             className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm text-[#e6edf3] placeholder-[#484f58] focus:outline-none focus:border-[#58a6ff]"
           />
         </div>
 
         <div className="flex-1 overflow-y-auto">
           {loading ? (
-            <div className="flex items-center justify-center h-32 text-[#8b949e] text-sm">Lade...</div>
+            <div className="flex items-center justify-center h-32 text-[#8b949e] text-sm">{t('emailList.loading')}</div>
           ) : emails.length === 0 ? (
-            <div className="flex items-center justify-center h-32 text-[#8b949e] text-sm">Keine E-Mails</div>
+            <div className="flex items-center justify-center h-32 text-[#8b949e] text-sm">{t('emailList.noEmails')}</div>
           ) : (
             emails.map(email => (
               <EmailRow
@@ -67,7 +69,7 @@ export function EmailList() {
           <div className="flex items-center justify-center h-full text-[#8b949e]">
             <div className="text-center">
               <div className="text-4xl mb-2">📭</div>
-              <div>E-Mail auswählen</div>
+              <div>{t('emailList.selectEmail')}</div>
             </div>
           </div>
         )}
@@ -83,6 +85,7 @@ function EmailRow({ email, selected, onClick, onDelete }: {
   onDelete: () => void
 }) {
   const [hovered, setHovered] = useState(false)
+  const t = useT()
   const cat = email.classification?.category
   return (
     <div
@@ -103,7 +106,7 @@ function EmailRow({ email, selected, onClick, onDelete }: {
           <span className="text-xs text-[#484f58] flex-shrink-0">{formatDate(email.date)}</span>
         </div>
         <div className={`text-sm truncate mb-0.5 ${email.is_read ? 'text-[#8b949e]' : 'text-[#e6edf3] font-medium'}`}>
-          {email.subject || '(kein Betreff)'}
+          {email.subject || t('emailList.noSubject')}
         </div>
         <div className="flex items-center gap-1.5">
           {cat && (
@@ -123,7 +126,7 @@ function EmailRow({ email, selected, onClick, onDelete }: {
       {hovered && (
         <button
           onClick={e => { e.stopPropagation(); onDelete() }}
-          title="Loeschen"
+          title={t('settings.remove')}
           className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded text-[#f85149] hover:bg-[#f8514920] transition-colors text-sm"
         >
           🗑

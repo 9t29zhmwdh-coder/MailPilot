@@ -21,6 +21,12 @@ jobs:
         with:
           components: clippy
       - uses: Swatinem/rust-cache@v2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Build frontend
+        run: npm ci && npm run build
+        working-directory: frontend
       - name: Install sqlx-cli
         run: cargo install sqlx-cli --no-default-features --features sqlite
       - name: Prepare database
@@ -28,11 +34,26 @@ jobs:
           sqlx database create
           sqlx migrate run --source crates/mp-core/src/db/migrations
       - name: cargo check
-        run: cargo check --workspace --exclude mailpilot
+        run: cargo check --workspace
       - name: cargo clippy
-        run: cargo clippy --workspace --exclude mailpilot -- -D warnings
+        run: cargo clippy --workspace -- -D warnings
       - name: cargo test
-        run: cargo test --workspace --exclude mailpilot
+        run: cargo test --workspace
+
+  frontend:
+    name: Frontend typecheck & build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm ci
+        working-directory: frontend
+      - name: Typecheck & build
+        run: npm run build
+        working-directory: frontend
 
   coverage:
     name: Coverage
@@ -69,4 +90,7 @@ jobs:
       # RUSTSEC-2026-0194/-0195: quick-xml 0.39 DoS, transitive via plist->tauri;
       # patched only in quick-xml >=0.41, no compatible plist release yet (checked 2026-07-03).
       # Remove both ignores once plist ships a quick-xml >=0.41 dependency.
-      - run: cargo audit --ignore RUSTSEC-2024-0370 --ignore RUSTSEC-2023-0071 --ignore RUSTSEC-2026-0194 --ignore RUSTSEC-2026-0195
+      # RUSTSEC-2024-0429: unsound glib::VariantStrIter, transitive via gtk->muda->tauri's
+      # Linux backend only (this app targets macOS; audit runs on ubuntu-latest so it still
+      # pulls the Linux dependency tree). Remove once tauri/muda bump their glib dependency.
+      - run: cargo audit --ignore RUSTSEC-2024-0370 --ignore RUSTSEC-2023-0071 --ignore RUSTSEC-2026-0194 --ignore RUSTSEC-2026-0195 --ignore RUSTSEC-2024-0429
