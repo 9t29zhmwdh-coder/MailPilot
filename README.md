@@ -46,6 +46,8 @@ Quick login for iCloud, Microsoft 365, Gmail and Fastmail, with no manual server
 - An [Anthropic API key](https://console.anthropic.com/) for email classification
 - macOS 13+
 
+> 🌱 New here? → [Step-by-step guide for beginners](GETTING_STARTED.md)
+
 ---
 
 ## Quick Start
