@@ -14,6 +14,10 @@
 
 ---
 
+> 🌱 New here? → [Step-by-step guide for beginners](GETTING_STARTED.md)
+
+---
+
 MailPilot connects to your IMAP mailboxes, classifies every email using **Claude (Anthropic API)**, and lets you review and correct every decision before anything is moved or deleted. Emails are synced and stored locally in SQLite; classification requests go to Anthropic's API using your own API key, stored in the macOS Keychain.
 
 Quick login for iCloud, Microsoft 365, Gmail and Fastmail, with no manual server setup.
@@ -45,8 +49,6 @@ Quick login for iCloud, Microsoft 365, Gmail and Fastmail, with no manual server
 - [Tauri CLI v2](https://tauri.app/): `cargo install tauri-cli`
 - An [Anthropic API key](https://console.anthropic.com/) for email classification
 - macOS 13+
-
-> 🌱 New here? → [Step-by-step guide for beginners](GETTING_STARTED.md)
 
 ---
 
