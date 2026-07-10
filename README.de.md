@@ -14,6 +14,10 @@
 
 ---
 
+> 💾 [**Für macOS herunterladen**](https://github.com/9t29zhmwdh-coder/MailPilot/releases/latest/download/MailPilot.dmg) (DMG, immer das neueste Release) — nicht signiert/notarisiert, macOS Gatekeeper zeigt beim ersten Start eine "nicht verifizierter Entwickler"-Warnung (Rechtsklick → Öffnen, um das zu umgehen). Oder selbst aus dem Quellcode bauen, siehe Erste Schritte unten. Windows/Linux werden nicht gebaut: MailPilot nutzt den macOS-Schlüsselbund und wird nur auf macOS getestet.
+
+---
+
 > 🌱 Neu hier? → [Schritt-für-Schritt-Anleitung für Einsteiger](GETTING_STARTED.md)
 
 ---
