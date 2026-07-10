@@ -51,3 +51,12 @@ jobs:
           releaseBody: 'See CHANGELOG.md for details. Not code-signed/notarized: macOS Gatekeeper will show an "unidentified developer" warning on first run.'
           releaseDraft: false
           prerelease: false
+
+      - name: Upload stable-named DMG (for README download link)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          dmg=$(find src-tauri/target/release/bundle/dmg -name "*.dmg" | head -1)
+          cp "$dmg" MailPilot.dmg
+          gh release upload "${{ github.ref_name }}" MailPilot.dmg --clobber --repo ${{ github.repository }}
