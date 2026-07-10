@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="RayStudio.png" alt="MailPilot" width="100"/>
+  <img src="RayStudio.png" alt="MailPilot" width="120"/>
   <h1>MailPilot</h1>
   <p>AI-powered email organizer with smart categorization, a review workflow and multi-account IMAP</p>
 </div>
