@@ -96,7 +96,7 @@ impl AiBackend for ClaudeBackend {
         let prompt = format!(
             "{}{}",
             prompts::EMAIL_SUMMARIZE,
-            &body.chars().take(2000).collect::<String>()
+            body.chars().take(2000).collect::<String>()
         );
         self.complete(&prompt).await
     }

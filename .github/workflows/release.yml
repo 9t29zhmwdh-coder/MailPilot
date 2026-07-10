@@ -1,0 +1,53 @@
+name: Release
+
+# Baut die Tauri-App bei jedem Tag-Push und haengt das DMG-Bundle an ein
+# GitHub Release. Nur macOS: die App wird laut CI/README/Requirements bewusst
+# nur fuer macOS 13+ gebaut und getestet (siehe .github/workflows/ci.yml,
+# audit-Job-Kommentar "this app targets macOS"), obwohl tauri.conf.json
+# targets: "all" gesetzt hat. Windows/Linux-Bundles wurden nie verifiziert.
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-latest
+    env:
+      DATABASE_URL: sqlite:./ci_check.db
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - uses: Swatinem/rust-cache@v2
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install frontend dependencies
+        run: npm ci
+        working-directory: frontend
+
+      - name: Install sqlx-cli
+        run: cargo install sqlx-cli --no-default-features --features sqlite
+
+      - name: Prepare database
+        run: |
+          sqlx database create
+          sqlx migrate run --source crates/mp-core/src/db/migrations
+
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: 'MailPilot ${{ github.ref_name }}'
+          releaseBody: 'See CHANGELOG.md for details. Not code-signed/notarized: macOS Gatekeeper will show an "unidentified developer" warning on first run.'
+          releaseDraft: false
+          prerelease: false

@@ -78,7 +78,7 @@ impl AiBackend for OllamaBackend {
     }
 
     async fn summarize(&self, body: &str) -> Result<String> {
-        let prompt = format!("{}{}", prompts::EMAIL_SUMMARIZE, &body.chars().take(2000).collect::<String>());
+        let prompt = format!("{}{}", prompts::EMAIL_SUMMARIZE, body.chars().take(2000).collect::<String>());
         self.generate_text(&prompt).await
     }
 
