@@ -5,6 +5,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.3.0] - 2026-07-10
+
+### Added
+
+- Release workflow: pushing a `v*` tag now builds the macOS DMG bundle via `tauri-action` and attaches it to a GitHub Release. Not code-signed/notarized. Windows/Linux are intentionally not built (app uses the macOS Keychain, only ever tested on macOS)
+
 ## [0.2.2] - 2026-07-10
 
 ### Changed
