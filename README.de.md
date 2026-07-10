@@ -14,6 +14,10 @@
 
 ---
 
+> 🌱 Neu hier? → [Schritt-für-Schritt-Anleitung für Einsteiger](GETTING_STARTED.md)
+
+---
+
 MailPilot verbindet sich mit deinen IMAP-Postfächern, klassifiziert jede E-Mail mit **Claude (Anthropic API)** und lässt dich jede Entscheidung prüfen und korrigieren, bevor etwas verändert wird. E-Mails werden lokal in SQLite synchronisiert und gespeichert; Klassifizierungsanfragen gehen an die Anthropic API mit deinem eigenen API-Key, gespeichert im macOS-Schlüsselbund.
 
 Schnell-Login für iCloud, Microsoft 365, Gmail und Fastmail, ohne manuelle Servereinstellungen.
