@@ -91,7 +91,7 @@ Standardmodell: `claude-haiku-4-5` (schnell, günstig), in den Einstellungen ums
 
 ## Datenschutz
 
-E-Mails und Sync-Status werden lokal in SQLite gespeichert; außer Anthropic (für Klassifizierungsanfragen) sieht niemand deine Daten. IMAP-Passwörter und der Anthropic API-Key werden im macOS-Schlüsselbund gespeichert und nie im Klartext auf die Festplatte geschrieben.
+E-Mails und Sync-Status werden lokal in SQLite gespeichert; ausser Anthropic (für Klassifizierungsanfragen) sieht niemand deine Daten. IMAP-Passwörter und der Anthropic API-Key werden im macOS-Schlüsselbund gespeichert und nie im Klartext auf die Festplatte geschrieben.
 
 ---
 
