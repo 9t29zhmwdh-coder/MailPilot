@@ -20,13 +20,13 @@ jobs:
     env:
       DATABASE_URL: sqlite:./ci_check.db
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: dtolnay/rust-toolchain@stable
 
       - uses: Swatinem/rust-cache@v2
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: '20'
 
@@ -42,7 +42,7 @@ jobs:
           sqlx database create
           sqlx migrate run --source crates/mp-core/src/db/migrations
 
-      - uses: tauri-apps/tauri-action@v0
+      - uses: tauri-apps/tauri-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
