@@ -1,8 +1,10 @@
 <div align="center">
   <img src="RayStudio.png" alt="MailPilot" width="120"/>
   <h1>MailPilot</h1>
-  <p>KI-gestützter E-Mail-Organizer mit intelligenter Kategorisierung, Review-Workflow und Multi-Account IMAP</p>
+
 </div>
+
+<p>KI-gestützter E-Mail-Organizer mit intelligenter Kategorisierung, Review-Workflow und Multi-Account IMAP</p>
 
 [🇬🇧 English Version](README.md)
 
