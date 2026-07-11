@@ -57,6 +57,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          dmg=$(find src-tauri/target/release/bundle/dmg -name "*.dmg" | head -1)
+          dmg=$(find target/release/bundle/dmg -name "*.dmg" | head -1)
           cp "$dmg" MailPilot.dmg
           gh release upload "${{ github.ref_name }}" MailPilot.dmg --clobber --repo ${{ github.repository }}
