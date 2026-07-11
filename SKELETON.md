@@ -1,4 +1,4 @@
-# MailPilot — Repository Skeleton
+# MailPilot: Repository Skeleton
 
 **Repo:** `9t29zhmwdh-coder/MailPilot`
 **Stack:** Rust workspace · Tauri v2 · React/TypeScript · SQLite · IMAP · keyring
@@ -57,5 +57,5 @@ MailPilot/
 ## Notes
 
 - CI/CD workflows are not included in this skeleton (GitHub Actions requires secrets setup).
-- IMAP credentials are stored via OS keyring — never written to disk in plaintext.
+- IMAP credentials are stored via OS keyring, never written to disk in plaintext.
 - Tauri v2 capabilities must explicitly allowlist all IPC commands in `src-tauri/capabilities/`.

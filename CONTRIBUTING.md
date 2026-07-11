@@ -35,12 +35,12 @@
 
 ## Commit Convention
 
-`[type] description` — where type is:
-- `[feat]` — new feature
-- `[fix]` — bug fix
-- `[docs]` — documentation only
-- `[refactor]` — code cleanup
-- `[test]` — tests only
+`[type] description`, where type is:
+- `[feat]`: new feature
+- `[fix]`: bug fix
+- `[docs]`: documentation only
+- `[refactor]`: code cleanup
+- `[test]`: tests only
 
 ## Questions?
 

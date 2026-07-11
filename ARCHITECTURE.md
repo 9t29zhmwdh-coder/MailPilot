@@ -1,8 +1,8 @@
-# MailPilot — Architecture
+# MailPilot: Architecture
 
 ## Overview
 
-MailPilot is an offline-first Rust/Tauri v2 desktop email client. It connects to IMAP servers (Outlook, Gmail, Apple Mail), fetches emails into a local SQLite store, classifies and tags them using local AI inference (Ollama), and provides smart filtering and folder organisation — fully without cloud dependencies.
+MailPilot is an offline-first Rust/Tauri v2 desktop email client. It connects to IMAP servers (Outlook, Gmail, Apple Mail), fetches emails into a local SQLite store, classifies and tags them using local AI inference (Ollama), and provides smart filtering and folder organisation, fully without cloud dependencies.
 
 ---
 
@@ -10,8 +10,8 @@ MailPilot is an offline-first Rust/Tauri v2 desktop email client. It connects to
 
 ```
 src-tauri/
-├── mp-core/          # Library crate — all business logic
-└── mp-cli/           # Binary crate — Tauri shell + CLI entry point
+├── mp-core/          # Library crate: all business logic
+└── mp-cli/           # Binary crate: Tauri shell + CLI entry point
 ```
 
 ### mp-core
@@ -73,11 +73,11 @@ IMAP Server (Outlook / Gmail / Apple Mail)
 React/TypeScript SPA served by Tauri v2. Communicates with the Rust backend exclusively via `invoke()` IPC calls. No HTTP server is exposed.
 
 Key views:
-- **Inbox** — smart inbox with tag filters and search
-- **Classifier** — review AI tag suggestions, accept/reject, retrain
-- **Accounts** — add/remove IMAP accounts (Outlook, Gmail, Apple Mail)
-- **Rules** — define custom filter rules (sender, subject, tag → action)
-- **Settings** — sync interval, Ollama model selection, folder mapping
+- **Inbox**: smart inbox with tag filters and search
+- **Classifier**: review AI tag suggestions, accept/reject, retrain
+- **Accounts**: add/remove IMAP accounts (Outlook, Gmail, Apple Mail)
+- **Rules**: define custom filter rules (sender, subject, tag → action)
+- **Settings**: sync interval, Ollama model selection, folder mapping
 
 ---
 
@@ -87,7 +87,7 @@ SQLite database in the OS application data directory (`$APPDATA/MailPilot/` / `~
 
 Tables: `accounts`, `emails`, `tags`, `email_tags`, `rules`, `sync_state`, `migrations`.
 
-IMAP credentials are stored exclusively in the OS keyring (`keyring` crate) — never written to SQLite or any file.
+IMAP credentials are stored exclusively in the OS keyring (`keyring` crate), never written to SQLite or any file.
 
 ---
 

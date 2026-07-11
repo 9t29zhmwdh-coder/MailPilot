@@ -5,6 +5,12 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.3.7] - 2026-07-11
+
+### Fixed
+
+- Removed an eszett and em-dashes across the repo (TEMPLATE_NOTES.md, README.de.md, ARCHITECTURE.md, CONTRIBUTING.md, SKELETON.md). Swiss German orthography.
+
 ## [0.3.6] - 2026-07-11
 
 ### Added
