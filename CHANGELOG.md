@@ -5,6 +5,17 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [0.3.8] - 2026-07-12
+
+### Added
+
+- TERMS_OF_SALE.md: terms covering the purchase of a pre-built, packaged distribution through a marketplace (as-is, no warranty, liability strictly capped at the amount paid). Does not modify the existing MIT LICENSE, which continues to cover the source code at no cost.
+
+### Security
+
+- Bumped `vite` and `@vitejs/plugin-react` (frontend dev dependencies) to resolve 4 Dependabot-reported advisories affecting the Vite dev server only, not the built/shipped application (a high-severity `server.fs.deny` bypass on Windows, an NTLMv2 hash disclosure via UNC path handling, a path traversal in optimized-deps `.map` handling, and an esbuild dev-server exposure).
+- Documented a 5th advisory (`glib`, RUSTSEC, medium) as an accepted, time-boxed exception in SECURITY.md: it is a transitive dependency pinned by Tauri's own Linux GTK bindings and cannot be patched in isolation without a Tauri major-version bump.
+
 ## [0.3.7] - 2026-07-11
 
 ### Fixed
