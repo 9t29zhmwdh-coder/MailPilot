@@ -5,6 +5,11 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.0.0] - 2026-07-17
+
+First stable release: a real, packaged, installable distribution exists
+for end users. macOS DMG installer. Windows/Linux are not built: MailPilot shells out to the macOS-only `/usr/bin/security` Keychain CLI for credential storage, a real platform dependency, not a gap.
+
 ## [0.3.9] - 2026-07-17
 
 ### Changed
