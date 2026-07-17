@@ -11,6 +11,9 @@ env:
   RUSTFLAGS: "-D warnings"
   DATABASE_URL: sqlite:./ci_check.db
 
+permissions:
+  contents: read
+
 jobs:
   check:
     name: Check
