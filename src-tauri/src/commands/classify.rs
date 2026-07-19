@@ -8,8 +8,8 @@ use serde::{Deserialize, Serialize};
 use tauri::{Emitter, State};
 use crate::{error::MpResult, state::AppState};
 
-/// API-Key fuer Claude: zuerst System-Keychain (Konto "claude-api-key"),
-/// dann die Umgebungsvariable ANTHROPIC_API_KEY (praktisch fuer Testlaeufe).
+/// API-Key für Claude: zuerst System-Keychain (Konto "claude-api-key"),
+/// dann die Umgebungsvariable ANTHROPIC_API_KEY (praktisch für Testläufe).
 fn claude_api_key() -> Option<String> {
     account_manager::get_password("claude-api-key")
         .ok()
@@ -150,7 +150,7 @@ pub async fn suggest_folder_reorganization(
         .join(", ");
 
     let prompt = format!(
-        "Du bist ein E-Mail-Organisationsexperte. Analysiere diese IMAP-Ordnerstruktur und die E-Mail-Kategorienverteilung und schlage Reorganisationsaktionen vor.\n\nAktuelle Ordner: {}\n\nE-Mail-Kategorien: {}\n\nAntworte mit einem JSON-Array mit Objekten: {{\"action\": \"merge|rename|create|delete\", \"folder\": \"Ordnername\", \"target\": \"Zielordner oder null\", \"reason\": \"Erklaerung\"}}.\nNur sinnvolle Aktionen, maximal 8 Vorschlaege. Nur JSON, kein Text darum.",
+        "Du bist ein E-Mail-Organisationsexperte. Analysiere diese IMAP-Ordnerstruktur und die E-Mail-Kategorienverteilung und schlage Reorganisationsaktionen vor.\n\nAktuelle Ordner: {}\n\nE-Mail-Kategorien: {}\n\nAntworte mit einem JSON-Array mit Objekten: {{\"action\": \"merge|rename|create|delete\", \"folder\": \"Ordnername\", \"target\": \"Zielordner oder null\", \"reason\": \"Erklärung\"}}.\nNur sinnvolle Aktionen, maximal 8 Vorschläge. Nur JSON, kein Text darum.",
         if folder_list.is_empty() { "Keine Ordner gefunden".to_string() } else { folder_list },
         if cat_list.is_empty() { "Keine klassifizierten E-Mails".to_string() } else { cat_list }
     );

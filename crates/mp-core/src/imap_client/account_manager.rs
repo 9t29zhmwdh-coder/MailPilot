@@ -5,7 +5,7 @@ use crate::models::account::EmailAccount;
 const SERVICE: &str = "com.raystudio.mailpilot";
 
 pub fn store_password(account_id: &str, password: &str) -> Result<()> {
-    // Bestehenden Eintrag zuerst loeschen (add schlaegt fehl wenn er schon existiert)
+    // Bestehenden Eintrag zuerst löschen (add schlägt fehl wenn er schon existiert)
     let _ = delete_password(account_id);
     let status = Command::new("security")
         .args(["add-generic-password", "-s", SERVICE, "-a", account_id, "-w", password])
@@ -21,7 +21,7 @@ pub fn get_password(account_id: &str) -> Result<String> {
         .args(["find-generic-password", "-s", SERVICE, "-a", account_id, "-w"])
         .output()?;
     if !out.status.success() {
-        bail!("Kein Eintrag gefunden fuer '{}'", account_id);
+        bail!("Kein Eintrag gefunden für '{}'", account_id);
     }
     Ok(String::from_utf8_lossy(&out.stdout).trim().to_string())
 }

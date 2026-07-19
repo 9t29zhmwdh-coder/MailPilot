@@ -8,7 +8,7 @@ use sqlx::{
 use std::str::FromStr;
 
 pub async fn open_db(path: &str) -> Result<SqlitePool> {
-    // Uebergeordnetes Verzeichnis anlegen; SQLite legt nur die Datei an, nicht den Ordner.
+    // Übergeordnetes Verzeichnis anlegen; SQLite legt nur die Datei an, nicht den Ordner.
     let fs_path = path.trim_start_matches("sqlite://").trim_start_matches("sqlite:");
     if let Some(parent) = std::path::Path::new(fs_path).parent() {
         if !parent.as_os_str().is_empty() {

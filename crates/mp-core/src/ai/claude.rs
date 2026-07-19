@@ -26,7 +26,7 @@ impl ClaudeBackend {
         }
     }
 
-    /// Ein einzelner Messages-API-Call; gibt den Text des ersten Content-Blocks zurueck.
+    /// Ein einzelner Messages-API-Call; gibt den Text des ersten Content-Blocks zurück.
     async fn complete(&self, prompt: &str) -> Result<String> {
         #[derive(Serialize)]
         struct Msg<'a> {
