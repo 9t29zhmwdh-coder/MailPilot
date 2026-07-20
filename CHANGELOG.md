@@ -5,6 +5,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.0.1] - 2026-07-20
+
+### Changed
+
+- OpenSSF Scorecard workflow and badge.
+- `copilot-instructions.md` for consistent AI-assisted contributions.
+- Restored real umlauts that had been substituted with ASCII approximations.
+- German README now uses the same dynamic version badge as the English one instead of a hardcoded version string.
+- Split the README's security/CI badges onto their own line, separate from the platform/tech/AI badges (they were rendering as a single merged line).
+
 ## [1.0.0] - 2026-07-17
 
 First stable release: a real, packaged, installable distribution exists
