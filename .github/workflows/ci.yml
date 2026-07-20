@@ -19,11 +19,11 @@ jobs:
     name: Check
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
         with:
           components: clippy
-      - uses: Swatinem/rust-cache@v2
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
       - uses: actions/setup-node@v6
         with:
           node-version: '20'
@@ -47,7 +47,7 @@ jobs:
     name: Frontend typecheck & build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - uses: actions/setup-node@v6
         with:
           node-version: '20'
@@ -64,9 +64,9 @@ jobs:
     env:
       DATABASE_URL: sqlite:./ci_check.db
     steps:
-      - uses: actions/checkout@v7
-      - uses: dtolnay/rust-toolchain@stable
-      - uses: Swatinem/rust-cache@v2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
+      - uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
       - name: Install sqlx-cli
         run: cargo install sqlx-cli --no-default-features --features sqlite
       - name: Prepare database
@@ -78,7 +78,7 @@ jobs:
       - name: Generate coverage
         run: cargo tarpaulin -p mp-core --out Xml --timeout 120
       - name: Upload coverage
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         with:
           files: cobertura.xml
           fail_ci_if_error: false
@@ -87,8 +87,8 @@ jobs:
     name: Security audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
       - run: cargo install cargo-audit --locked
       # RUSTSEC-2026-0194/-0195: quick-xml 0.39 DoS, transitive via plist->tauri;
       # patched only in quick-xml >=0.41, no compatible plist release yet (checked 2026-07-03).
