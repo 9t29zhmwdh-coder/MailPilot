@@ -16,10 +16,10 @@ tracing.workspace     = true
 async-trait.workspace = true
 
 imap       = "3.0.0-alpha.15"
-mailparse  = "0.15"
-base64     = "0.22"
+mailparse  = "0.16"
+base64     = "0.23"
 regex      = "1"
 rayon      = "1"
 blake3     = "1"
 once_cell  = "1"
-sqlx       = { version = "0.8", features = ["sqlite", "runtime-tokio", "chrono", "uuid", "migrate"] }
+sqlx       = { version = "0.9", features = ["sqlite", "runtime-tokio", "chrono", "uuid", "migrate"] }
