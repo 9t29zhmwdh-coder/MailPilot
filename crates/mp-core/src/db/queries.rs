@@ -8,6 +8,7 @@ use crate::models::{
     action::OrganizeAction,
     classification::Classification,
     email_entry::EmailEntry,
+    filter_rule::FilterRule,
 };
 use crate::search::SearchQuery;
 
@@ -294,4 +295,72 @@ fn deserialize_email_row(
         in_reply_to: None, references: vec![],
         is_read, is_flagged, size, hash, thread_id, classification, date, fetched_at,
     })
+}
+
+pub async fn list_rules(pool: &SqlitePool) -> Result<Vec<FilterRule>> {
+    let rows = sqlx::query!(
+        r#"SELECT id AS "id!", name, conditions_json, match_all, actions_json,
+                  enabled, confirmed_by_user, ai_suggested, created_ts
+           FROM filter_rules ORDER BY created_ts ASC"#
+    )
+    .fetch_all(pool)
+    .await?;
+
+    // A rule whose JSON no longer parses is skipped rather than aborting the
+    // whole list, so one broken row cannot hide every other rule from the user.
+    Ok(rows
+        .into_iter()
+        .filter_map(|r| {
+            Some(FilterRule {
+                id: r.id,
+                name: r.name,
+                conditions: serde_json::from_str(&r.conditions_json).ok()?,
+                match_all: r.match_all,
+                actions: serde_json::from_str(&r.actions_json).ok()?,
+                enabled: r.enabled,
+                confirmed_by_user: r.confirmed_by_user,
+                ai_suggested: r.ai_suggested,
+                created_at: chrono::DateTime::from_timestamp(r.created_ts, 0)
+                    .unwrap_or_else(Utc::now),
+            })
+        })
+        .collect())
+}
+
+pub async fn upsert_rule(pool: &SqlitePool, rule: &FilterRule) -> Result<()> {
+    let conditions_json = serde_json::to_string(&rule.conditions)?;
+    let actions_json = serde_json::to_string(&rule.actions)?;
+    let created_ts = rule.created_at.timestamp();
+    sqlx::query!(
+        "INSERT INTO filter_rules(id, name, conditions_json, match_all, actions_json,
+                                  enabled, confirmed_by_user, ai_suggested, created_ts)
+         VALUES(?,?,?,?,?,?,?,?,?)
+         ON CONFLICT(id) DO UPDATE SET
+           name = excluded.name,
+           conditions_json = excluded.conditions_json,
+           match_all = excluded.match_all,
+           actions_json = excluded.actions_json,
+           enabled = excluded.enabled,
+           confirmed_by_user = excluded.confirmed_by_user,
+           ai_suggested = excluded.ai_suggested",
+        rule.id, rule.name, conditions_json, rule.match_all, actions_json,
+        rule.enabled, rule.confirmed_by_user, rule.ai_suggested, created_ts,
+    )
+    .execute(pool)
+    .await?;
+    Ok(())
+}
+
+pub async fn set_rule_enabled(pool: &SqlitePool, rule_id: &str, enabled: bool) -> Result<()> {
+    sqlx::query!("UPDATE filter_rules SET enabled = ? WHERE id = ?", enabled, rule_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
+
+pub async fn delete_rule(pool: &SqlitePool, rule_id: &str) -> Result<()> {
+    sqlx::query!("DELETE FROM filter_rules WHERE id = ?", rule_id)
+        .execute(pool)
+        .await?;
+    Ok(())
 }
