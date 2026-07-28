@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT email_id, kind_json, target_folder FROM organize_actions WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "email_id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "kind_json",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "target_folder",
+        "ordinal": 2,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      true
+    ]
+  },
+  "hash": "011dd194c9ec947d85eeab2fa1a8fffea47896b45bfba548cbb9760342323de7"
+}

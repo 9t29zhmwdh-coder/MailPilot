@@ -46,7 +46,7 @@ Schnell-Login für iCloud, Microsoft 365, Gmail und Fastmail, ohne manuelle Serv
 | **Multi-Account** | Mehrere IMAP-Konten in einem Dashboard | Fertig |
 | **Keychain** | Passwörter nur im macOS-Schlüsselbund gespeichert | Fertig |
 | **Regeln** | Automatische Regeln pro Kategorie (archivieren, löschen, verschieben...) | Geplant |
-| **IMAP-Aktionen** | Tatsächliches Verschieben auf dem Server nach Bestätigung | Geplant |
+| **IMAP-Aktionen** | Tatsächliches Verschieben auf dem Server nach Bestätigung | Fertig |
 
 ---
 

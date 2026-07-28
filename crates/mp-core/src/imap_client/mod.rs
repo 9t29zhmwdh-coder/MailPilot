@@ -76,6 +76,45 @@ pub fn delete_email_imap(account: &EmailAccount, password: &str, mailbox: &str, 
     Ok(())
 }
 
+/// Moves a message to another mailbox on the server, creating the target if needed.
+///
+/// Prefers the MOVE extension (RFC 6851). Not every server implements it, so this
+/// falls back to the classic COPY plus \Deleted plus EXPUNGE sequence. The fallback
+/// is not free of consequence: EXPUNGE removes every message flagged as deleted in
+/// the mailbox, not just this one, which is why it only runs when MOVE is refused.
+pub fn move_email_imap(
+    account: &EmailAccount,
+    password: &str,
+    mailbox: &str,
+    uid: u32,
+    target: &str,
+) -> Result<()> {
+    let mut session = connect_tls(account, password)?;
+    session.select(mailbox)?;
+
+    // The target folder may not exist yet; CREATE on an existing mailbox is an
+    // error on most servers, so a failure here is only fatal if the move fails too.
+    let _ = session.create(target);
+
+    let uid_str = uid.to_string();
+    let move_result = session.uid_mv(&uid_str, target);
+
+    if move_result.is_err() {
+        session
+            .uid_copy(&uid_str, target)
+            .map_err(|e| anyhow::anyhow!("COPY nach {} fehlgeschlagen: {}", target, e))?;
+        session
+            .uid_store(&uid_str, "+FLAGS (\\Deleted)")
+            .map_err(|e| anyhow::anyhow!("Markieren als geloescht fehlgeschlagen: {}", e))?;
+        session
+            .expunge()
+            .map_err(|e| anyhow::anyhow!("EXPUNGE fehlgeschlagen: {}", e))?;
+    }
+
+    let _ = session.logout();
+    Ok(())
+}
+
 pub fn fetch_since_uid(
     account: &EmailAccount,
     password: &str,
