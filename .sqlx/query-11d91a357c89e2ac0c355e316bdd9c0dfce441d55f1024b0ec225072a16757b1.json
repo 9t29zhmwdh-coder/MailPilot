@@ -6,7 +6,7 @@
       {
         "name": "cat: String",
         "ordinal": 0,
-        "type_info": "Text"
+        "type_info": "Null"
       },
       {
         "name": "cnt!: i64",

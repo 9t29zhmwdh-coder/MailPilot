@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { api, categoryEmoji, categoryLabel, type EmailEntry, type EmailCategory, type FolderSuggestion } from '../../lib/tauri'
 import { useEmailStore } from '../../stores/emailStore'
 import { useT } from '../../lib/i18n'
+import { OrganizeTab } from './OrganizeTab'
 
 const ALL_CATEGORIES: EmailCategory[] = [
   'Important', 'Work', 'Private', 'Invoice', 'Package', 'Calendar',
@@ -14,7 +15,7 @@ export function ActionsView() {
   const [loading, setLoading] = useState(true)
   const [dismissed, setDismissed] = useState<Set<string>>(new Set())
   const [correcting, setCorrecting] = useState<string | null>(null)
-  const [tab, setTab] = useState<'review' | 'ordner' | 'regeln'>('review')
+  const [tab, setTab] = useState<'review' | 'organisieren' | 'ordner' | 'regeln'>('review')
   const t = useT()
 
   const load = async () => {
@@ -77,6 +78,12 @@ export function ActionsView() {
         >
           🔍 {t('actions.reviewTab')}
           {visible.length > 0 && <span className="ml-1.5 text-xs bg-[#1f6feb] text-white px-1.5 py-0.5 rounded-full">{visible.length}</span>}
+        </button>
+        <button
+          onClick={() => setTab('organisieren')}
+          className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'organisieren' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:text-[#e6edf3]'}`}
+        >
+          📮 {t('actions.organizeTab')}
         </button>
         <button
           onClick={() => setTab('ordner')}
@@ -160,6 +167,7 @@ export function ActionsView() {
         </>
       )}
 
+      {tab === 'organisieren' && <OrganizeTab />}
       {tab === 'ordner' && <OrdnerTab />}
       {tab === 'regeln' && <RegelnTab />}
     </div>

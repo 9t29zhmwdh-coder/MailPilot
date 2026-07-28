@@ -46,7 +46,7 @@ Quick login for iCloud, Microsoft 365, Gmail and Fastmail, with no manual server
 | **Multi-Account** | Multiple IMAP accounts in one view | Done |
 | **Keychain** | Passwords stored in macOS Keychain only | Done |
 | **Rules** | Automatic rules per category (archive, delete, move...) | Planned |
-| **IMAP actions** | Actually move emails on the server after confirmation | Planned |
+| **IMAP actions** | Actually move emails on the server after confirmation | Done |
 
 ---
 

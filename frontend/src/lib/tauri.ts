@@ -95,6 +95,14 @@ export interface FolderSuggestion {
   reason: string
 }
 
+/// Mirrors Rust's ActionStatus. The Failed variant carries the server's reason,
+/// so serde emits an object for it while the other variants are plain strings.
+export type ActionStatus = 'Pending' | 'Applied' | 'Skipped' | { Failed: string }
+
+export function actionFailureReason(status: ActionStatus): string | null {
+  return typeof status === 'object' && 'Failed' in status ? status.Failed : null
+}
+
 export interface OrganizeAction {
   id: string
   email_id: string
@@ -103,9 +111,17 @@ export interface OrganizeAction {
   kind: string
   target_folder?: string
   reason: string
-  status: string
+  status: ActionStatus
   undoable: boolean
   created_at: string
+}
+
+/// Applied and failed are reported separately: one number cannot distinguish
+/// "everything moved" from "everything was marked done while the server refused".
+export interface ApplyReport {
+  applied: number
+  failed: number
+  first_error?: string
 }
 
 export interface EmailStats {
@@ -158,8 +174,8 @@ export const api = {
 
   listActions: ()                                => invoke<OrganizeAction[]>('list_actions'),
   proposeActions: ()                             => invoke<number>('propose_actions'),
-  applyAction: (actionId: string)                => invoke<void>('apply_action', { actionId }),
-  applyAllActions: ()                            => invoke<number>('apply_all_actions'),
+  applyAction: (actionId: string)                => invoke<ActionStatus>('apply_action', { actionId }),
+  applyAllActions: ()                            => invoke<ApplyReport>('apply_all_actions'),
   skipAction: (actionId: string)                 => invoke<void>('skip_action', { actionId }),
   skipAllActions: ()                             => invoke<number>('skip_all_actions'),
 

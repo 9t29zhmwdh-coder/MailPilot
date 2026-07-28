@@ -5,6 +5,23 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.1.0] - 2026-07-28
+
+### Added
+
+- Organize tab: proposals to move emails into their category folder on the IMAP server, applied one by one or in bulk, each with subject, sender, target folder and the reason behind it. Failures are listed separately with the server's own message and can be retried. This is the piece that was missing: the backend commands for actions existed and were declared in the frontend API, but no component ever called them, so the whole pipeline was unreachable.
+- `move_email_imap` in the IMAP client. It prefers the MOVE extension (RFC 6851) and falls back to COPY plus `\Deleted` plus EXPUNGE where the server does not support it, and creates the target folder when it is missing.
+
+### Fixed
+
+- `apply_action` and `apply_all_actions` only wrote `Applied` into the local database and never contacted the server. Had anything called them, the app would have reported success while every message stayed exactly where it was. They now perform the move and record `Failed` with the server's reason when it does not work, a status the model always had but nothing ever set.
+- `apply_all_actions` returned a single number that could not distinguish "everything moved" from "everything was marked done while the server refused". It now reports applied and failed counts separately, plus the first error.
+- The local `mailbox` column is updated after a successful move, so the app's view matches the server instead of drifting from it.
+
+### Changed
+
+- README feature table: `IMAP actions` moves from Planned to Done. `Rules` stays planned; the data model and the `filter_rules` table exist, but no engine evaluates them yet.
+
 ## [1.0.5] - 2026-07-28
 
 ### Fixed
