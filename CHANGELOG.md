@@ -5,6 +5,20 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.2.1] - 2026-07-29
+
+### Fixed
+
+- The release built for the runner's own architecture only, so every DMG since the first release carried an `arm64` binary that an Intel Mac cannot start. The build now targets `universal-apple-darwin` and covers both architectures.
+- The folder suggestions carried the note "IMAP actions are coming in a future version", which stopped being true when they shipped in 1.1.0. It now says where the moves are actually confirmed.
+
+### Changed
+
+- The release is created as a draft and only published after `lipo -archs` confirms both architectures are in the bundled binary. The runner is Apple Silicon, so a build that quietly loses the `x86_64` slice still produces a working DMG there and would fail only on a user's machine. A published release cannot be taken back once people have downloaded it, so the check runs before publication rather than after.
+- The DMG path moved to `target/universal-apple-darwin/release/bundle/dmg`, since multi-architecture output does not land in the single-architecture build directory.
+
+---
+
 ## [1.2.0] - 2026-07-28
 
 ### Added
