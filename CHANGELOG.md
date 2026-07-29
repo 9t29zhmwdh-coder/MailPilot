@@ -5,6 +5,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.2.5] - 2026-07-30
+
+### Security
+
+- Passwords no longer pass through a command line. Keychain access went through `/usr/bin/security` with the password as an argument, and `security add-generic-password -h` says of that option: "Use of the -p or -w options is insecure." Command-line arguments are readable from the process table, so any process running as the same user could read an IMAP password out of `ps` while the call was in flight. This affected both mail account passwords and the Claude API key, which is stored the same way. Access now goes through the Security framework via the `keyring` crate, with no subprocess and no argument to expose.
+- The CLI offered no way out: its only alternative to the argument is an interactive prompt that asks for the password twice, which a windowed application cannot answer.
+
+### Added
+
+- A round-trip test for the keychain path. It stores a secret, reads it back, deletes it and checks that the entry is gone, then deletes again to confirm removal stays a no-op. A test that only asserted "no error" would have passed against the insecure version too.
+
+---
+
 ## [1.2.4] - 2026-07-29
 
 ### Security

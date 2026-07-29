@@ -3,7 +3,7 @@ resolver = "2"
 members  = ["crates/mp-core", "crates/mp-cli", "src-tauri"]
 
 [workspace.package]
-version = "1.2.4"
+version = "1.2.5"
 edition = "2021"
 
 [workspace.dependencies]
@@ -11,6 +11,11 @@ serde        = { version = "1",    features = ["derive"] }
 serde_json   = "1"
 tokio        = { version = "1",    features = ["full"] }
 reqwest      = { version = "0.13", features = ["json", "rustls"], default-features = false }
+# Die Default-Features von keyring 4 enthalten den Apple-Keychain-Store bereits
+# (default -> v1 -> apple-native-keyring-store/keychain). In Version 3 war das
+# noch anders: dort gab es keine Default-Features, und eine Deklaration ohne
+# Plattform-Feature kompilierte zwar, speicherte aber nichts.
+keyring      = "4"
 chrono       = { version = "0.4",  features = ["serde"] }
 uuid         = { version = "1",    features = ["v4", "serde"] }
 thiserror    = "1"
