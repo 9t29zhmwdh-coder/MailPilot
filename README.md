@@ -56,7 +56,7 @@ Quick login for iCloud, Microsoft 365, Gmail and Fastmail, with no manual server
 - [Node.js](https://nodejs.org/) 20+
 - [Tauri CLI v2](https://tauri.app/): `cargo install tauri-cli`
 - An [Anthropic API key](https://console.anthropic.com/) for email classification
-- macOS 13+
+- macOS 13+ (Apple Silicon and Intel, universal binary)
 
 ---
 

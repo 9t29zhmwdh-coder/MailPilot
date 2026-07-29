@@ -23,6 +23,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable branch, pinned 2026-07-28
+        with:
+          targets: aarch64-apple-darwin,x86_64-apple-darwin
 
       - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
 
@@ -42,6 +44,9 @@ jobs:
           sqlx database create
           sqlx migrate run --source crates/mp-core/src/db/migrations
 
+      # Released as a draft so the architecture check below runs before anyone
+      # can download the result. A published release containing an arm64-only
+      # build cannot be taken back once people have it.
       - uses: tauri-apps/tauri-action@1deb371b0cd8bd54025b384f1cd735e725c4060f # v1.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,14 +54,40 @@ jobs:
           tagName: ${{ github.ref_name }}
           releaseName: 'MailPilot ${{ github.ref_name }}'
           releaseBody: 'See CHANGELOG.md for details. Not code-signed/notarized: macOS Gatekeeper will show an "unidentified developer" warning on first run.'
-          releaseDraft: false
+          releaseDraft: true
           prerelease: false
+          args: --target universal-apple-darwin
+
+      # The runner is Apple Silicon, so a build that quietly lost the x86_64
+      # slice still produces a working DMG here and fails only on a user's
+      # Intel Mac. lipo is what turns that into a red pipeline instead.
+      - name: Verify the bundled binary is universal
+        shell: bash
+        run: |
+          app_binary=$(find target/universal-apple-darwin/release/bundle/macos \
+            -path "*/Contents/MacOS/*" -type f | head -1)
+          if [ -z "$app_binary" ]; then
+            echo "no app binary found under the universal bundle path" >&2
+            exit 1
+          fi
+          archs=$(lipo -archs "$app_binary")
+          echo "$app_binary: $archs"
+          case "$archs" in
+            *arm64*x86_64*|*x86_64*arm64*) echo "universal binary confirmed" ;;
+            *) echo "expected a universal binary, got: $archs" >&2; exit 1 ;;
+          esac
 
       - name: Upload stable-named DMG (for README download link)
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          dmg=$(find target/release/bundle/dmg -name "*.dmg" | head -1)
+          dmg=$(find target/universal-apple-darwin/release/bundle/dmg -name "*.dmg" | head -1)
           cp "$dmg" MailPilot.dmg
           gh release upload "${{ github.ref_name }}" MailPilot.dmg --clobber --repo ${{ github.repository }}
+
+      - name: Publish the release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release edit "${{ github.ref_name }}" --draft=false --repo ${{ github.repository }}
