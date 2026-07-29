@@ -5,6 +5,18 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.2.2] - 2026-07-29
+
+### Changed
+
+Dependency and workflow updates merged since 1.2.1:
+
+- chore(ci): bump the actions group across 1 directory with 3 updates
+- chore(deps): bump the npm group across 1 directory with 4 updates
+- chore(deps): bump the cargo group across 1 directory with 9 updates
+
+---
+
 ## [1.2.1] - 2026-07-29
 
 ### Fixed
