@@ -14,7 +14,7 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
-- A round-trip test for the keychain path. It stores a secret, reads it back, deletes it and checks that the entry is gone, then deletes again to confirm removal stays a no-op. A test that only asserted "no error" would have passed against the insecure version too.
+- A round-trip test for the keychain path, macOS only. The coverage job runs on Linux, where keyring defaults to the D-Bus secret service that a CI runner does not provide, and a failure there says nothing about this code. It It stores a secret, reads it back, deletes it and checks that the entry is gone, then deletes again to confirm removal stays a no-op. A test that only asserted "no error" would have passed against the insecure version too.
 
 ---
 

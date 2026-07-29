@@ -1,3 +1,10 @@
+// macOS only. The coverage job runs on Linux, where keyring's default backend is
+// the D-Bus secret service; CI has no such service, so the call fails with
+// "org.freedesktop.secrets was not provided by any .service files". That is the
+// runner missing a keychain, not this code being wrong, and MailPilot ships for
+// macOS anyway.
+#![cfg(target_os = "macos")]
+
 //! Proves the keychain path actually stores and returns a secret.
 //!
 //! The previous implementation shelled out to `/usr/bin/security` and passed the
