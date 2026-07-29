@@ -124,6 +124,44 @@ export interface ApplyReport {
   first_error?: string
 }
 
+/// Mirrors Rust's RuleCondition and RuleAction. Unit variants serialise to a
+/// bare string, variants with data to a single-key object.
+export type RuleCondition =
+  | { FromContains: string }
+  | { SubjectContains: string }
+  | { BodyContains: string }
+  | 'HasAttachment'
+  | { SenderDomain: string }
+  | { HasCategory: EmailCategory }
+
+export type RuleAction =
+  | { MoveToFolder: string }
+  | { AddTag: string }
+  | 'MarkRead'
+  | 'MarkSpam'
+  | { SetCategory: EmailCategory }
+
+export interface FilterRule {
+  id: string
+  name: string
+  conditions: RuleCondition[]
+  match_all: boolean
+  actions: RuleAction[]
+  enabled: boolean
+  confirmed_by_user: boolean
+  ai_suggested: boolean
+  created_at: string
+}
+
+export interface RuleInput {
+  id?: string
+  name: string
+  conditions: RuleCondition[]
+  match_all: boolean
+  actions: RuleAction[]
+  enabled: boolean
+}
+
 export interface EmailStats {
   total_emails: number
   unread_count: number
@@ -178,6 +216,13 @@ export const api = {
   applyAllActions: ()                            => invoke<ApplyReport>('apply_all_actions'),
   skipAction: (actionId: string)                 => invoke<void>('skip_action', { actionId }),
   skipAllActions: ()                             => invoke<number>('skip_all_actions'),
+
+  // rules
+  listRules: ()                                  => invoke<FilterRule[]>('list_rules'),
+  saveRule: (input: RuleInput)                   => invoke<FilterRule>('save_rule', { input }),
+  setRuleEnabled: (ruleId: string, enabled: boolean) => invoke<void>('set_rule_enabled', { ruleId, enabled }),
+  deleteRule: (ruleId: string)                   => invoke<void>('delete_rule', { ruleId }),
+  runRules: ()                                   => invoke<number>('run_rules'),
 
   // stats
   getStats: ()                                   => invoke<EmailStats>('get_stats'),

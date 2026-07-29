@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { api, categoryEmoji, categoryLabel, type EmailEntry, type EmailCategory, type FolderSuggestion } from '../../lib/tauri'
 import { useEmailStore } from '../../stores/emailStore'
 import { useT } from '../../lib/i18n'
+import RulesTab from './RulesTab'
 import { OrganizeTab } from './OrganizeTab'
 
 const ALL_CATEGORIES: EmailCategory[] = [
@@ -169,7 +170,7 @@ export function ActionsView() {
 
       {tab === 'organisieren' && <OrganizeTab />}
       {tab === 'ordner' && <OrdnerTab />}
-      {tab === 'regeln' && <RegelnTab />}
+      {tab === 'regeln' && <RulesTab />}
     </div>
   )
 }
@@ -446,50 +447,3 @@ function OrdnerTab() {
   )
 }
 
-function RegelnTab() {
-  const [on, setOn] = useState<Record<string, boolean>>({})
-  const t = useT()
-  const REGEL_VORLAGEN = [
-    { emoji: '📰', label: t('actions.ruleNewsletterLabel'), desc: t('actions.ruleNewsletterDesc') },
-    { emoji: '🗑️', label: t('actions.ruleAdsLabel'), desc: t('actions.ruleAdsDesc') },
-    { emoji: '🧾', label: t('actions.ruleInvoiceLabel'), desc: t('actions.ruleInvoiceDesc') },
-    { emoji: '📦', label: t('actions.rulePackageLabel'), desc: t('actions.rulePackageDesc') },
-    { emoji: '⚠️', label: t('actions.rulePhishingLabel'), desc: t('actions.rulePhishingDesc') },
-    { emoji: '🔄', label: t('actions.ruleSubscriptionLabel'), desc: t('actions.ruleSubscriptionDesc') },
-  ]
-  return (
-    <div>
-      <div className="mb-4 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#8b949e] flex gap-3">
-        <span className="text-lg">📋</span>
-        <div>
-          <div className="font-medium text-[#e6edf3] mb-0.5">{t('actions.rulesInDev')}</div>
-          {t('actions.rulesIntroText')}
-        </div>
-      </div>
-
-      <div className="space-y-2 mb-4">
-        {REGEL_VORLAGEN.map(r => (
-          <div key={r.label} className="flex items-center justify-between p-3 bg-[#161b22] border border-[#30363d] rounded-lg">
-            <div className="flex items-center gap-3">
-              <span className="text-xl">{r.emoji}</span>
-              <div>
-                <div className="text-sm font-medium text-[#e6edf3]">{r.label}</div>
-                <div className="text-xs text-[#8b949e]">{r.desc}</div>
-              </div>
-            </div>
-            <button
-              onClick={() => setOn(s => ({ ...s, [r.label]: !s[r.label] }))}
-              className={`relative w-10 h-5 rounded-full transition-colors ${on[r.label] ? 'bg-[#238636]' : 'bg-[#30363d]'}`}
-            >
-              <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${on[r.label] ? 'translate-x-5' : 'translate-x-0.5'}`} />
-            </button>
-          </div>
-        ))}
-      </div>
-
-      <button className="w-full p-3 border border-dashed border-[#30363d] rounded-lg text-xs text-[#8b949e] hover:border-[#58a6ff] hover:text-[#58a6ff] transition-colors">
-        + {t('actions.createOwnRule')}
-      </button>
-    </div>
-  )
-}

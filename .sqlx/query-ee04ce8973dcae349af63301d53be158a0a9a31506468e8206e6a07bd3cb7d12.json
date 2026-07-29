@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "INSERT INTO filter_rules(id, name, conditions_json, match_all, actions_json,\n                                  enabled, confirmed_by_user, ai_suggested, created_ts)\n         VALUES(?,?,?,?,?,?,?,?,?)\n         ON CONFLICT(id) DO UPDATE SET\n           name = excluded.name,\n           conditions_json = excluded.conditions_json,\n           match_all = excluded.match_all,\n           actions_json = excluded.actions_json,\n           enabled = excluded.enabled,\n           confirmed_by_user = excluded.confirmed_by_user,\n           ai_suggested = excluded.ai_suggested",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 9
+    },
+    "nullable": []
+  },
+  "hash": "ee04ce8973dcae349af63301d53be158a0a9a31506468e8206e6a07bd3cb7d12"
+}

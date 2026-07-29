@@ -1,0 +1,68 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT id AS \"id!\", name, conditions_json, match_all, actions_json,\n                  enabled, confirmed_by_user, ai_suggested, created_ts\n           FROM filter_rules ORDER BY created_ts ASC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id!",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "conditions_json",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "match_all",
+        "ordinal": 3,
+        "type_info": "Bool"
+      },
+      {
+        "name": "actions_json",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "enabled",
+        "ordinal": 5,
+        "type_info": "Bool"
+      },
+      {
+        "name": "confirmed_by_user",
+        "ordinal": 6,
+        "type_info": "Bool"
+      },
+      {
+        "name": "ai_suggested",
+        "ordinal": 7,
+        "type_info": "Bool"
+      },
+      {
+        "name": "created_ts",
+        "ordinal": 8,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "f5fd85e1757ce94ce47a0517be9b11fbfa4635cc43b4f07c3cb5cd070df2c28c"
+}

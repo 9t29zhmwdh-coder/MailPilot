@@ -5,6 +5,24 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.2.0] - 2026-07-28
+
+### Added
+
+- Filter rules are evaluated for real. `mp-core::rules` decides whether a rule matches an email and turns the matches into pending move actions. Until now the model and the database table existed but nothing ever read them, and the Rules tab was six toggles that only changed local component state.
+- Rules tab backed by the database: list, create from a category template, write a custom rule (sender, subject, body or sender domain), enable, disable and delete. Each rule is shown as a readable sentence rather than its stored JSON shape.
+- "Apply rules" queues the matches as proposals and reports how many were queued. Nothing is carried out here: the proposals go through the same confirmation in the Organize tab as the AI suggestions, so a broadly written rule cannot reshuffle a mailbox on its own.
+- Commands `list_rules`, `save_rule`, `set_rule_enabled`, `delete_rule` and `run_rules`, with the matching queries in `mp-core::db`.
+
+### Security
+
+- A rule with no conditions never matches. Treating an empty condition list as "matches everything" would turn a half-filled form into a mailbox-wide move.
+- `SenderDomain` compares the full host after the `@`, so a rule for `example.com` does not also match a sender at `example.com.attacker.net`.
+- Only folder moves become actions. Tagging, read state and category changes are local concepts that the organize pipeline cannot carry out on the server, and producing actions for them would promise something it does not do.
+- A rule is skipped for emails that already have a queued or applied action, so running the rules twice does not stack duplicate moves on one message.
+
+---
+
 ## [1.1.0] - 2026-07-28
 
 ### Added
