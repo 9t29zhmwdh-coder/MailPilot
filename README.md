@@ -85,15 +85,24 @@ No other files or background services are left behind.
 
 ## AI Backend
 
-MailLoom uses [Claude](https://www.anthropic.com/claude) (Anthropic API) for email classification, summaries and reply suggestions. This requires your own Anthropic API key and an internet connection; email content sent for classification leaves your device and is processed by Anthropic's API.
+You choose which model classifies your email, and that choice decides whether any email content leaves your device.
 
-Default model: `claude-haiku-4-5` (fast, low cost), configurable in Settings to `claude-sonnet-4-6` or `claude-opus-4-8`.
+| Setting | Runs on | What leaves the device |
+|---|---|---|
+| `ollama` (default) | your own [Ollama](https://ollama.com) instance, by default `localhost:11434` | nothing |
+| `claude` | [Anthropic's API](https://www.anthropic.com/claude), with your own key | sender, subject and the first 800 characters of the body, per classified email |
+
+The local path needs a running Ollama with a model pulled, `llama3` by default. The cloud path needs an API key in the Keychain; without one, classification reports an error instead of quietly switching to the local model, so the two never substitute for each other unnoticed.
+
+Cloud models: `claude-haiku-4-5` by default, configurable to `claude-sonnet-4-6` or `claude-opus-4-8`.
+
+**Before enabling the cloud path**, note that the content sent belongs to the people who wrote to you, and they did not agree to it. If your mail falls under the Swiss FADP, the GDPR, professional confidentiality or an employment contract, check whether forwarding it to a third party is permitted.
 
 ---
 
 ## Privacy
 
-Emails and sync state are stored locally in SQLite; no third party except Anthropic (for classification requests) ever sees your data. IMAP passwords and the Anthropic API key are stored in the macOS Keychain and never written to disk in plain text.
+Emails and sync state are stored locally in SQLite. With the default local model no third party sees your mail at all; with the cloud model, classification requests reach Anthropic and nothing else does. IMAP passwords and the API key are stored in the macOS Keychain and never written to disk in plain text. See [PRIVACY.md](PRIVACY.md) for what exactly is transmitted.
 
 ---
 

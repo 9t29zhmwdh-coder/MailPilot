@@ -59,6 +59,10 @@ fn default_claude_model() -> String {
     "claude-haiku-4-5-20251001".to_string()
 }
 
+fn default_ai_backend() -> String {
+    "ollama".to_string()
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct AppSettings {
     pub ollama_url: String,
@@ -66,6 +70,13 @@ pub struct AppSettings {
     pub vision_model: String,
     #[serde(default = "default_claude_model")]
     pub claude_model: String,
+    /// Welches Backend die Klassifizierung ausfuehrt.
+    ///
+    /// Default ist "ollama": ohne diese Wahl liefe die Klassifizierung ueber
+    /// einen Cloud-Dienst, obwohl README und Datenschutzerklaerung lokale
+    /// Verarbeitung zusagen. Wer die Cloud will, waehlt sie ausdruecklich.
+    #[serde(default = "default_ai_backend")]
+    pub ai_backend: String,
     pub auto_classify: bool,
     pub auto_sync: bool,
     pub sync_interval_minutes: u32,
@@ -81,6 +92,7 @@ impl Default for AppSettings {
             text_model: "llama3".to_string(),
             vision_model: "llava".to_string(),
             claude_model: default_claude_model(),
+            ai_backend: default_ai_backend(),
             auto_classify: true,
             auto_sync: false,
             sync_interval_minutes: 30,
