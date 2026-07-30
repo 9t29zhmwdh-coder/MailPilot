@@ -1,36 +1,44 @@
-use anyhow::{bail, Result};
-use std::process::Command;
+use anyhow::{Context, Result};
+use keyring::Entry;
+
 use crate::models::account::EmailAccount;
 
 const SERVICE: &str = "com.raystudio.mailpilot";
 
+/// Opens the keychain entry for one account.
+///
+/// This talks to the Security framework through `keyring` rather than shelling
+/// out to `/usr/bin/security`. The CLI takes the password as a command-line
+/// argument, and `security add-generic-password -h` says so itself: "Use of the
+/// -p or -w options is insecure." Arguments are readable from the process table,
+/// so any process running as the same user could read the password out of `ps`
+/// while the call was in flight. Its only alternative is an interactive prompt,
+/// which a GUI app cannot use.
+fn entry(account_id: &str) -> Result<Entry> {
+    Entry::new(SERVICE, account_id).context("Schluesselbund-Eintrag nicht zugreifbar")
+}
+
 pub fn store_password(account_id: &str, password: &str) -> Result<()> {
-    // Bestehenden Eintrag zuerst löschen (add schlägt fehl wenn er schon existiert)
-    let _ = delete_password(account_id);
-    let status = Command::new("security")
-        .args(["add-generic-password", "-s", SERVICE, "-a", account_id, "-w", password])
-        .status()?;
-    if !status.success() {
-        bail!("security add-generic-password schlug fehl");
-    }
-    Ok(())
+    entry(account_id)?
+        .set_password(password)
+        .context("Passwort konnte nicht im Schluesselbund gespeichert werden")
 }
 
 pub fn get_password(account_id: &str) -> Result<String> {
-    let out = Command::new("security")
-        .args(["find-generic-password", "-s", SERVICE, "-a", account_id, "-w"])
-        .output()?;
-    if !out.status.success() {
-        bail!("Kein Eintrag gefunden für '{}'", account_id);
-    }
-    Ok(String::from_utf8_lossy(&out.stdout).trim().to_string())
+    entry(account_id)?
+        .get_password()
+        .with_context(|| format!("Kein Schluesselbund-Eintrag fuer '{}'", account_id))
 }
 
 pub fn delete_password(account_id: &str) -> Result<()> {
-    Command::new("security")
-        .args(["delete-generic-password", "-s", SERVICE, "-a", account_id])
-        .status()?;
-    Ok(())
+    match entry(account_id)?.delete_credential() {
+        Ok(()) => Ok(()),
+        // Deleting an entry that was never stored is the desired end state, not
+        // a failure. Treating it as one would break account removal after a
+        // failed setup.
+        Err(keyring::Error::NoEntry) => Ok(()),
+        Err(e) => Err(e).context("Schluesselbund-Eintrag konnte nicht entfernt werden"),
+    }
 }
 
 pub fn test_connection(account: &EmailAccount, password: &str) -> Result<Vec<String>> {
