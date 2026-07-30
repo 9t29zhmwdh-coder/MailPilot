@@ -1,6 +1,6 @@
-# MailPilot: Repository Skeleton
+# MailLoom: Repository Skeleton
 
-**Repo:** `9t29zhmwdh-coder/MailPilot`
+**Repo:** `9t29zhmwdh-coder/MailLoom`
 **Stack:** Rust workspace · Tauri v2 · React/TypeScript · SQLite · IMAP · keyring
 **Initial commit:** `37ffef272ecdf989781bad24b7bdae3c7ea132eb` (2026-06-12)
 
@@ -9,7 +9,7 @@
 ## File Tree
 
 ```
-MailPilot/
+MailLoom/
 ├── .github/
 │   ├── ISSUE_TEMPLATE/
 │   │   ├── bug_report.md

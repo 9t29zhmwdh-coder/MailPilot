@@ -1,7 +1,15 @@
-# Changelog, MailPilot
+# Changelog, MailLoom
 
 All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+---
+
+## [1.3.0] - 2026-07-30
+
+### Changed
+
+- Renamed from MailPilot to MailLoom. "Mail Pilot" is a registered trademark of Mindsense LLC, whose product is also a macOS email client, so the collision was in the same category on the same platform rather than merely a similar word. The bundle identifier changes with it, which resets the keychain service name: stored account passwords have to be entered once more.
 
 ---
 

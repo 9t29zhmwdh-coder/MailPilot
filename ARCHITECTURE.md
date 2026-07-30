@@ -1,8 +1,8 @@
-# MailPilot: Architecture
+# MailLoom: Architecture
 
 ## Overview
 
-MailPilot is an offline-first Rust/Tauri v2 desktop email client. It connects to IMAP servers (Outlook, Gmail, Apple Mail), fetches emails into a local SQLite store, classifies and tags them using local AI inference (Ollama), and provides smart filtering and folder organisation, fully without cloud dependencies.
+MailLoom is an offline-first Rust/Tauri v2 desktop email client. It connects to IMAP servers (Outlook, Gmail, Apple Mail), fetches emails into a local SQLite store, classifies and tags them using local AI inference (Ollama), and provides smart filtering and folder organisation, fully without cloud dependencies.
 
 ---
 
@@ -83,7 +83,7 @@ Key views:
 
 ## Storage
 
-SQLite database in the OS application data directory (`$APPDATA/MailPilot/` / `~/Library/Application Support/MailPilot/`).
+SQLite database in the OS application data directory (`$APPDATA/MailLoom/` / `~/Library/Application Support/MailLoom/`).
 
 Tables: `accounts`, `emails`, `tags`, `email_tags`, `rules`, `sync_state`, `migrations`.
 

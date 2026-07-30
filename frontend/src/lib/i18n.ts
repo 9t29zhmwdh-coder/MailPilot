@@ -2,7 +2,7 @@ import { create } from 'zustand'
 
 export type Lang = 'en' | 'de'
 
-const STORAGE_KEY = 'mailpilot_lang'
+const STORAGE_KEY = 'mailloom_lang'
 
 interface Dict {
   [key: string]: string | Dict

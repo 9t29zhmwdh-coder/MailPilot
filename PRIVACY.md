@@ -1,12 +1,12 @@
-# Privacy Policy : MailPilot
+# Privacy Policy : MailLoom
 
 ## Summary
 
-MailPilot processes all data locally. No data ever leaves your device except the IMAP connections you configure.
+MailLoom processes all data locally. No data ever leaves your device except the IMAP connections you configure.
 
 ## What I Collect
 
-**Nothing.** MailPilot does not collect, store, transmit, or share any user data with third parties.
+**Nothing.** MailLoom does not collect, store, transmit, or share any user data with third parties.
 
 ## Data Processing
 
@@ -24,7 +24,7 @@ MailPilot processes all data locally. No data ever leaves your device except the
 
 ## Network Access
 
-MailPilot connects only to:
+MailLoom connects only to:
 1. Your configured IMAP servers (Outlook, Gmail, Apple Mail) : user-initiated
 2. `localhost:11434` (Ollama, local AI inference)
 
@@ -32,7 +32,7 @@ No other outbound connections are made.
 
 ## Data Retention
 
-MailPilot does not retain data beyond what you explicitly sync from your IMAP server. Deleting the app removes all local data.
+MailLoom does not retain data beyond what you explicitly sync from your IMAP server. Deleting the app removes all local data.
 
 ## Contact
 

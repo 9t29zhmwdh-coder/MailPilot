@@ -55,10 +55,10 @@ async fn main() {
             commands::settings::get_claude_key_status,
         ])
         .run(tauri::generate_context!())
-        .expect("MailPilot failed to start");
+        .expect("MailLoom failed to start");
 }
 
 fn dirs_path() -> String {
     let home = std::env::var("HOME").unwrap_or_else(|_| ".".to_string());
-    format!("{}/Library/Application Support/com.raystudio.mailpilot/mailpilot.db", home)
+    format!("{}/Library/Application Support/com.raystudio.mailloom/mailloom.db", home)
 }

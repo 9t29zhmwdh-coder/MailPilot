@@ -3,7 +3,7 @@ use keyring::Entry;
 
 use crate::models::account::EmailAccount;
 
-const SERVICE: &str = "com.raystudio.mailpilot";
+const SERVICE: &str = "com.raystudio.mailloom";
 
 /// Opens the keychain entry for one account.
 ///

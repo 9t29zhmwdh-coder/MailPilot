@@ -1,7 +1,7 @@
 // macOS only. The coverage job runs on Linux, where keyring's default backend is
 // the D-Bus secret service; CI has no such service, so the call fails with
 // "org.freedesktop.secrets was not provided by any .service files". That is the
-// runner missing a keychain, not this code being wrong, and MailPilot ships for
+// runner missing a keychain, not this code being wrong, and MailLoom ships for
 // macOS anyway.
 #![cfg(target_os = "macos")]
 
@@ -17,7 +17,7 @@ use mp_core::imap_client::account_manager;
 
 #[test]
 fn a_stored_password_comes_back_unchanged() {
-    let id = format!("mailpilot-test-{}", std::process::id());
+    let id = format!("mailloom-test-{}", std::process::id());
     let secret = "correct horse battery staple";
 
     account_manager::store_password(&id, secret).expect("store");

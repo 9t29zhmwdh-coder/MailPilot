@@ -14,12 +14,12 @@ async fn main() -> Result<()> {
             println!("Classifying unclassified emails…");
         }
         "stats" => {
-            println!("MailPilot statistics");
+            println!("MailLoom statistics");
         }
         _ => {
-            println!("MailPilot CLI");
+            println!("MailLoom CLI");
             println!();
-            println!("Usage: mailpilot <command>");
+            println!("Usage: mailloom <command>");
             println!();
             println!("Commands:");
             println!("  sync [account_id]   Sync emails from IMAP");

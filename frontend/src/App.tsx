@@ -64,7 +64,7 @@ export default function App() {
         <div className="p-4 border-b border-[#30363d]">
           <div className="flex items-center gap-2">
             <span className="text-lg">✉️</span>
-            <span className="font-semibold text-[#e6edf3]">MailPilot</span>
+            <span className="font-semibold text-[#e6edf3]">MailLoom</span>
           </div>
           <div className="flex items-center gap-1.5 mt-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${ollamaOnline ? 'bg-[#3fb950]' : 'bg-[#f85149]'}`} />
