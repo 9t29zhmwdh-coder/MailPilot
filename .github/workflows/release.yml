@@ -57,7 +57,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tagName: ${{ github.ref_name }}
-          releaseName: 'MailPilot ${{ github.ref_name }}'
+          releaseName: 'MailLoom ${{ github.ref_name }}'
           releaseBody: 'See CHANGELOG.md for details. Not code-signed/notarized: macOS Gatekeeper will show an "unidentified developer" warning on first run.'
           releaseDraft: true
           prerelease: false
@@ -88,8 +88,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           dmg=$(find target/universal-apple-darwin/release/bundle/dmg -name "*.dmg" | head -1)
-          cp "$dmg" MailPilot.dmg
-          gh release upload "${{ github.ref_name }}" MailPilot.dmg --clobber --repo ${{ github.repository }}
+          cp "$dmg" MailLoom.dmg
+          gh release upload "${{ github.ref_name }}" MailLoom.dmg --clobber --repo ${{ github.repository }}
 
       - name: Publish the release
         shell: bash

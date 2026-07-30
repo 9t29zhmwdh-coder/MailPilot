@@ -1,4 +1,4 @@
-# Contributing to MailPilot
+# Contributing to MailLoom
 
 ## Getting Started
 
@@ -12,8 +12,8 @@
 ### Setup
 
 1. Fork the repository
-2. `git clone https://github.com/YOUR_USERNAME/MailPilot`
-3. `cd MailPilot`
+2. `git clone https://github.com/YOUR_USERNAME/MailLoom`
+3. `cd MailLoom`
 4. `cd frontend && npm install && cd ..`
 5. `cargo build --workspace`
 6. `cargo tauri dev`

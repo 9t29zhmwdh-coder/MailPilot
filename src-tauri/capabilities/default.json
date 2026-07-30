@@ -1,7 +1,7 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "Default-Capability für das MailPilot-Hauptfenster",
+  "description": "Default-Capability für das MailLoom-Hauptfenster",
   "windows": ["main"],
   "permissions": [
     "core:default",

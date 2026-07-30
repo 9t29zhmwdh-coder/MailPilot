@@ -1,7 +1,15 @@
-# Changelog, MailPilot
+# Changelog, MailLoom
 
 All notable changes to this project will be documented in this file.
 Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+---
+
+## [1.3.0] - 2026-07-30
+
+### Changed
+
+- Renamed from MailPilot to MailLoom. "Mail Pilot" is a registered trademark of Mindsense LLC, whose product is also a macOS email client, so the collision was in the same category on the same platform rather than merely a similar word. The bundle identifier changes with it, which resets the keychain service name: stored account passwords have to be entered once more.
 
 ---
 
@@ -148,7 +156,7 @@ Applied as a normal pull request rather than by merging Dependabot's, because De
 ## [1.0.0] - 2026-07-17
 
 First stable release: a real, packaged, installable distribution exists
-for end users. macOS DMG installer. Windows/Linux are not built: MailPilot shells out to the macOS-only `/usr/bin/security` Keychain CLI for credential storage, a real platform dependency, not a gap.
+for end users. macOS DMG installer. Windows/Linux are not built: MailLoom shells out to the macOS-only `/usr/bin/security` Keychain CLI for credential storage, a real platform dependency, not a gap.
 
 ## [0.3.9] - 2026-07-17
 
@@ -198,7 +206,7 @@ for end users. macOS DMG installer. Windows/Linux are not built: MailPilot shell
 
 ### Fixed
 
-- Fixed the release workflow's stable-named DMG upload: it looked for the built bundle under `src-tauri/target/...`, but this is a Cargo workspace, so Cargo places build output under the workspace root `target/...`. The stable `MailPilot.dmg` download link in README.md never actually got uploaded before this fix.
+- Fixed the release workflow's stable-named DMG upload: it looked for the built bundle under `src-tauri/target/...`, but this is a Cargo workspace, so Cargo places build output under the workspace root `target/...`. The stable `MailLoom.dmg` download link in README.md never actually got uploaded before this fix.
 
 ## [0.3.2] - 2026-07-11
 

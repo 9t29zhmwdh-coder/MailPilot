@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "MailPilot",
-  "version": "1.2.5",
-  "identifier": "com.raystudio.mailpilot",
+  "productName": "MailLoom",
+  "version": "1.3.0",
+  "identifier": "com.raystudio.mailloom",
   "build": {
     "beforeBuildCommand": "npm --prefix ../frontend run build",
     "beforeDevCommand": "npm --prefix ../frontend run dev",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "MailPilot",
+        "title": "MailLoom",
         "width": 1400,
         "height": 860,
         "resizable": true,

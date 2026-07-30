@@ -30,12 +30,12 @@ function getProviders(): Record<ProviderKey, Provider> {
       appPasswordSteps: de ? [
         'Melde dich auf appleid.apple.com an',
         'Sicherheit → App-Passwörter',
-        'Klick (+) → Name: MailPilot',
+        'Klick (+) → Name: MailLoom',
         'Kopiere das generierte Passwort',
       ] : [
         'Sign in at appleid.apple.com',
         'Security → App-Specific Passwords',
-        'Click (+) → Name: MailPilot',
+        'Click (+) → Name: MailLoom',
         'Copy the generated password',
       ],
     },
@@ -48,12 +48,12 @@ function getProviders(): Record<ProviderKey, Provider> {
       appPasswordSteps: de ? [
         'Öffne mysignins.microsoft.com',
         'Sicherheitsinformationen → Methode hinzufügen',
-        'App-Passwort → Name: MailPilot',
+        'App-Passwort → Name: MailLoom',
         'Kopiere das generierte Passwort',
       ] : [
         'Open mysignins.microsoft.com',
         'Security info → Add method',
-        'App password → Name: MailPilot',
+        'App password → Name: MailLoom',
         'Copy the generated password',
       ],
     },
@@ -66,12 +66,12 @@ function getProviders(): Record<ProviderKey, Provider> {
       appPasswordSteps: de ? [
         'Öffne myaccount.google.com',
         'Sicherheit → App-Passwörter',
-        'App: MailPilot → Erstellen',
+        'App: MailLoom → Erstellen',
         'Kopiere das 16-stellige Passwort',
       ] : [
         'Open myaccount.google.com',
         'Security → App passwords',
-        'App: MailPilot → Create',
+        'App: MailLoom → Create',
         'Copy the 16-character password',
       ],
     },

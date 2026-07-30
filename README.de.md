@@ -1,6 +1,6 @@
 <div align="center">
-  <img src="RayStudio.png" alt="MailPilot" width="120"/>
-  <h1>MailPilot</h1>
+  <img src="RayStudio.png" alt="MailLoom" width="120"/>
+  <h1>MailLoom</h1>
 
 </div>
 
@@ -8,17 +8,17 @@
 
 [🇬🇧 English Version](README.md)
 
-[![CI](https://github.com/9t29zhmwdh-coder/MailPilot/actions/workflows/ci.yml/badge.svg)](https://github.com/9t29zhmwdh-coder/MailPilot/actions) [![CodeQL](https://github.com/9t29zhmwdh-coder/MailPilot/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/9t29zhmwdh-coder/MailPilot/security/code-scanning) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/9t29zhmwdh-coder/MailPilot/badge)](https://securityscorecards.dev/viewer/?uri=github.com/9t29zhmwdh-coder/MailPilot) [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13696/badge)](https://www.bestpractices.dev/projects/13696)
+[![CI](https://github.com/9t29zhmwdh-coder/MailLoom/actions/workflows/ci.yml/badge.svg)](https://github.com/9t29zhmwdh-coder/MailLoom/actions) [![CodeQL](https://github.com/9t29zhmwdh-coder/MailLoom/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/9t29zhmwdh-coder/MailLoom/security/code-scanning) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/9t29zhmwdh-coder/MailLoom/badge)](https://securityscorecards.dev/viewer/?uri=github.com/9t29zhmwdh-coder/MailLoom) [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13696/badge)](https://www.bestpractices.dev/projects/13696)
 
-![Rust](https://img.shields.io/badge/Rust-1.96+-CE422B?logo=rust&logoColor=white) ![Tauri](https://img.shields.io/badge/Tauri-v2-24C8D8?logo=tauri&logoColor=white) ![Plattform](https://img.shields.io/badge/Plattform-macOS-lightgrey) ![AI | Claude](https://img.shields.io/badge/AI-Claude-black?logo=anthropic&logoColor=white) ![AI | Claude Code](https://img.shields.io/badge/AI-Claude_Code-black?logo=anthropic&logoColor=white) ![AI | Copilot](https://img.shields.io/badge/AI-Copilot-black?logo=github&logoColor=white) [![Release](https://img.shields.io/github/v/release/9t29zhmwdh-coder/MailPilot?color=3F8E7E)](https://github.com/9t29zhmwdh-coder/MailPilot/releases) [![License](https://img.shields.io/github/license/9t29zhmwdh-coder/MailPilot?color=lightgrey)](LICENSE)
+![Rust](https://img.shields.io/badge/Rust-1.96+-CE422B?logo=rust&logoColor=white) ![Tauri](https://img.shields.io/badge/Tauri-v2-24C8D8?logo=tauri&logoColor=white) ![Plattform](https://img.shields.io/badge/Plattform-macOS-lightgrey) ![AI | Claude](https://img.shields.io/badge/AI-Claude-black?logo=anthropic&logoColor=white) ![AI | Claude Code](https://img.shields.io/badge/AI-Claude_Code-black?logo=anthropic&logoColor=white) ![AI | Copilot](https://img.shields.io/badge/AI-Copilot-black?logo=github&logoColor=white) [![Release](https://img.shields.io/github/v/release/9t29zhmwdh-coder/MailLoom?color=3F8E7E)](https://github.com/9t29zhmwdh-coder/MailLoom/releases) [![License](https://img.shields.io/github/license/9t29zhmwdh-coder/MailLoom?color=lightgrey)](LICENSE)
 
-> **So läuft es:** MailPilot ist eine native Desktop-App, kein Server oder Browser-Tool. Sie öffnet sich als eigenes Fenster, ohne Tray-Icon oder Hintergrunddienst; sie synchronisiert und klassifiziert nur, während das Fenster geöffnet ist.
+> **So läuft es:** MailLoom ist eine native Desktop-App, kein Server oder Browser-Tool. Sie öffnet sich als eigenes Fenster, ohne Tray-Icon oder Hintergrunddienst; sie synchronisiert und klassifiziert nur, während das Fenster geöffnet ist.
 
-![MailPilot](docs/screenshot.de.png)
+![MailLoom](docs/screenshot.de.png)
 
 ---
 
-> 💾 [**Für macOS herunterladen**](https://github.com/9t29zhmwdh-coder/MailPilot/releases/latest/download/MailPilot.dmg) (DMG, immer das neueste Release): nicht signiert/notarisiert, macOS Gatekeeper zeigt beim ersten Start eine "nicht verifizierter Entwickler"-Warnung (Rechtsklick → Öffnen, um das zu umgehen). Oder selbst aus dem Quellcode bauen, siehe Erste Schritte unten. Windows/Linux werden nicht gebaut: MailPilot nutzt den macOS-Schlüsselbund und wird nur auf macOS getestet.
+> 💾 [**Für macOS herunterladen**](https://github.com/9t29zhmwdh-coder/MailLoom/releases/latest/download/MailLoom.dmg) (DMG, immer das neueste Release): nicht signiert/notarisiert, macOS Gatekeeper zeigt beim ersten Start eine "nicht verifizierter Entwickler"-Warnung (Rechtsklick → Öffnen, um das zu umgehen). Oder selbst aus dem Quellcode bauen, siehe Erste Schritte unten. Windows/Linux werden nicht gebaut: MailLoom nutzt den macOS-Schlüsselbund und wird nur auf macOS getestet.
 
 ---
 
@@ -26,7 +26,7 @@
 
 ---
 
-MailPilot verbindet sich mit deinen IMAP-Postfächern, klassifiziert jede E-Mail mit **Claude (Anthropic API)** und lässt dich jede Entscheidung prüfen und korrigieren, bevor etwas verändert wird. E-Mails werden lokal in SQLite synchronisiert und gespeichert; Klassifizierungsanfragen gehen an die Anthropic API mit deinem eigenen API-Key, gespeichert im macOS-Schlüsselbund.
+MailLoom verbindet sich mit deinen IMAP-Postfächern, klassifiziert jede E-Mail mit **Claude (Anthropic API)** und lässt dich jede Entscheidung prüfen und korrigieren, bevor etwas verändert wird. E-Mails werden lokal in SQLite synchronisiert und gespeichert; Klassifizierungsanfragen gehen an die Anthropic API mit deinem eigenen API-Key, gespeichert im macOS-Schlüsselbund.
 
 Schnell-Login für iCloud, Microsoft 365, Gmail und Fastmail, ohne manuelle Servereinstellungen.
 
@@ -63,8 +63,8 @@ Schnell-Login für iCloud, Microsoft 365, Gmail und Fastmail, ohne manuelle Serv
 ## Schnellstart
 
 ```bash
-git clone https://github.com/9t29zhmwdh-coder/MailPilot
-cd MailPilot
+git clone https://github.com/9t29zhmwdh-coder/MailLoom
+cd MailLoom
 cd frontend && npm install && cd ..
 SQLX_OFFLINE=true cargo tauri dev
 ```
@@ -76,7 +76,7 @@ Beim ersten Start: **Einstellungen** öffnen, Anthropic API-Key einfügen (wird 
 ## Deinstallation / Aufräumen
 
 - App-Bundle löschen
-- Lokale Datenbank entfernen: `~/Library/Application Support/com.raystudio.mailpilot/`
+- Lokale Datenbank entfernen: `~/Library/Application Support/com.raystudio.mailloom/`
 - Gespeicherten API-Key und IMAP-Zugangsdaten aus der Schlüsselbundverwaltung.app entfernen (suche nach "claude-api-key" und deinen Konto-Bezeichnungen)
 
 Es bleiben keine weiteren Dateien oder Hintergrunddienste zurück.
@@ -85,7 +85,7 @@ Es bleiben keine weiteren Dateien oder Hintergrunddienste zurück.
 
 ## KI-Backend
 
-MailPilot nutzt [Claude](https://www.anthropic.com/claude) (Anthropic API) für E-Mail-Klassifizierung, Zusammenfassungen und Antwortvorschläge. Das erfordert einen eigenen Anthropic API-Key und eine Internetverbindung; E-Mail-Inhalte für die Klassifizierung verlassen dein Gerät und werden von der Anthropic API verarbeitet.
+MailLoom nutzt [Claude](https://www.anthropic.com/claude) (Anthropic API) für E-Mail-Klassifizierung, Zusammenfassungen und Antwortvorschläge. Das erfordert einen eigenen Anthropic API-Key und eine Internetverbindung; E-Mail-Inhalte für die Klassifizierung verlassen dein Gerät und werden von der Anthropic API verarbeitet.
 
 Standardmodell: `claude-haiku-4-5` (schnell, günstig), in den Einstellungen umstellbar auf `claude-sonnet-4-6` oder `claude-opus-4-8`.
 
@@ -100,7 +100,7 @@ E-Mails und Sync-Status werden lokal in SQLite gespeichert; ausser Anthropic (f�
 ## Architektur
 
 ```
-MailPilot/
+MailLoom/
 ├── crates/mp-core/      Rust: IMAP-Client, Klassifizierung, DB, Claude-API-Backend
 ├── crates/mp-cli/       CLI-Binary
 ├── src-tauri/           Tauri v2 Backend + IPC-Commands
@@ -109,4 +109,4 @@ MailPilot/
 
 ---
 
-**Autor:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Aktiv · ![version](https://img.shields.io/github/v/release/9t29zhmwdh-coder/MailPilot?color=6b7280&style=flat-square)
+**Autor:** [Rafael Yilmaz](https://github.com/9t29zhmwdh-coder) · **Status:** Aktiv · ![version](https://img.shields.io/github/v/release/9t29zhmwdh-coder/MailLoom?color=6b7280&style=flat-square)

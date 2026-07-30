@@ -1,6 +1,6 @@
-# Getting Started with MailPilot
+# Getting Started with MailLoom
 
-This guide walks you through setting up and running MailPilot from scratch, even if you have never used a terminal or built a Rust/Tauri app before. MailPilot is a **macOS-only** application (it relies on the macOS Keychain for storing your Anthropic API key and IMAP credentials), so the steps below are for macOS 13 or later.
+This guide walks you through setting up and running MailLoom from scratch, even if you have never used a terminal or built a Rust/Tauri app before. MailLoom is a **macOS-only** application (it relies on the macOS Keychain for storing your Anthropic API key and IMAP credentials), so the steps below are for macOS 13 or later.
 
 <!-- TODO: Screenshot -->
 
@@ -32,13 +32,13 @@ After installing, close and reopen your terminal so the new PATH entries take ef
 ### 3. Get the code
 
 **Easiest way (no git required):**
-1. Go to the [MailPilot GitHub page](https://github.com/9t29zhmwdh-coder/MailPilot)
+1. Go to the [MailLoom GitHub page](https://github.com/9t29zhmwdh-coder/MailLoom)
 2. Click the green **Code** button → **Download ZIP**
-3. Extract the ZIP file, e.g. into `~/Projects/MailPilot`
+3. Extract the ZIP file, e.g. into `~/Projects/MailLoom`
 
 **If you already use git:**
 ```bash
-git clone https://github.com/9t29zhmwdh-coder/MailPilot.git
+git clone https://github.com/9t29zhmwdh-coder/MailLoom.git
 ```
 
 ### 4. Build & run
@@ -46,12 +46,12 @@ git clone https://github.com/9t29zhmwdh-coder/MailPilot.git
 In your terminal, navigate into the extracted/cloned folder, then run:
 
 ```bash
-cd MailPilot
+cd MailLoom
 cd frontend && npm install && cd ..
 SQLX_OFFLINE=true cargo tauri dev
 ```
 
-`npm install` downloads frontend dependencies, and `SQLX_OFFLINE=true cargo tauri dev` compiles the Rust backend without needing a live database connection at compile time. The first run takes a few minutes. Once it finishes, the MailPilot window opens.
+`npm install` downloads frontend dependencies, and `SQLX_OFFLINE=true cargo tauri dev` compiles the Rust backend without needing a live database connection at compile time. The first run takes a few minutes. Once it finishes, the MailLoom window opens.
 
 ### 5. First-time setup
 

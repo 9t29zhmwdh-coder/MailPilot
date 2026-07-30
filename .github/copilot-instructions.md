@@ -1,4 +1,4 @@
-# Copilot Instructions for MailPilot
+# Copilot Instructions for MailLoom
 AI-powered email organizer with smart categorization, a review workflow and multi-account IMAP, built as a native Rust+Tauri desktop app.
 ## Code style
 - Functions stay small and single-purpose, prefer under 20 lines
