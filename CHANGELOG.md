@@ -5,6 +5,25 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.4.0] - 2026-07-30
+
+### Added
+
+- The AI backend is selectable. `ai_backend` chooses between a local Ollama instance and Anthropic's API, and defaults to `ollama`.
+
+### Fixed
+
+- Classification ran exclusively through Anthropic's API. `OllamaBackend` was fully implemented but never instantiated anywhere, so every command built a `ClaudeBackend` regardless of any setting. Even `check_ollama` reported Anthropic's availability under Ollama's name.
+- `PRIVACY.md` stated that classification ran locally and that no email content was transmitted to external services. Neither was true. The file now describes what each backend sends, and records the correction rather than quietly replacing the text.
+
+### Security
+
+- An unknown value in `ai_backend`, whether a typo or a leftover from an older configuration, selects the local model. A configuration mistake must not send somebody's email to a third party.
+- Choosing the cloud backend without an API key reports an error instead of falling back to the local model, and a missing local model never falls back to the cloud. Either silent substitution would override a deliberate choice about where private mail is processed.
+- The README now names what the cloud path transmits: sender, subject and the first 800 characters of the body. That content belongs to the people who wrote to you, who did not agree to it.
+
+---
+
 ## [1.3.0] - 2026-07-30
 
 ### Changed
