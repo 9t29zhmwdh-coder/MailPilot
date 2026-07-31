@@ -16,6 +16,8 @@
 
 ![MailLoom](docs/screenshot.de.png)
 
+<sub>Screenshot mit erfundenen Demodaten. Absender und Betreffzeilen sind ausgedacht, es ist kein echtes Postfach zu sehen.</sub>
+
 ---
 
 > 💾 [**Für macOS herunterladen**](https://github.com/9t29zhmwdh-coder/MailLoom/releases/latest/download/MailLoom.dmg) (DMG, immer das neueste Release): nicht signiert/notarisiert, macOS Gatekeeper zeigt beim ersten Start eine "nicht verifizierter Entwickler"-Warnung (Rechtsklick → Öffnen, um das zu umgehen). Oder selbst aus dem Quellcode bauen, siehe Erste Schritte unten. Windows/Linux werden nicht gebaut: MailLoom nutzt den macOS-Schlüsselbund und wird nur auf macOS getestet.

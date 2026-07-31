@@ -12,7 +12,7 @@ const translations: Record<Lang, Dict> = {
   en: {
     nav: {
       dashboard: 'Overview', emails: 'Emails', actions: 'Actions', settings: 'Settings',
-      claudeOnline: 'Claude online', claudeOffline: 'Claude offline',
+      backendOnline: 'online', backendOffline: 'offline',
     },
     category: {
       Important: 'Important', Work: 'Work', Private: 'Private',
@@ -98,6 +98,11 @@ const translations: Record<Lang, Dict> = {
     },
     settings: {
       title: 'Settings', emailAccounts: 'Email accounts', addAccount: 'Add account',
+      backendLabel: 'Which model classifies',
+      backendLocal: 'Local (Ollama)',
+      backendLocalHint: 'Nothing leaves your device',
+      backendCloud: 'Cloud (Claude)',
+      backendCloudHint: 'Sender, subject and 800 characters go to Anthropic',
       claudeSection: 'AI, Claude', syncOptions: 'Sync options',
       maxEmailsPerSync: 'Max emails per sync', autoClassifyAfterSync: 'Classify automatically after sync',
       reviewBeforeDelete: 'Always use review folder before deleting',
@@ -126,7 +131,7 @@ const translations: Record<Lang, Dict> = {
   de: {
     nav: {
       dashboard: 'Übersicht', emails: 'E-Mails', actions: 'Aktionen', settings: 'Einstellungen',
-      claudeOnline: 'Claude online', claudeOffline: 'Claude offline',
+      backendOnline: 'online', backendOffline: 'offline',
     },
     category: {
       Important: 'Wichtig', Work: 'Arbeit', Private: 'Privat',
@@ -212,6 +217,11 @@ const translations: Record<Lang, Dict> = {
     },
     settings: {
       title: 'Einstellungen', emailAccounts: 'E-Mail Konten', addAccount: 'Konto hinzufügen',
+      backendLabel: 'Welches Modell klassifiziert',
+      backendLocal: 'Lokal (Ollama)',
+      backendLocalHint: 'Nichts verlässt dein Gerät',
+      backendCloud: 'Cloud (Claude)',
+      backendCloudHint: 'Absender, Betreff und 800 Zeichen gehen an Anthropic',
       claudeSection: 'KI, Claude', syncOptions: 'Sync-Optionen',
       maxEmailsPerSync: 'Maximale E-Mails pro Sync', autoClassifyAfterSync: 'Automatisch klassifizieren nach Sync',
       reviewBeforeDelete: 'Vor Löschen immer Review-Ordner',
@@ -245,8 +255,19 @@ interface LangState {
   toggle: () => void
 }
 
+/// The language for a first run, taken from the operating system.
+///
+/// Previously this fell back to 'en' outright, so a German system started the
+/// app in English and every user had to change it by hand once. The stored
+/// choice still wins: somebody who picked a language means it, whatever the
+/// system says.
+function systemLang(): Lang {
+  const tags = navigator.languages?.length ? navigator.languages : [navigator.language]
+  return tags.some(t => t?.toLowerCase().startsWith('de')) ? 'de' : 'en'
+}
+
 export const useLangStore = create<LangState>((set) => ({
-  lang: (localStorage.getItem(STORAGE_KEY) as Lang) || 'en',
+  lang: (localStorage.getItem(STORAGE_KEY) as Lang) || systemLang(),
   setLang: (lang) => {
     localStorage.setItem(STORAGE_KEY, lang)
     set({ lang })

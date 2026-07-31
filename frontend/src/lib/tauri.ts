@@ -76,6 +76,10 @@ export interface EmailAccount {
 }
 
 export interface AppSettings {
+  /// Which backend classifies. 'ollama' keeps everything on the machine,
+  /// 'claude' sends sender, subject and the first 800 characters of the body
+  /// to Anthropic.
+  ai_backend: string
   ollama_url: string
   text_model: string
   vision_model: string
@@ -199,7 +203,7 @@ export const api = {
   // classify
   classifyEmail: (emailId: string)               => invoke<void>('classify_email', { emailId }),
   classifyBatch: (limit?: number)                => invoke<number>('classify_batch', { limit }),
-  checkClaude: ()                                => invoke<boolean>('check_ollama'),
+  checkBackend: ()                               => invoke<boolean>('check_ollama'),
   generateSummary: (emailId: string)             => invoke<string>('generate_summary', { emailId }),
   suggestFolderReorganization: (accountId: string) => invoke<FolderSuggestion[]>('suggest_folder_reorganization', { accountId }),
 

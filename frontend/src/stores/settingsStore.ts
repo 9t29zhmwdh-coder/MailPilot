@@ -2,6 +2,8 @@ import { create } from 'zustand'
 import { AppSettings, api } from '../lib/tauri'
 
 const DEFAULT_SETTINGS: AppSettings = {
+  // Ohne ausdrueckliche Wahl bleibt alles lokal.
+  ai_backend: 'ollama',
   ollama_url: 'http://localhost:11434',
   text_model: 'llama3',
   vision_model: 'llava',

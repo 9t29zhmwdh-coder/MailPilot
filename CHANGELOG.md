@@ -5,6 +5,23 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.5.0] - 2026-07-31
+
+### Added
+
+- The settings screen lets you pick the backend. 1.4.0 made the choice real in the code but left no way to make it, so the setting could only be changed by editing the stored configuration. The picker sits above the API key field, because it decides whether any email content leaves the machine and the key only matters once the cloud path is chosen.
+
+### Fixed
+
+- The sidebar named the backend that is actually in use. It read "Claude online" whatever the setting said, which became wrong the moment the local model became the default.
+- The interface started in English on a German system. The language fell back to `'en'` outright instead of reading the operating system's, so every German user changed it by hand once. A stored choice still wins over the system setting.
+
+### Changed
+
+- New screenshots in both READMEs, taken with invented demo data. The old ones still showed the previous product name in the window title. A caption states that the senders and subjects are made up.
+
+---
+
 ## [1.4.0] - 2026-07-30
 
 ### Added

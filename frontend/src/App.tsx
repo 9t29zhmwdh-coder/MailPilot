@@ -15,7 +15,7 @@ type Tab = 'dashboard' | 'emails' | 'actions' | 'settings'
 export default function App() {
   const [tab, setTab] = useState<Tab>('dashboard')
   const { ollamaOnline, setOllamaOnline, loadAccounts, loadStats } = useAccountStore()
-  const { loadSettings } = useSettingsStore()
+  const { loadSettings, settings } = useSettingsStore()
   const { loadEmails, filterCategory } = useEmailStore()
   const t = useT()
   const { lang, toggle } = useLangStore()
@@ -24,7 +24,7 @@ export default function App() {
     loadAccounts()
     loadStats()
     loadSettings()
-    api.checkClaude().then(setOllamaOnline).catch(() => {})
+    api.checkBackend().then(setOllamaOnline).catch(() => {})
 
     const cleanup: Array<() => void> = []
     events.onSyncDone(count => {
@@ -68,7 +68,14 @@ export default function App() {
           </div>
           <div className="flex items-center gap-1.5 mt-1.5">
             <div className={`w-1.5 h-1.5 rounded-full ${ollamaOnline ? 'bg-[#3fb950]' : 'bg-[#f85149]'}`} />
-            <span className="text-xs text-[#8b949e]">{ollamaOnline ? t('nav.claudeOnline') : t('nav.claudeOffline')}</span>
+            {/* Names the backend actually in use. It said "Claude" regardless of
+                the setting, which was wrong the moment the local model became
+                the default. */}
+            <span className="text-xs text-[#8b949e]">
+              {(settings?.ai_backend === 'claude' ? 'Claude' : 'Ollama')}
+              {' '}
+              {ollamaOnline ? t('nav.backendOnline') : t('nav.backendOffline')}
+            </span>
           </div>
         </div>
 
