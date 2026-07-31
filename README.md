@@ -16,6 +16,8 @@
 
 ![MailLoom](docs/screenshot.png)
 
+<sub>Screenshot with invented demo data. The senders and subjects are made up; no real mailbox is shown.</sub>
+
 ---
 
 > 💾 [**Download for macOS**](https://github.com/9t29zhmwdh-coder/MailLoom/releases/latest/download/MailLoom.dmg) (DMG, always the latest release): not code-signed/notarized, so macOS Gatekeeper will show an "unidentified developer" warning on first run (right-click → Open to bypass). Or build from source, see Getting Started below. Windows/Linux are not built: MailLoom uses the macOS Keychain and is only tested on macOS.

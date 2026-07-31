@@ -520,7 +520,7 @@ function ClaudeSection({
 
   const handleCheck = async () => {
     setChecking(true); setClaudeMsg('')
-    const ok = await api.checkClaude().catch(() => false)
+    const ok = await api.checkBackend().catch(() => false)
     setClaudeMsg(ok ? `${t('settings.claudeReachable')} ✓` : t('settings.claudeUnreachable'))
     setChecking(false)
   }
@@ -541,6 +541,32 @@ function ClaudeSection({
 
   return (
     <Section title={t('settings.claudeSection')}>
+      {/* The choice comes first: it decides whether any email content leaves
+          the machine, so it belongs above the key field rather than below it. */}
+      <div className="mb-4">
+        <div className="text-xs text-[#8b949e] mb-2">{t('settings.backendLabel')}</div>
+        <div className="flex gap-2">
+          {(['ollama', 'claude'] as const).map(b => (
+            <button
+              key={b}
+              onClick={() => set('ai_backend', b)}
+              className={`flex-1 text-left px-3 py-2 rounded-md border transition-colors ${
+                (draft.ai_backend ?? 'ollama') === b
+                  ? 'border-[#58a6ff] bg-[#58a6ff11]'
+                  : 'border-[#30363d] hover:border-[#484f58]'
+              }`}
+            >
+              <div className="text-sm text-[#e6edf3]">
+                {b === 'ollama' ? t('settings.backendLocal') : t('settings.backendCloud')}
+              </div>
+              <div className="text-xs text-[#8b949e] mt-0.5">
+                {b === 'ollama' ? t('settings.backendLocalHint') : t('settings.backendCloudHint')}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="mb-3 flex items-center gap-2">
         <span className="text-xs text-[#8b949e]">{t('settings.apiKeyLabel')}</span>
         {keyStatus === true && <span className="text-xs text-[#3fb950] font-medium">{t('settings.keySet')} ✓</span>}
