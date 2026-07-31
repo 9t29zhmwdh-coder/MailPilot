@@ -4,13 +4,13 @@
 
 </div>
 
-<p>AI-powered email organizer with smart categorization, a review workflow and multi-account IMAP</p>
+<p>Sorts your inbox by what each mail actually is, and shows you every decision before it acts</p>
 
 [🇩🇪 Deutsche Version](README.de.md)
 
 [![CI](https://github.com/9t29zhmwdh-coder/MailLoom/actions/workflows/ci.yml/badge.svg)](https://github.com/9t29zhmwdh-coder/MailLoom/actions) [![CodeQL](https://github.com/9t29zhmwdh-coder/MailLoom/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/9t29zhmwdh-coder/MailLoom/security/code-scanning) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/9t29zhmwdh-coder/MailLoom/badge)](https://securityscorecards.dev/viewer/?uri=github.com/9t29zhmwdh-coder/MailLoom) [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/13696/badge)](https://www.bestpractices.dev/projects/13696)
 
-![Rust](https://img.shields.io/badge/Rust-1.96+-CE422B?logo=rust&logoColor=white) ![Tauri](https://img.shields.io/badge/Tauri-v2-24C8D8?logo=tauri&logoColor=white) ![Platform](https://img.shields.io/badge/Platform-macOS-lightgrey) ![AI | Claude](https://img.shields.io/badge/AI-Claude-black?logo=anthropic&logoColor=white) ![AI | Claude Code](https://img.shields.io/badge/AI-Claude_Code-black?logo=anthropic&logoColor=white) ![AI | Copilot](https://img.shields.io/badge/AI-Copilot-black?logo=github&logoColor=white) [![Release](https://img.shields.io/github/v/release/9t29zhmwdh-coder/MailLoom?color=3F8E7E)](https://github.com/9t29zhmwdh-coder/MailLoom/releases) [![License](https://img.shields.io/github/license/9t29zhmwdh-coder/MailLoom?color=lightgrey)](LICENSE)
+![Rust](https://img.shields.io/badge/Rust-1.96+-CE422B?logo=rust&logoColor=white) ![Tauri](https://img.shields.io/badge/Tauri-v2-24C8D8?logo=tauri&logoColor=white) ![Platform](https://img.shields.io/badge/Platform-macOS-lightgrey) ![AI | Claude](https://img.shields.io/badge/AI-Claude-black?logo=anthropic&logoColor=white) ![AI | Claude Code](https://img.shields.io/badge/AI-Claude_Code-black?logo=anthropic&logoColor=white) ![AI | Copilot](https://img.shields.io/badge/AI-Copilot-black?logo=github&logoColor=white) ![AI | Ollama](https://img.shields.io/badge/AI-Ollama-black?logo=ollama&logoColor=white) [![Release](https://img.shields.io/github/v/release/9t29zhmwdh-coder/MailLoom?color=3F8E7E)](https://github.com/9t29zhmwdh-coder/MailLoom/releases) [![License](https://img.shields.io/github/license/9t29zhmwdh-coder/MailLoom?color=lightgrey)](LICENSE)
 
 > **How it runs:** MailLoom is a native desktop app, not a server or browser tool. It opens as its own window and has no tray icon or background service; it only syncs and classifies while the window is open.
 
@@ -28,11 +28,31 @@
 
 ---
 
-MailLoom connects to your IMAP mailboxes, classifies every email using **Claude (Anthropic API)**, and lets you review and correct every decision before anything is moved or deleted. Emails are synced and stored locally in SQLite; classification requests go to Anthropic's API using your own API key, stored in the macOS Keychain.
+**Sorts your inbox by what each mail actually is, and shows you every decision before it acts.**
 
-Quick login for iCloud, Microsoft 365, Gmail and Fastmail, with no manual server setup.
+Mail rules match a sender or a word in the subject. That covers newsletters
+and nothing else, because an invoice, a delivery notice and a phishing attempt
+do not announce themselves in the header. So the rules stay half-written and
+the inbox stays a pile.
 
-**In practice:** you connect an account, sync your inbox, and let Claude categorize everything into 16 categories (Invoice, Package, Phishing, Newsletter...). You review or correct each suggestion before it's final; nothing is deleted or moved without your confirmation.
+MailLoom reads each mail and sorts it into one of 16 categories: invoice,
+package, phishing, work, newsletter and the rest. Every suggestion is yours to
+confirm or correct, and nothing is moved or deleted until you say so.
+
+**You choose which model reads your mail.** A local Ollama model is the
+default, and with it no email content leaves the machine. Anthropic's Claude
+is available if you prefer it, and then sender, subject and the first 800
+characters of each classified mail are sent to their API. The choice is a
+setting, not a build option, and [PRIVACY.md](PRIVACY.md) spells out what each
+one sends.
+
+Quick login for iCloud, Microsoft 365, Gmail and Fastmail, with no manual
+server setup. Mail is stored locally in SQLite; passwords and the API key live
+in the macOS Keychain.
+
+**Not for you if** your mail already sorts itself. If sender rules cover your
+inbox, they are faster and need no model at all. This is for the inbox where
+what matters is what the mail *is*, not who sent it.
 
 ## Features
 
