@@ -5,6 +5,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.5.1] - 2026-07-31
+
+### Changed
+
+- Both READMEs now open with why mail rules stop working, which is that an invoice, a delivery notice and a phishing attempt do not announce themselves in the header, rather than with the category "AI-powered email organizer".
+- The description said classification runs through Claude and named the Anthropic API as the only path. Since 1.4.0 a local Ollama model is the default and the choice is a setting. The READMEs now say so and point at PRIVACY.md for what each backend transmits.
+- An Ollama badge sits alongside the Claude one, matching what the app actually supports.
+
+---
+
 ## [1.5.0] - 2026-07-31
 
 ### Added
