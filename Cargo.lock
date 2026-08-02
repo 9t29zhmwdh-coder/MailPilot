@@ -2452,7 +2452,7 @@ checksum = "112b39cec0b298b6c1999fee3e31427f74f676e4cb9879ed1a121b43661a4154"
 
 [[package]]
 name = "mailloom"
-version = "1.5.0"
+version = "1.5.1"
 dependencies = [
  "anyhow",
  "chrono",
@@ -2464,7 +2464,7 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-dialog",
  "tauri-plugin-shell",
- "thiserror 1.0.69",
+ "thiserror 2.0.18",
  "tokio",
  "tracing",
  "uuid",
@@ -2552,7 +2552,7 @@ dependencies = [
 
 [[package]]
 name = "mp-cli"
-version = "1.5.0"
+version = "1.5.1"
 dependencies = [
  "anyhow",
  "mp-core",
@@ -2562,7 +2562,7 @@ dependencies = [
 
 [[package]]
 name = "mp-core"
-version = "1.5.0"
+version = "1.5.1"
 dependencies = [
  "anyhow",
  "async-trait",
@@ -2579,7 +2579,7 @@ dependencies = [
  "serde",
  "serde_json",
  "sqlx",
- "thiserror 1.0.69",
+ "thiserror 2.0.18",
  "tokio",
  "tracing",
  "uuid",
