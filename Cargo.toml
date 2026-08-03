@@ -3,7 +3,7 @@ resolver = "2"
 members  = ["crates/mp-core", "crates/mp-cli", "src-tauri"]
 
 [workspace.package]
-version = "1.6.0"
+version = "1.7.0"
 edition = "2021"
 
 [workspace.dependencies]
@@ -18,7 +18,7 @@ reqwest      = { version = "0.13", features = ["json", "rustls"], default-featur
 keyring      = "4"
 chrono       = { version = "0.4",  features = ["serde"] }
 uuid         = { version = "1",    features = ["v4", "serde"] }
-thiserror    = "1"
+thiserror    = "2"
 anyhow       = "1"
 tracing      = "0.1"
 async-trait  = "0.1"

@@ -5,6 +5,29 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.7.0] - 2026-08-03
+
+### Changed
+
+- `mailparse` 0.15 to 0.16. This crate does the message parsing, so a change in how encoded words or timestamps are handled would show up as broken umlauts or wrong sorting in the list a user reads. The three parsing tests added first pass unmodified.
+- `thiserror` 1 to 2. The error strings the frontend shows are unchanged, held by tests that pass under both versions.
+- `sqlx` 0.8 to 0.9. Every query site uses a static SQL literal, so none runs into the guard 0.9 introduces for query strings that are not `&'static str`.
+- React 18 to 19 with `react-dom` and both type packages together, since neither half resolves alone. Checked against what React 19 removes rather than assumed.
+- `zustand` 4 to 5. All four stores already import the named `create`, which is the form version 5 expects.
+- The npm group, covering `lightningcss`, `postcss` and the devtools plugin below vite.
+- `github/codeql-action` 4.37.3 to 4.37.4 and `actions/attest` 4.2.0 to 4.2.1, merged separately and carried by this version.
+
+### Added
+
+- Three tests over the message parsing: a realistic message with a UTF-8 encoded subject, a quoted-printable sender name, two recipients and a +0200 timestamp, plus one without a subject. Subject, sender, recipients, message id and the conversion to UTC are all held.
+- Tests that hold the `MpError` messages, including the `anyhow` conversion that goes through a hand-written `From`.
+
+### Removed
+
+- `base64` from `mp-core` and `thiserror` from `mp-core`. Both were declared and never referenced. `base64` had been proposed for a 0.22 to 0.23 bump; it remains in the tree below `charset` below `mailparse`, which is not a declaration of ours.
+
+---
+
 ## [1.6.0] - 2026-08-03
 
 ### Changed

@@ -277,3 +277,53 @@ fn decode_header_value(raw: &str) -> String {
         Err(_) => raw.to_string(),
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Haelt fest, was `mailparse` aus einer realistischen Nachricht macht.
+    ///
+    /// Diese Zerlegung ist das Herz der Anwendung: Betreff, Absender und Datum
+    /// landen unveraendert in der Liste, die der Nutzer sieht. Aendert ein
+    /// Versionssprung die Dekodierung, stehen dort kaputte Umlaute oder ein
+    /// falsches Datum, und nichts davon loest einen Fehler aus.
+    const NACHRICHT: &[u8] = b"From: =?UTF-8?Q?Rafael_Gr=C3=BCn?= <rafael@example.ch>\r\n\
+To: empfang@example.ch, zweiter@example.ch\r\n\
+Subject: =?UTF-8?B?QsO8cm9zY2hsw7xzc2VsIGdlZnVuZGVu?=\r\n\
+Date: Tue, 15 Jul 2026 14:30:00 +0200\r\n\
+Message-Id: <abc123@example.ch>\r\n\
+Content-Type: text/plain; charset=utf-8\r\n\
+\r\n\
+Der Schluessel liegt beim Empfang.\r\n";
+
+    #[test]
+    fn kopfzeilen_werden_wie_gehabt_dekodiert() {
+        let mail = parse_email_message(NACHRICHT, 42, "INBOX", "konto-1").unwrap();
+
+        assert_eq!(mail.subject, "Büroschlüssel gefunden");
+        assert_eq!(mail.from.name.as_deref(), Some("Rafael Grün"));
+        assert_eq!(mail.from.address, "rafael@example.ch");
+        assert_eq!(mail.to.len(), 2);
+        assert_eq!(mail.to[1].address, "zweiter@example.ch");
+        assert_eq!(mail.message_id, "abc123@example.ch");
+    }
+
+    /// Das Datum kommt ueber `mailparse::dateparse` als Unix-Zeit herein und
+    /// wird danach zu UTC. Eine verschobene Zeitzonenbehandlung waere in der
+    /// Oberflaeche nur als falsche Sortierung sichtbar.
+    #[test]
+    fn das_datum_wird_korrekt_nach_utc_gerechnet() {
+        let mail = parse_email_message(NACHRICHT, 42, "INBOX", "konto-1").unwrap();
+        assert_eq!(mail.date.to_rfc3339(), "2026-07-15T12:30:00+00:00");
+    }
+
+    /// Fehlt der Betreff, darf nichts umfallen.
+    #[test]
+    fn eine_nachricht_ohne_betreff_bleibt_verarbeitbar() {
+        let roh = b"From: nur@example.ch\r\nDate: Tue, 15 Jul 2026 14:30:00 +0200\r\n\r\nText\r\n";
+        let mail = parse_email_message(roh, 1, "INBOX", "konto-1").unwrap();
+        assert_eq!(mail.subject, "");
+        assert_eq!(mail.from.address, "nur@example.ch");
+    }
+}
