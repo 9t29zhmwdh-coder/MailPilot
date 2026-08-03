@@ -106,17 +106,17 @@ export function Dashboard({ onNavigate }: Props) {
   })) : []
 
   const StatCard = ({ label, value, sub, color }: { label: string; value: string | number; sub?: string; color?: string }) => (
-    <div className="bg-[#161b22] border border-[#30363d] rounded-lg p-4">
-      <div className="text-xs text-[#8b949e] mb-1">{label}</div>
-      <div className={`text-2xl font-bold ${color ?? 'text-[#e6edf3]'}`}>{value}</div>
-      {sub && <div className="text-xs text-[#8b949e] mt-0.5">{sub}</div>}
+    <div className="bg-gh-surface border border-gh-border rounded-lg p-4">
+      <div className="text-xs text-gh-muted mb-1">{label}</div>
+      <div className={`text-2xl font-bold ${color ?? 'text-gh-text'}`}>{value}</div>
+      {sub && <div className="text-xs text-gh-muted mt-0.5">{sub}</div>}
     </div>
   )
 
   return (
     <div className="h-full overflow-y-auto p-6">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-xl font-semibold text-[#e6edf3]">{t('dashboard.title')}</h1>
+        <h1 className="text-xl font-semibold text-gh-text">{t('dashboard.title')}</h1>
         <div className="flex gap-2">
           <button
             onClick={handleClassify}
@@ -135,23 +135,23 @@ export function Dashboard({ onNavigate }: Props) {
       {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3 mb-6 lg:grid-cols-4">
         <StatCard label={t('dashboard.totalEmails')} value={stats?.total_emails ?? 0} />
-        <StatCard label={t('dashboard.unread')} value={stats?.unread_count ?? 0} color="text-[#58a6ff]" />
-        <StatCard label={t('dashboard.classified')} value={stats?.classified_count ?? 0} color="text-[#3fb950]" />
+        <StatCard label={t('dashboard.unread')} value={stats?.unread_count ?? 0} color="text-gh-blue" />
+        <StatCard label={t('dashboard.classified')} value={stats?.classified_count ?? 0} color="text-gh-green" />
         <StatCard label={t('dashboard.accounts')} value={stats?.accounts_count ?? 0} />
       </div>
 
       <div className="grid grid-cols-2 gap-3 mb-6 lg:grid-cols-4">
-        <StatCard label={t('dashboard.phishingDetected')} value={stats?.phishing_count ?? 0} color="text-[#f85149]"
+        <StatCard label={t('dashboard.phishingDetected')} value={stats?.phishing_count ?? 0} color="text-gh-red"
           sub={stats?.phishing_count ? `⚠️ ${t('dashboard.check')}` : `✓ ${t('dashboard.safe')}`} />
-        <StatCard label={t('dashboard.packages')} value={stats?.packages_count ?? 0} color="text-[#3fb950]" />
-        <StatCard label={t('dashboard.subscriptions')} value={stats?.subscriptions_count ?? 0} color="text-[#d29922]" />
-        <StatCard label={t('dashboard.followUps')} value={stats?.follow_up_count ?? 0} color="text-[#f0883e]" />
+        <StatCard label={t('dashboard.packages')} value={stats?.packages_count ?? 0} color="text-gh-green" />
+        <StatCard label={t('dashboard.subscriptions')} value={stats?.subscriptions_count ?? 0} color="text-gh-yellow" />
+        <StatCard label={t('dashboard.followUps')} value={stats?.follow_up_count ?? 0} color="text-gh-orange" />
       </div>
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 mb-6">
         {/* Pie Chart */}
-        <div className="bg-[#161b22] border border-[#30363d] rounded-lg p-4">
-          <h3 className="text-sm font-medium text-[#e6edf3] mb-3">{t('dashboard.byCategory')}</h3>
+        <div className="bg-gh-surface border border-gh-border rounded-lg p-4">
+          <h3 className="text-sm font-medium text-gh-text mb-3">{t('dashboard.byCategory')}</h3>
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={200}>
               <PieChart>
@@ -168,15 +168,15 @@ export function Dashboard({ onNavigate }: Props) {
               </PieChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-[200px] flex items-center justify-center text-[#8b949e] text-sm">
+            <div className="h-[200px] flex items-center justify-center text-gh-muted text-sm">
               {t('dashboard.noClassifiedYet')}
             </div>
           )}
         </div>
 
         {/* Category List */}
-        <div className="bg-[#161b22] border border-[#30363d] rounded-lg p-4">
-          <h3 className="text-sm font-medium text-[#e6edf3] mb-3">{t('dashboard.topCategories')}</h3>
+        <div className="bg-gh-surface border border-gh-border rounded-lg p-4">
+          <h3 className="text-sm font-medium text-gh-text mb-3">{t('dashboard.topCategories')}</h3>
           <div className="space-y-1.5 overflow-y-auto max-h-[200px]">
             {Object.entries(stats?.by_category ?? {})
               .sort((a, b) => b[1] - a[1])
@@ -185,15 +185,15 @@ export function Dashboard({ onNavigate }: Props) {
                 <button
                   key={cat}
                   onClick={() => onNavigate('emails')}
-                  className="flex items-center justify-between w-full px-2 py-1 rounded hover:bg-[#21262d] transition-colors group"
+                  className="flex items-center justify-between w-full px-2 py-1 rounded-sm hover:bg-[#21262d] transition-colors group"
                 >
                   <div className="flex items-center gap-2">
                     <span>{categoryEmoji(cat as EmailCategory)}</span>
-                    <span className="text-sm text-[#c9d1d9] group-hover:text-[#e6edf3]">
+                    <span className="text-sm text-[#c9d1d9] group-hover:text-gh-text">
                       {categoryLabel(cat as EmailCategory)}
                     </span>
                   </div>
-                  <span className="text-xs text-[#8b949e] bg-[#21262d] px-1.5 py-0.5 rounded-full">{count}</span>
+                  <span className="text-xs text-gh-muted bg-[#21262d] px-1.5 py-0.5 rounded-full">{count}</span>
                 </button>
               ))}
           </div>
@@ -201,25 +201,25 @@ export function Dashboard({ onNavigate }: Props) {
       </div>
 
       {/* Accounts */}
-      <div className="bg-[#161b22] border border-[#30363d] rounded-lg p-4">
+      <div className="bg-gh-surface border border-gh-border rounded-lg p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-medium text-[#e6edf3]">{t('dashboard.accountsSection')}</h3>
+          <h3 className="text-sm font-medium text-gh-text">{t('dashboard.accountsSection')}</h3>
           <div className="flex items-center gap-3">
             {/* Auto-Sync Toggle */}
             <button
               onClick={() => setAutoSync(v => !v)}
               className={`flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-md border transition-colors ${
                 autoSync
-                  ? 'border-[#3fb950] text-[#3fb950] bg-[#3fb95015]'
-                  : 'border-[#30363d] text-[#8b949e] hover:border-[#484f58]'
+                  ? 'border-gh-green text-gh-green bg-[#3fb95015]'
+                  : 'border-gh-border text-gh-muted hover:border-[#484f58]'
               }`}
             >
-              <span className={`w-1.5 h-1.5 rounded-full ${autoSync ? 'bg-[#3fb950] animate-pulse' : 'bg-[#484f58]'}`} />
+              <span className={`w-1.5 h-1.5 rounded-full ${autoSync ? 'bg-gh-green animate-pulse' : 'bg-[#484f58]'}`} />
               Auto-Sync {autoSync ? t('dashboard.autoSyncOn') : t('dashboard.autoSyncOff')}
             </button>
             <button
               onClick={() => onNavigate('settings')}
-              className="text-xs text-[#58a6ff] hover:underline"
+              className="text-xs text-gh-blue hover:underline"
             >
               + {t('dashboard.addAccount')}
             </button>
@@ -228,15 +228,15 @@ export function Dashboard({ onNavigate }: Props) {
 
         {autoSync && (
           <div className="mb-3 text-xs text-[#484f58] flex items-center gap-1.5">
-            <span className="w-1 h-1 rounded-full bg-[#3fb950] animate-pulse" />
+            <span className="w-1 h-1 rounded-full bg-gh-green animate-pulse" />
             {t('dashboard.autoSyncNote')}
           </div>
         )}
 
         {accounts.length === 0 ? (
-          <div className="text-sm text-[#8b949e] text-center py-4">
+          <div className="text-sm text-gh-muted text-center py-4">
             {t('dashboard.noAccountsYet')}<br />
-            <button onClick={() => onNavigate('settings')} className="text-[#58a6ff] hover:underline mt-1">
+            <button onClick={() => onNavigate('settings')} className="text-gh-blue hover:underline mt-1">
               {t('dashboard.addAccountNow')} →
             </button>
           </div>
@@ -246,15 +246,15 @@ export function Dashboard({ onNavigate }: Props) {
               const result = syncResults[acc.id]
               const isSyncing = syncing === acc.id
               return (
-                <div key={acc.id} className="flex items-center justify-between p-3 bg-[#0d1117] rounded-md">
+                <div key={acc.id} className="flex items-center justify-between p-3 bg-gh-bg rounded-md">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2 mb-0.5">
-                      <div className="text-sm text-[#e6edf3] font-medium truncate">{acc.label}</div>
+                      <div className="text-sm text-gh-text font-medium truncate">{acc.label}</div>
                       {isSyncing && (
-                        <span className="text-xs text-[#58a6ff] animate-pulse flex-shrink-0">{t('dashboard.syncing')}</span>
+                        <span className="text-xs text-gh-blue animate-pulse shrink-0">{t('dashboard.syncing')}</span>
                       )}
                     </div>
-                    <div className="text-xs text-[#8b949e] truncate">{acc.email_address}</div>
+                    <div className="text-xs text-gh-muted truncate">{acc.email_address}</div>
                     <div className="flex items-center gap-2 mt-1">
                       {acc.last_sync ? (
                         <span className="text-xs text-[#484f58]">
@@ -265,25 +265,25 @@ export function Dashboard({ onNavigate }: Props) {
                       )}
                       {result && !isSyncing && (
                         result.error ? (
-                          <span className="text-xs text-[#f85149]">{t('dashboard.error')}</span>
+                          <span className="text-xs text-gh-red">{t('dashboard.error')}</span>
                         ) : (
-                          <span className="text-xs text-[#3fb950]">
+                          <span className="text-xs text-gh-green">
                             {result.count > 0 ? `+${result.count} ${t('dashboard.newCount')}` : t('dashboard.current')}
                           </span>
                         )
                       )}
                     </div>
                     {result?.error && !isSyncing && (
-                      <div className="text-xs text-[#f85149] mt-0.5 truncate">{result.error}</div>
+                      <div className="text-xs text-gh-red mt-0.5 truncate">{result.error}</div>
                     )}
                   </div>
                   <button
                     onClick={() => handleSync(acc.id)}
                     disabled={!!syncing}
-                    className={`ml-3 flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-colors disabled:opacity-50
+                    className={`ml-3 shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-md transition-colors disabled:opacity-50
                       ${isSyncing
                         ? 'bg-[#1f6feb] text-white'
-                        : 'bg-[#21262d] hover:bg-[#30363d] text-[#8b949e] hover:text-[#e6edf3]'}`}
+                        : 'bg-[#21262d] hover:bg-gh-border text-gh-muted hover:text-gh-text'}`}
                   >
                     <span className={isSyncing ? 'animate-spin inline-block' : ''}>⟳</span>
                     {isSyncing ? `${t('dashboard.sync')}...` : t('dashboard.sync')}

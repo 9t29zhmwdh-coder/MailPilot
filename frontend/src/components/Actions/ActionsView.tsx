@@ -64,37 +64,37 @@ export function ActionsView() {
     <div className="h-full overflow-y-auto p-6">
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h2 className="text-xl font-semibold text-[#e6edf3]">{t('actions.title')}</h2>
-          <p className="text-xs text-[#8b949e] mt-0.5">
+          <h2 className="text-xl font-semibold text-gh-text">{t('actions.title')}</h2>
+          <p className="text-xs text-gh-muted mt-0.5">
             {t('actions.subtitle')}
           </p>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 mb-5 bg-[#0d1117] p-1 rounded-lg w-fit border border-[#30363d]">
+      <div className="flex gap-1 mb-5 bg-gh-bg p-1 rounded-lg w-fit border border-gh-border">
         <button
           onClick={() => setTab('review')}
-          className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'review' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:text-[#e6edf3]'}`}
+          className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'review' ? 'bg-[#21262d] text-gh-text' : 'text-gh-muted hover:text-gh-text'}`}
         >
           🔍 {t('actions.reviewTab')}
           {visible.length > 0 && <span className="ml-1.5 text-xs bg-[#1f6feb] text-white px-1.5 py-0.5 rounded-full">{visible.length}</span>}
         </button>
         <button
           onClick={() => setTab('organisieren')}
-          className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'organisieren' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:text-[#e6edf3]'}`}
+          className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'organisieren' ? 'bg-[#21262d] text-gh-text' : 'text-gh-muted hover:text-gh-text'}`}
         >
           📮 {t('actions.organizeTab')}
         </button>
         <button
           onClick={() => setTab('ordner')}
-          className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'ordner' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:text-[#e6edf3]'}`}
+          className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'ordner' ? 'bg-[#21262d] text-gh-text' : 'text-gh-muted hover:text-gh-text'}`}
         >
           📁 {t('actions.foldersTab')}
         </button>
         <button
           onClick={() => setTab('regeln')}
-          className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'regeln' ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:text-[#e6edf3]'}`}
+          className={`px-4 py-1.5 text-sm rounded-md transition-colors ${tab === 'regeln' ? 'bg-[#21262d] text-gh-text' : 'text-gh-muted hover:text-gh-text'}`}
         >
           📋 {t('actions.rulesTab')}
         </button>
@@ -103,24 +103,24 @@ export function ActionsView() {
       {tab === 'review' && (
         <>
           {/* Info-Box */}
-          <div className="mb-5 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#8b949e] flex gap-3 items-start">
+          <div className="mb-5 p-3 bg-gh-surface border border-gh-border rounded-lg text-xs text-gh-muted flex gap-3 items-start">
             <span className="text-lg mt-0.5">💡</span>
             <div>
-              <div className="font-medium text-[#e6edf3] mb-0.5">{t('actions.howReviewWorks')}</div>
+              <div className="font-medium text-gh-text mb-0.5">{t('actions.howReviewWorks')}</div>
               {t('actions.reviewExplain')}
               <br />
-              <span className="text-[#58a6ff]">✓ {t('actions.correctChecks')}</span> {t('actions.correctChecksExplain')}
+              <span className="text-gh-blue">✓ {t('actions.correctChecks')}</span> {t('actions.correctChecksExplain')}
               <br />
-              <span className="text-[#d29922]">{t('actions.changeCategory')}</span> {t('actions.changeCategoryExplain')}
+              <span className="text-gh-yellow">{t('actions.changeCategory')}</span> {t('actions.changeCategoryExplain')}
             </div>
           </div>
 
           {loading ? (
-            <div className="text-center text-[#8b949e] py-12">{t('actions.loading')}</div>
+            <div className="text-center text-gh-muted py-12">{t('actions.loading')}</div>
           ) : visible.length === 0 ? (
-            <div className="text-center text-[#8b949e] py-16">
+            <div className="text-center text-gh-muted py-16">
               <div className="text-4xl mb-3">✅</div>
-              <div className="text-sm text-[#e6edf3] mb-1">{t('actions.allReviewed')}</div>
+              <div className="text-sm text-gh-text mb-1">{t('actions.allReviewed')}</div>
               <div className="text-xs text-[#484f58]">
                 {dismissed.size > 0 ? `${dismissed.size} ${t('actions.confirmedCount')}` : t('actions.noClassifiedYetReview')}
               </div>
@@ -183,9 +183,9 @@ function Section({ title, color, children, onAllOk }: {
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-2">
-        <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider"
+        <div className="text-xs font-semibold text-gh-muted uppercase tracking-wider"
           style={{ color: borderColor }}>{title}</div>
-        <button onClick={onAllOk} className="text-xs text-[#8b949e] hover:text-[#e6edf3] transition-colors">
+        <button onClick={onAllOk} className="text-xs text-gh-muted hover:text-gh-text transition-colors">
           {t('actions.confirmAll')}
         </button>
       </div>
@@ -208,10 +208,10 @@ function ReviewCard({ email, correcting, onOk, onCorrecting, onCorrect, onCancel
   const preview = email.body_text?.slice(0, 120).trim().replace(/\s+/g, ' ')
 
   return (
-    <div className="p-3 bg-[#161b22] border border-[#30363d] rounded-lg">
+    <div className="p-3 bg-gh-surface border border-gh-border rounded-lg">
       <div className="flex items-start gap-3">
         {/* Kategorie-Badge */}
-        <div className="flex-shrink-0 mt-0.5">
+        <div className="shrink-0 mt-0.5">
           <div className="w-10 h-10 rounded-lg bg-[#21262d] flex items-center justify-center text-xl">
             {categoryEmoji(cls.category)}
           </div>
@@ -220,44 +220,44 @@ function ReviewCard({ email, correcting, onOk, onCorrecting, onCorrect, onCancel
         {/* Content */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
-            <span className="text-sm font-medium text-[#e6edf3] truncate">{email.subject || t('emailList.noSubject')}</span>
+            <span className="text-sm font-medium text-gh-text truncate">{email.subject || t('emailList.noSubject')}</span>
             {(cls.phishing_score ?? 0) > 0.5 && (
-              <span className="text-xs text-[#f85149] bg-[#f8514920] px-1.5 py-0.5 rounded flex-shrink-0">⚠️ Phishing</span>
+              <span className="text-xs text-gh-red bg-[#f8514920] px-1.5 py-0.5 rounded-sm shrink-0">⚠️ Phishing</span>
             )}
           </div>
-          <div className="text-xs text-[#8b949e] mb-1">
+          <div className="text-xs text-gh-muted mb-1">
             {email.from.name ?? email.from.address}
           </div>
           {preview && (
             <div className="text-xs text-[#484f58] mb-1.5 line-clamp-2">{preview}</div>
           )}
           {cls.summary && (
-            <div className="text-xs text-[#8b949e] bg-[#21262d] rounded px-2 py-1 mb-1.5 italic">
+            <div className="text-xs text-gh-muted bg-[#21262d] rounded-sm px-2 py-1 mb-1.5 italic">
               "{cls.summary}"
             </div>
           )}
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-xs px-2 py-0.5 rounded-full bg-[#21262d] text-[#58a6ff]">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-[#21262d] text-gh-blue">
               {categoryEmoji(cls.category)} {categoryLabel(cls.category)}
             </span>
             <span className="text-xs text-[#484f58]">{conf}% {t('emailDetail.confidence')}</span>
             {cls.classified_by === 'user' && (
-              <span className="text-xs text-[#3fb950]">{t('actions.correctedByUser')}</span>
+              <span className="text-xs text-gh-green">{t('actions.correctedByUser')}</span>
             )}
           </div>
         </div>
 
         {/* Buttons */}
-        <div className="flex-shrink-0 flex flex-col gap-1.5">
+        <div className="shrink-0 flex flex-col gap-1.5">
           <button
             onClick={onOk}
-            className="px-3 py-1 text-xs bg-[#238636] hover:bg-[#2ea043] text-white rounded transition-colors whitespace-nowrap"
+            className="px-3 py-1 text-xs bg-[#238636] hover:bg-[#2ea043] text-white rounded-sm transition-colors whitespace-nowrap"
           >
             ✓ {t('actions.matches')}
           </button>
           <button
             onClick={correcting ? onCancelCorrect : onCorrecting}
-            className="px-3 py-1 text-xs bg-[#21262d] hover:bg-[#30363d] text-[#8b949e] hover:text-[#e6edf3] rounded transition-colors whitespace-nowrap"
+            className="px-3 py-1 text-xs bg-[#21262d] hover:bg-gh-border text-gh-muted hover:text-gh-text rounded-sm transition-colors whitespace-nowrap"
           >
             {correcting ? `✕ ${t('actions.cancelBtn')}` : `✏️ ${t('actions.changed')}`}
           </button>
@@ -266,17 +266,17 @@ function ReviewCard({ email, correcting, onOk, onCorrecting, onCorrect, onCancel
 
       {/* Kategorie-Auswahl */}
       {correcting && (
-        <div className="mt-3 pt-3 border-t border-[#30363d]">
-          <div className="text-xs text-[#8b949e] mb-2">{t('actions.chooseCorrectCategory')}</div>
+        <div className="mt-3 pt-3 border-t border-gh-border">
+          <div className="text-xs text-gh-muted mb-2">{t('actions.chooseCorrectCategory')}</div>
           <div className="grid grid-cols-4 gap-1.5">
             {ALL_CATEGORIES.map(cat => (
               <button
                 key={cat}
                 onClick={() => onCorrect(cat)}
-                className={`flex items-center gap-1.5 px-2 py-1.5 rounded text-xs transition-colors
+                className={`flex items-center gap-1.5 px-2 py-1.5 rounded-sm text-xs transition-colors
                   ${cls.category === cat
                     ? 'bg-[#1f6feb] text-white'
-                    : 'bg-[#21262d] text-[#8b949e] hover:bg-[#30363d] hover:text-[#e6edf3]'}`}
+                    : 'bg-[#21262d] text-gh-muted hover:bg-gh-border hover:text-gh-text'}`}
               >
                 <span>{categoryEmoji(cat)}</span>
                 <span className="truncate">{categoryLabel(cat)}</span>
@@ -343,10 +343,10 @@ function OrdnerTab() {
 
   return (
     <div>
-      <div className="mb-4 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#8b949e] flex gap-3">
+      <div className="mb-4 p-3 bg-gh-surface border border-gh-border rounded-lg text-xs text-gh-muted flex gap-3">
         <span className="text-lg">📁</span>
         <div>
-          <div className="font-medium text-[#e6edf3] mb-0.5">{t('actions.folderIntroTitle')}</div>
+          <div className="font-medium text-gh-text mb-0.5">{t('actions.folderIntroTitle')}</div>
           {t('actions.folderIntroText')}
         </div>
       </div>
@@ -355,21 +355,21 @@ function OrdnerTab() {
         <select
           value={accountId}
           onChange={e => { setAccountId(e.target.value); setFolders([]); setSuggestions([]) }}
-          className="w-full mb-3 bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm text-[#e6edf3] focus:outline-none focus:border-[#58a6ff]"
+          className="w-full mb-3 bg-gh-bg border border-gh-border rounded-md px-3 py-1.5 text-sm text-gh-text focus:outline-hidden focus:border-gh-blue"
         >
           {accountList.map(a => <option key={a.id} value={a.id}>{a.label}</option>)}
         </select>
       )}
 
       {error && (
-        <div className="mb-3 p-2 bg-[#f8514920] border border-[#f85149] rounded text-xs text-[#f85149]">{error}</div>
+        <div className="mb-3 p-2 bg-[#f8514920] border border-gh-red rounded-sm text-xs text-gh-red">{error}</div>
       )}
 
       <div className="flex gap-2 mb-4">
         <button
           onClick={loadFolders}
           disabled={!accountId || loadingFolders}
-          className="flex-1 py-2 text-xs bg-[#21262d] hover:bg-[#30363d] text-[#e6edf3] rounded-md transition-colors disabled:opacity-50"
+          className="flex-1 py-2 text-xs bg-[#21262d] hover:bg-gh-border text-gh-text rounded-md transition-colors disabled:opacity-50"
         >
           {loadingFolders ? t('actions.loadingFolders') : `📁 ${t('actions.loadFolders')}`}
         </button>
@@ -384,10 +384,10 @@ function OrdnerTab() {
 
       {folders.length > 0 && (
         <div className="mb-5">
-          <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-2">
+          <div className="text-xs font-semibold text-gh-muted uppercase tracking-wider mb-2">
             {t('actions.currentFolders')} ({folders.length})
           </div>
-          <div className="bg-[#161b22] border border-[#30363d] rounded-lg divide-y divide-[#21262d]">
+          <div className="bg-gh-surface border border-gh-border rounded-lg divide-y divide-[#21262d]">
             {folders.map(f => (
               <div key={f} className="flex items-center gap-2 px-3 py-2 text-sm text-[#c9d1d9]">
                 <span className="text-[#484f58]">📂</span>
@@ -400,14 +400,14 @@ function OrdnerTab() {
 
       {suggestions.length > 0 && (
         <div>
-          <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-2">
+          <div className="text-xs font-semibold text-gh-muted uppercase tracking-wider mb-2">
             {t('actions.aiSuggestions')}
           </div>
           <div className="space-y-2">
             {suggestions.map((s, i) => {
               const meta = ACTION_LABELS[s.action] ?? { label: s.action, color: '#8b949e' }
               return (
-                <div key={i} className="p-3 bg-[#161b22] border border-[#30363d] rounded-lg">
+                <div key={i} className="p-3 bg-gh-surface border border-gh-border rounded-lg">
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
@@ -417,15 +417,15 @@ function OrdnerTab() {
                         >
                           {meta.label}
                         </span>
-                        <span className="text-sm text-[#e6edf3] font-medium truncate">{s.folder}</span>
+                        <span className="text-sm text-gh-text font-medium truncate">{s.folder}</span>
                         {s.target && (
                           <>
                             <span className="text-[#484f58] text-xs">→</span>
-                            <span className="text-sm text-[#8b949e] truncate">{s.target}</span>
+                            <span className="text-sm text-gh-muted truncate">{s.target}</span>
                           </>
                         )}
                       </div>
-                      <div className="text-xs text-[#8b949e]">{s.reason}</div>
+                      <div className="text-xs text-gh-muted">{s.reason}</div>
                     </div>
                   </div>
                 </div>

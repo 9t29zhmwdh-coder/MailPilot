@@ -21,20 +21,20 @@ export function CategorySidebar() {
 
   return (
     <div className="p-2">
-      <div className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider px-2 mb-1">
+      <div className="text-xs font-semibold text-gh-muted uppercase tracking-wider px-2 mb-1">
         {t('categorySidebar.categories')}
       </div>
       <button
         onClick={() => select(null)}
-        className={`flex items-center justify-between w-full px-2 py-1.5 rounded text-sm transition-colors
-          ${!filterCategory ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:bg-[#161b22]'}`}
+        className={`flex items-center justify-between w-full px-2 py-1.5 rounded-sm text-sm transition-colors
+          ${!filterCategory ? 'bg-[#21262d] text-gh-text' : 'text-gh-muted hover:bg-gh-surface'}`}
       >
         <div className="flex items-center gap-1.5">
           <span>📥</span>
           <span>{t('categorySidebar.all')}</span>
         </div>
         {stats && (
-          <span className="text-xs text-[#8b949e]">{stats.total_emails}</span>
+          <span className="text-xs text-gh-muted">{stats.total_emails}</span>
         )}
       </button>
       {CATEGORIES.map(cat => {
@@ -43,15 +43,15 @@ export function CategorySidebar() {
           <button
             key={cat}
             onClick={() => select(cat)}
-            className={`flex items-center justify-between w-full px-2 py-1.5 rounded text-sm transition-colors
-              ${filterCategory === cat ? 'bg-[#21262d] text-[#e6edf3]' : 'text-[#8b949e] hover:bg-[#161b22]'}`}
+            className={`flex items-center justify-between w-full px-2 py-1.5 rounded-sm text-sm transition-colors
+              ${filterCategory === cat ? 'bg-[#21262d] text-gh-text' : 'text-gh-muted hover:bg-gh-surface'}`}
           >
             <div className="flex items-center gap-1.5">
               <span>{categoryEmoji(cat)}</span>
               <span>{categoryLabel(cat)}</span>
             </div>
             {count != null && count > 0 && (
-              <span className="text-xs text-[#8b949e]">{count}</span>
+              <span className="text-xs text-gh-muted">{count}</span>
             )}
           </button>
         )
