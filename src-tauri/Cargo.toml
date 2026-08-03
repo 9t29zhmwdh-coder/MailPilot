@@ -19,4 +19,4 @@ tracing.workspace          = true
 uuid.workspace             = true
 chrono.workspace           = true
 mp-core                    = { path = "../crates/mp-core" }
-sqlx                       = { version = "0.8", features = ["sqlite", "runtime-tokio"] }
+sqlx                       = { version = "0.9", features = ["sqlite", "runtime-tokio"] }
