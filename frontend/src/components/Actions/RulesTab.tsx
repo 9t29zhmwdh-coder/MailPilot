@@ -107,21 +107,21 @@ export default function RulesTab() {
 
   return (
     <div>
-      <div className="mb-4 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#8b949e] flex gap-3">
+      <div className="mb-4 p-3 bg-gh-surface border border-gh-border rounded-lg text-xs text-gh-muted flex gap-3">
         <span className="text-lg">📋</span>
         <div>
-          <div className="font-medium text-[#e6edf3] mb-0.5">{t('rules.title')}</div>
+          <div className="font-medium text-gh-text mb-0.5">{t('rules.title')}</div>
           {t('rules.intro')}
         </div>
       </div>
 
       {error && (
-        <div className="mb-3 p-3 bg-[#f8514922] border border-[#f85149] rounded-lg text-xs text-[#f85149]">
+        <div className="mb-3 p-3 bg-[#f8514922] border border-gh-red rounded-lg text-xs text-gh-red">
           {error}
         </div>
       )}
       {notice && (
-        <div className="mb-3 p-3 bg-[#23863622] border border-[#238636] rounded-lg text-xs text-[#3fb950]">
+        <div className="mb-3 p-3 bg-[#23863622] border border-[#238636] rounded-lg text-xs text-gh-green">
           {notice}
         </div>
       )}
@@ -137,11 +137,11 @@ export default function RulesTab() {
             {rules.map(rule => (
               <div
                 key={rule.id}
-                className="flex items-center justify-between p-3 bg-[#161b22] border border-[#30363d] rounded-lg"
+                className="flex items-center justify-between p-3 bg-gh-surface border border-gh-border rounded-lg"
               >
                 <div className="min-w-0 flex-1 pr-3">
-                  <div className="text-sm font-medium text-[#e6edf3] truncate">{rule.name}</div>
-                  <div className="text-xs text-[#8b949e] truncate">
+                  <div className="text-sm font-medium text-gh-text truncate">{rule.name}</div>
+                  <div className="text-xs text-gh-muted truncate">
                     {rule.conditions.map(c => describeCondition(c, t)).join(
                       rule.match_all ? ` ${t('rules.and')} ` : ` ${t('rules.or')} `,
                     )}
@@ -154,14 +154,14 @@ export default function RulesTab() {
                     onClick={() => void toggle(rule)}
                     disabled={busy}
                     aria-label={rule.enabled ? t('rules.disable') : t('rules.enable')}
-                    className={`relative w-10 h-5 rounded-full transition-colors disabled:opacity-50 ${rule.enabled ? 'bg-[#238636]' : 'bg-[#30363d]'}`}
+                    className={`relative w-10 h-5 rounded-full transition-colors disabled:opacity-50 ${rule.enabled ? 'bg-[#238636]' : 'bg-gh-border'}`}
                   >
                     <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${rule.enabled ? 'translate-x-5' : 'translate-x-0.5'}`} />
                   </button>
                   <button
                     onClick={() => void remove(rule)}
                     disabled={busy}
-                    className="text-xs text-[#8b949e] hover:text-[#f85149] transition-colors disabled:opacity-50 px-1"
+                    className="text-xs text-gh-muted hover:text-gh-red transition-colors disabled:opacity-50 px-1"
                   >
                     {t('rules.delete')}
                   </button>
@@ -173,20 +173,20 @@ export default function RulesTab() {
           <button
             onClick={() => void run()}
             disabled={busy || activeCount === 0}
-            className="w-full mb-4 p-3 bg-[#238636] hover:bg-[#2ea043] disabled:bg-[#30363d] disabled:text-[#484f58] rounded-lg text-sm font-medium text-white transition-colors"
+            className="w-full mb-4 p-3 bg-[#238636] hover:bg-[#2ea043] disabled:bg-gh-border disabled:text-[#484f58] rounded-lg text-sm font-medium text-white transition-colors"
           >
             {busy ? t('rules.loading') : `${t('rules.run')} (${activeCount})`}
           </button>
 
           <div className="mb-3">
-            <div className="text-xs text-[#8b949e] mb-2">{t('rules.templates')}</div>
+            <div className="text-xs text-gh-muted mb-2">{t('rules.templates')}</div>
             <div className="flex flex-wrap gap-2">
               {TEMPLATE_CATEGORIES.map(cat => (
                 <button
                   key={cat}
                   onClick={() => void addTemplate(cat)}
                   disabled={busy}
-                  className="px-3 py-1.5 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#8b949e] hover:border-[#58a6ff] hover:text-[#58a6ff] transition-colors disabled:opacity-50"
+                  className="px-3 py-1.5 bg-gh-surface border border-gh-border rounded-lg text-xs text-gh-muted hover:border-gh-blue hover:text-gh-blue transition-colors disabled:opacity-50"
                 >
                   {categoryEmoji(cat)} {t(`category.${cat}`)}
                 </button>
@@ -204,7 +204,7 @@ export default function RulesTab() {
           ) : (
             <button
               onClick={() => setShowForm(true)}
-              className="w-full p-3 border border-dashed border-[#30363d] rounded-lg text-xs text-[#8b949e] hover:border-[#58a6ff] hover:text-[#58a6ff] transition-colors"
+              className="w-full p-3 border border-dashed border-gh-border rounded-lg text-xs text-gh-muted hover:border-gh-blue hover:text-gh-blue transition-colors"
             >
               + {t('rules.createOwn')}
             </button>
@@ -251,10 +251,10 @@ function CustomRuleForm(props: {
   }
 
   const inputClass =
-    'w-full px-3 py-2 bg-[#0d1117] border border-[#30363d] rounded-lg text-sm text-[#e6edf3] focus:border-[#58a6ff] outline-none'
+    'w-full px-3 py-2 bg-gh-bg border border-gh-border rounded-lg text-sm text-gh-text focus:border-gh-blue outline-hidden'
 
   return (
-    <div className="p-4 bg-[#161b22] border border-[#30363d] rounded-lg space-y-3">
+    <div className="p-4 bg-gh-surface border border-gh-border rounded-lg space-y-3">
       <input
         className={inputClass}
         placeholder={t('rules.namePlaceholder')}
@@ -289,13 +289,13 @@ function CustomRuleForm(props: {
         <button
           onClick={() => void save()}
           disabled={!ready || saving || props.busy}
-          className="px-4 py-2 bg-[#238636] hover:bg-[#2ea043] disabled:bg-[#30363d] disabled:text-[#484f58] rounded-lg text-sm text-white transition-colors"
+          className="px-4 py-2 bg-[#238636] hover:bg-[#2ea043] disabled:bg-gh-border disabled:text-[#484f58] rounded-lg text-sm text-white transition-colors"
         >
           {t('rules.save')}
         </button>
         <button
           onClick={props.onCancel}
-          className="px-4 py-2 bg-[#21262d] hover:bg-[#30363d] rounded-lg text-sm text-[#e6edf3] transition-colors"
+          className="px-4 py-2 bg-[#21262d] hover:bg-gh-border rounded-lg text-sm text-gh-text transition-colors"
         >
           {t('rules.cancel')}
         </button>

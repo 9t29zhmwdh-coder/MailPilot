@@ -33,21 +33,21 @@ export function EmailList() {
 
   return (
     <div className="flex h-full">
-      <div className="w-80 flex-shrink-0 border-r border-[#30363d] flex flex-col">
-        <div className="p-2 border-b border-[#30363d]">
+      <div className="w-80 shrink-0 border-r border-gh-border flex flex-col">
+        <div className="p-2 border-b border-gh-border">
           <input
             value={searchQuery}
             onChange={e => handleSearch(e.target.value)}
             placeholder={t('emailList.searchPlaceholder')}
-            className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm text-[#e6edf3] placeholder-[#484f58] focus:outline-none focus:border-[#58a6ff]"
+            className="w-full bg-gh-bg border border-gh-border rounded-md px-3 py-1.5 text-sm text-gh-text placeholder-[#484f58] focus:outline-hidden focus:border-gh-blue"
           />
         </div>
 
         <div className="flex-1 overflow-y-auto">
           {loading ? (
-            <div className="flex items-center justify-center h-32 text-[#8b949e] text-sm">{t('emailList.loading')}</div>
+            <div className="flex items-center justify-center h-32 text-gh-muted text-sm">{t('emailList.loading')}</div>
           ) : emails.length === 0 ? (
-            <div className="flex items-center justify-center h-32 text-[#8b949e] text-sm">{t('emailList.noEmails')}</div>
+            <div className="flex items-center justify-center h-32 text-gh-muted text-sm">{t('emailList.noEmails')}</div>
           ) : (
             emails.map(email => (
               <EmailRow
@@ -66,7 +66,7 @@ export function EmailList() {
         {selected ? (
           <EmailDetail email={selected} />
         ) : (
-          <div className="flex items-center justify-center h-full text-[#8b949e]">
+          <div className="flex items-center justify-center h-full text-gh-muted">
             <div className="text-center">
               <div className="text-4xl mb-2">📭</div>
               <div>{t('emailList.selectEmail')}</div>
@@ -89,7 +89,7 @@ function EmailRow({ email, selected, onClick, onDelete }: {
   const cat = email.classification?.category
   return (
     <div
-      className={`relative border-b border-[#21262d] transition-colors ${selected ? 'bg-[#21262d]' : hovered ? 'bg-[#161b22]' : ''}`}
+      className={`relative border-b border-[#21262d] transition-colors ${selected ? 'bg-[#21262d]' : hovered ? 'bg-gh-surface' : ''}`}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -97,15 +97,15 @@ function EmailRow({ email, selected, onClick, onDelete }: {
         <div className="flex items-start justify-between gap-1 mb-0.5">
           <div className="flex items-center gap-1.5 min-w-0">
             {!email.is_read && (
-              <div className="w-1.5 h-1.5 rounded-full bg-[#58a6ff] flex-shrink-0 mt-1" />
+              <div className="w-1.5 h-1.5 rounded-full bg-gh-blue shrink-0 mt-1" />
             )}
-            <span className="text-xs text-[#8b949e] truncate">
+            <span className="text-xs text-gh-muted truncate">
               {email.from.name ?? email.from.address}
             </span>
           </div>
-          <span className="text-xs text-[#484f58] flex-shrink-0">{formatDate(email.date)}</span>
+          <span className="text-xs text-[#484f58] shrink-0">{formatDate(email.date)}</span>
         </div>
-        <div className={`text-sm truncate mb-0.5 ${email.is_read ? 'text-[#8b949e]' : 'text-[#e6edf3] font-medium'}`}>
+        <div className={`text-sm truncate mb-0.5 ${email.is_read ? 'text-gh-muted' : 'text-gh-text font-medium'}`}>
           {email.subject || t('emailList.noSubject')}
         </div>
         <div className="flex items-center gap-1.5">
@@ -119,7 +119,7 @@ function EmailRow({ email, selected, onClick, onDelete }: {
           )}
           {email.is_flagged && <span className="text-xs">⭐</span>}
           {(email.classification?.phishing_score ?? 0) > 0.5 && (
-            <span className="text-xs text-[#f85149]">⚠️</span>
+            <span className="text-xs text-gh-red">⚠️</span>
           )}
         </div>
       </button>
@@ -127,7 +127,7 @@ function EmailRow({ email, selected, onClick, onDelete }: {
         <button
           onClick={e => { e.stopPropagation(); onDelete() }}
           title={t('settings.remove')}
-          className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded text-[#f85149] hover:bg-[#f8514920] transition-colors text-sm"
+          className="absolute right-2 top-1/2 -translate-y-1/2 w-6 h-6 flex items-center justify-center rounded-sm text-gh-red hover:bg-[#f8514920] transition-colors text-sm"
         >
           🗑
         </button>

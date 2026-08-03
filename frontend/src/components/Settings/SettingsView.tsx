@@ -122,7 +122,7 @@ export function SettingsView() {
 
   return (
     <div className="h-full overflow-y-auto p-6 max-w-2xl">
-      <h2 className="text-xl font-semibold text-[#e6edf3] mb-6">{t('settings.title')}</h2>
+      <h2 className="text-xl font-semibold text-gh-text mb-6">{t('settings.title')}</h2>
 
       {/* Accounts */}
       <Section title={t('settings.emailAccounts')}>
@@ -133,16 +133,16 @@ export function SettingsView() {
             ))}
           </div>
         )}
-        <div className="text-xs text-[#8b949e] mb-2">{t('settings.addAccount')}</div>
+        <div className="text-xs text-gh-muted mb-2">{t('settings.addAccount')}</div>
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
           {(Object.entries(PROVIDERS) as [ProviderKey, Provider][]).map(([key, p]) => (
             <button
               key={key}
               onClick={() => setActiveModal(key)}
-              className="flex items-center gap-2 px-3 py-2.5 bg-[#0d1117] hover:bg-[#1c2128] border border-[#30363d] hover:border-[#58a6ff] rounded-lg text-left transition-colors group"
+              className="flex items-center gap-2 px-3 py-2.5 bg-gh-bg hover:bg-[#1c2128] border border-gh-border hover:border-gh-blue rounded-lg text-left transition-colors group"
             >
               <span className="text-lg leading-none">{p.icon}</span>
-              <span className="text-sm text-[#c9d1d9] group-hover:text-[#e6edf3]">{p.label}</span>
+              <span className="text-sm text-[#c9d1d9] group-hover:text-gh-text">{p.label}</span>
             </button>
           ))}
         </div>
@@ -220,15 +220,15 @@ function AccountModal({
       onClick={e => { if (e.target === e.currentTarget) onClose() }}
     >
       <div
-        className="relative w-full max-w-lg mx-4 bg-[#161b22] border border-[#30363d] rounded-xl shadow-2xl"
+        className="relative w-full max-w-lg mx-4 bg-gh-surface border border-gh-border rounded-xl shadow-2xl"
         style={{ maxHeight: '92vh', overflowY: 'auto' }}
       >
-        <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-[#30363d]">
+        <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gh-border">
           <div className="flex items-center gap-2">
             <span className="text-xl">{provider.icon}</span>
-            <h3 className="text-sm font-semibold text-[#e6edf3]">{provider.label} {t('settings.addProviderTitle')}</h3>
+            <h3 className="text-sm font-semibold text-gh-text">{provider.label} {t('settings.addProviderTitle')}</h3>
           </div>
-          <button onClick={onClose} className="text-[#8b949e] hover:text-[#e6edf3] transition-colors text-lg">
+          <button onClick={onClose} className="text-gh-muted hover:text-gh-text transition-colors text-lg">
             ✕
           </button>
         </div>
@@ -299,7 +299,7 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
   if (step === 'email') {
     return (
       <div className="space-y-4">
-        <p className="text-sm text-[#8b949e]">
+        <p className="text-sm text-gh-muted">
           {provider.label} {t('settings.appPasswordNeeded')}
         </p>
         <div>
@@ -310,7 +310,7 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
             onChange={e => setEmail(e.target.value)}
             placeholder={`user@${providerKey === 'icloud' ? 'icloud.com' : providerKey === 'm365' ? 'outlook.com' : 'gmail.com'}`}
             autoFocus
-            className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-2 text-sm text-[#e6edf3] font-mono focus:outline-none focus:border-[#58a6ff] placeholder-[#484f58]"
+            className="w-full bg-gh-bg border border-gh-border rounded-md px-3 py-2 text-sm text-gh-text font-mono focus:outline-hidden focus:border-gh-blue placeholder-[#484f58]"
           />
         </div>
         <button
@@ -327,19 +327,19 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
   if (step === 'qr') {
     return (
       <div className="space-y-4">
-        <p className="text-sm text-[#e6edf3] font-medium">
+        <p className="text-sm text-gh-text font-medium">
           {t('settings.scanQr')}
         </p>
         <div className="flex gap-4 items-start">
           {qrDataUrl && (
-            <div className="flex-shrink-0 rounded-lg overflow-hidden border border-[#30363d]">
+            <div className="shrink-0 rounded-lg overflow-hidden border border-gh-border">
               <img src={qrDataUrl} alt="QR-Code" width={120} height={120} />
             </div>
           )}
-          <ol className="space-y-1.5 text-xs text-[#8b949e]">
+          <ol className="space-y-1.5 text-xs text-gh-muted">
             {provider.appPasswordSteps?.map((s, i) => (
               <li key={i} className="flex gap-2">
-                <span className="text-[#58a6ff] font-bold flex-shrink-0">{i + 1}.</span>
+                <span className="text-gh-blue font-bold shrink-0">{i + 1}.</span>
                 <span>{s}</span>
               </li>
             ))}
@@ -347,7 +347,7 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
         </div>
         <div className="text-xs text-[#484f58]">
           {t('settings.orDirect')}{' '}
-          <span className="text-[#58a6ff] font-mono">{provider.appPasswordUrl}</span>
+          <span className="text-gh-blue font-mono">{provider.appPasswordUrl}</span>
         </div>
         <button
           onClick={() => setStep('password')}
@@ -362,8 +362,8 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
   // step === 'password'
   return (
     <div className="space-y-4">
-      <p className="text-sm text-[#8b949e]">
-        {t('settings.pasteAppPassword')} <span className="text-[#e6edf3]">{email}</span>.
+      <p className="text-sm text-gh-muted">
+        {t('settings.pasteAppPassword')} <span className="text-gh-text">{email}</span>.
       </p>
       <div>
         <Label>{t('settings.appPassword')}</Label>
@@ -374,14 +374,14 @@ function AppPasswordFlow({ providerKey, onDone }: { providerKey: ProviderKey; on
           placeholder="xxxx-xxxx-xxxx-xxxx"
           autoFocus
           onKeyDown={e => { if (e.key === 'Enter' && appPassword) handleConnect() }}
-          className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-2 text-sm text-[#e6edf3] font-mono focus:outline-none focus:border-[#58a6ff] placeholder-[#484f58]"
+          className="w-full bg-gh-bg border border-gh-border rounded-md px-3 py-2 text-sm text-gh-text font-mono focus:outline-hidden focus:border-gh-blue placeholder-[#484f58]"
         />
       </div>
-      {error && <div className="text-xs text-[#f85149]">{error}</div>}
+      {error && <div className="text-xs text-gh-red">{error}</div>}
       <div className="flex gap-2">
         <button
           onClick={() => setStep('qr')}
-          className="px-4 py-2 text-sm text-[#8b949e] hover:text-[#e6edf3] transition-colors"
+          className="px-4 py-2 text-sm text-gh-muted hover:text-gh-text transition-colors"
         >
           {t('settings.back')}
         </button>
@@ -461,7 +461,7 @@ function GenericAccountForm({
         <div><Label>{t('settings.username')}</Label><Input value={username} onChange={setUsername} placeholder="user@example.com" /></div>
         <div><Label>{t('settings.password')}</Label><PasswordInput value={password} onChange={setPassword} /></div>
       </div>
-      {error && <div className="text-xs text-[#f85149]">{error}</div>}
+      {error && <div className="text-xs text-gh-red">{error}</div>}
       <button
         onClick={handleAdd}
         disabled={testing || !host || !email || !password}
@@ -484,14 +484,14 @@ function AccountRow({ account, onDelete }: { account: EmailAccount; onDelete: ()
     }
   }
   return (
-    <div className="flex items-center justify-between bg-[#0d1117] border border-[#30363d] rounded-md p-3">
+    <div className="flex items-center justify-between bg-gh-bg border border-gh-border rounded-md p-3">
       <div>
-        <div className="text-sm text-[#e6edf3] font-medium">{account.label}</div>
-        <div className="text-xs text-[#8b949e]">
+        <div className="text-sm text-gh-text font-medium">{account.label}</div>
+        <div className="text-xs text-gh-muted">
           {account.email_address} · {account.imap_host}:{account.imap_port}
         </div>
       </div>
-      <button onClick={handleDelete} className="text-xs text-[#f85149] hover:underline">
+      <button onClick={handleDelete} className="text-xs text-gh-red hover:underline">
         {t('settings.remove')}
       </button>
     </div>
@@ -544,7 +544,7 @@ function ClaudeSection({
       {/* The choice comes first: it decides whether any email content leaves
           the machine, so it belongs above the key field rather than below it. */}
       <div className="mb-4">
-        <div className="text-xs text-[#8b949e] mb-2">{t('settings.backendLabel')}</div>
+        <div className="text-xs text-gh-muted mb-2">{t('settings.backendLabel')}</div>
         <div className="flex gap-2">
           {(['ollama', 'claude'] as const).map(b => (
             <button
@@ -552,14 +552,14 @@ function ClaudeSection({
               onClick={() => set('ai_backend', b)}
               className={`flex-1 text-left px-3 py-2 rounded-md border transition-colors ${
                 (draft.ai_backend ?? 'ollama') === b
-                  ? 'border-[#58a6ff] bg-[#58a6ff11]'
-                  : 'border-[#30363d] hover:border-[#484f58]'
+                  ? 'border-gh-blue bg-[#58a6ff11]'
+                  : 'border-gh-border hover:border-[#484f58]'
               }`}
             >
-              <div className="text-sm text-[#e6edf3]">
+              <div className="text-sm text-gh-text">
                 {b === 'ollama' ? t('settings.backendLocal') : t('settings.backendCloud')}
               </div>
-              <div className="text-xs text-[#8b949e] mt-0.5">
+              <div className="text-xs text-gh-muted mt-0.5">
                 {b === 'ollama' ? t('settings.backendLocalHint') : t('settings.backendCloudHint')}
               </div>
             </button>
@@ -568,9 +568,9 @@ function ClaudeSection({
       </div>
 
       <div className="mb-3 flex items-center gap-2">
-        <span className="text-xs text-[#8b949e]">{t('settings.apiKeyLabel')}</span>
-        {keyStatus === true && <span className="text-xs text-[#3fb950] font-medium">{t('settings.keySet')} ✓</span>}
-        {keyStatus === false && <span className="text-xs text-[#f85149]">{t('settings.keyNotSet')}</span>}
+        <span className="text-xs text-gh-muted">{t('settings.apiKeyLabel')}</span>
+        {keyStatus === true && <span className="text-xs text-gh-green font-medium">{t('settings.keySet')} ✓</span>}
+        {keyStatus === false && <span className="text-xs text-gh-red">{t('settings.keyNotSet')}</span>}
       </div>
       {(keyStatus === false || keyStatus === null) && (
         <div className="flex gap-2 mb-3">
@@ -579,19 +579,19 @@ function ClaudeSection({
             value={pendingKey}
             onChange={e => setPendingKey(e.target.value)}
             placeholder="sk-ant-..."
-            className="flex-1 bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm text-[#e6edf3] font-mono focus:outline-none focus:border-[#58a6ff] placeholder-[#484f58]"
+            className="flex-1 bg-gh-bg border border-gh-border rounded-md px-3 py-1.5 text-sm text-gh-text font-mono focus:outline-hidden focus:border-gh-blue placeholder-[#484f58]"
           />
           <button
             onClick={handleSaveKey}
             disabled={savingKey || !pendingKey.trim()}
-            className="px-3 py-1.5 text-xs bg-[#1f6feb] hover:bg-[#388bfd] text-white rounded transition-colors disabled:opacity-50"
+            className="px-3 py-1.5 text-xs bg-[#1f6feb] hover:bg-[#388bfd] text-white rounded-sm transition-colors disabled:opacity-50"
           >
             {savingKey ? t('settings.saving') : t('settings.save2')}
           </button>
         </div>
       )}
       {keyStatus === true && (
-        <button onClick={() => setKeyStatus(false)} className="text-xs text-[#8b949e] hover:text-[#e6edf3] mb-3">
+        <button onClick={() => setKeyStatus(false)} className="text-xs text-gh-muted hover:text-gh-text mb-3">
           {t('settings.replaceKey')}
         </button>
       )}
@@ -599,7 +599,7 @@ function ClaudeSection({
       <select
         value={draft.claude_model ?? 'claude-haiku-4-5-20251001'}
         onChange={e => set('claude_model', e.target.value)}
-        className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm text-[#e6edf3] font-mono focus:outline-none focus:border-[#58a6ff] mb-3"
+        className="w-full bg-gh-bg border border-gh-border rounded-md px-3 py-1.5 text-sm text-gh-text font-mono focus:outline-hidden focus:border-gh-blue mb-3"
       >
         <option value="claude-haiku-4-5-20251001">claude-haiku-4-5 ({t('settings.modelFast')})</option>
         <option value="claude-sonnet-4-6">claude-sonnet-4-6 ({t('settings.modelBalanced')})</option>
@@ -608,12 +608,12 @@ function ClaudeSection({
       <button
         onClick={handleCheck}
         disabled={checking}
-        className="mt-1 px-3 py-1.5 text-xs bg-[#21262d] hover:bg-[#30363d] text-[#8b949e] hover:text-[#e6edf3] rounded transition-colors"
+        className="mt-1 px-3 py-1.5 text-xs bg-[#21262d] hover:bg-gh-border text-gh-muted hover:text-gh-text rounded-sm transition-colors"
       >
         {checking ? t('settings.testing') : t('settings.testConnection')}
       </button>
       {claudeMsg && (
-        <div className={`mt-1 text-xs ${claudeMsg.includes('✓') ? 'text-[#3fb950]' : 'text-[#f85149]'}`}>
+        <div className={`mt-1 text-xs ${claudeMsg.includes('✓') ? 'text-gh-green' : 'text-gh-red'}`}>
           {claudeMsg}
         </div>
       )}
@@ -625,15 +625,15 @@ function ClaudeSection({
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="mb-6 bg-[#161b22] border border-[#30363d] rounded-lg p-4">
-      <h3 className="text-xs font-semibold text-[#8b949e] uppercase tracking-wider mb-4">{title}</h3>
+    <div className="mb-6 bg-gh-surface border border-gh-border rounded-lg p-4">
+      <h3 className="text-xs font-semibold text-gh-muted uppercase tracking-wider mb-4">{title}</h3>
       {children}
     </div>
   )
 }
 
 function Label({ children }: { children: React.ReactNode }) {
-  return <div className="text-xs text-[#8b949e] mb-1">{children}</div>
+  return <div className="text-xs text-gh-muted mb-1">{children}</div>
 }
 
 function Input({ value, onChange, placeholder }: { value: string; onChange: (v: string) => void; placeholder?: string }) {
@@ -642,7 +642,7 @@ function Input({ value, onChange, placeholder }: { value: string; onChange: (v: 
       value={value}
       onChange={e => onChange(e.target.value)}
       placeholder={placeholder}
-      className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm text-[#e6edf3] font-mono focus:outline-none focus:border-[#58a6ff] mb-3 placeholder-[#484f58]"
+      className="w-full bg-gh-bg border border-gh-border rounded-md px-3 py-1.5 text-sm text-gh-text font-mono focus:outline-hidden focus:border-gh-blue mb-3 placeholder-[#484f58]"
     />
   )
 }
@@ -653,7 +653,7 @@ function PasswordInput({ value, onChange }: { value: string; onChange: (v: strin
       type="password"
       value={value}
       onChange={e => onChange(e.target.value)}
-      className="w-full bg-[#0d1117] border border-[#30363d] rounded-md px-3 py-1.5 text-sm text-[#e6edf3] font-mono focus:outline-none focus:border-[#58a6ff] mb-3"
+      className="w-full bg-gh-bg border border-gh-border rounded-md px-3 py-1.5 text-sm text-gh-text font-mono focus:outline-hidden focus:border-gh-blue mb-3"
     />
   )
 }
@@ -664,7 +664,7 @@ function Toggle({ label, value, onChange }: { label: string; value: boolean; onC
       <span className="text-sm text-[#c9d1d9]">{label}</span>
       <button
         onClick={() => onChange(!value)}
-        className={`w-10 h-5 rounded-full transition-colors relative flex-shrink-0 ${value ? 'bg-[#238636]' : 'bg-[#30363d]'}`}
+        className={`w-10 h-5 rounded-full transition-colors relative shrink-0 ${value ? 'bg-[#238636]' : 'bg-gh-border'}`}
       >
         <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${value ? 'left-5' : 'left-0.5'}`} />
       </button>

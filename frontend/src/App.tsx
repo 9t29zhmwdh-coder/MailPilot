@@ -49,8 +49,8 @@ export default function App() {
       onClick={() => setTab(id)}
       className={`flex items-center gap-2 w-full px-3 py-2 rounded-md text-sm transition-colors
         ${tab === id
-          ? 'bg-[#21262d] text-[#e6edf3]'
-          : 'text-[#8b949e] hover:bg-[#161b22] hover:text-[#e6edf3]'}`}
+          ? 'bg-[#21262d] text-gh-text'
+          : 'text-gh-muted hover:bg-gh-surface hover:text-gh-text'}`}
     >
       <span>{icon}</span>
       <span>{label}</span>
@@ -58,20 +58,20 @@ export default function App() {
   )
 
   return (
-    <div className="flex h-screen bg-[#0d1117] text-[#e6edf3] overflow-hidden">
+    <div className="flex h-screen bg-gh-bg text-gh-text overflow-hidden">
       {/* Left Nav */}
-      <div className="w-52 flex-shrink-0 border-r border-[#30363d] flex flex-col">
-        <div className="p-4 border-b border-[#30363d]">
+      <div className="w-52 shrink-0 border-r border-gh-border flex flex-col">
+        <div className="p-4 border-b border-gh-border">
           <div className="flex items-center gap-2">
             <span className="text-lg">✉️</span>
-            <span className="font-semibold text-[#e6edf3]">MailLoom</span>
+            <span className="font-semibold text-gh-text">MailLoom</span>
           </div>
           <div className="flex items-center gap-1.5 mt-1.5">
-            <div className={`w-1.5 h-1.5 rounded-full ${ollamaOnline ? 'bg-[#3fb950]' : 'bg-[#f85149]'}`} />
+            <div className={`w-1.5 h-1.5 rounded-full ${ollamaOnline ? 'bg-gh-green' : 'bg-gh-red'}`} />
             {/* Names the backend actually in use. It said "Claude" regardless of
                 the setting, which was wrong the moment the local model became
                 the default. */}
-            <span className="text-xs text-[#8b949e]">
+            <span className="text-xs text-gh-muted">
               {(settings?.ai_backend === 'claude' ? 'Claude' : 'Ollama')}
               {' '}
               {ollamaOnline ? t('nav.backendOnline') : t('nav.backendOffline')}
@@ -87,14 +87,14 @@ export default function App() {
         </nav>
 
         {tab === 'emails' && (
-          <div className="border-t border-[#30363d]">
+          <div className="border-t border-gh-border">
             <CategorySidebar />
           </div>
         )}
 
         <button
           onClick={toggle}
-          className="m-2 px-2 py-1.5 text-xs text-[#8b949e] hover:text-[#e6edf3] border border-[#30363d] rounded-md transition-colors"
+          className="m-2 px-2 py-1.5 text-xs text-gh-muted hover:text-gh-text border border-gh-border rounded-md transition-colors"
         >
           {lang === 'en' ? 'DE' : 'EN'}
         </button>

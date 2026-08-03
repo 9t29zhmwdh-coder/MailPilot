@@ -96,16 +96,16 @@ export function OrganizeTab() {
   }
 
   if (loading) {
-    return <div className="text-sm text-[#8b949e]">...</div>
+    return <div className="text-sm text-gh-muted">...</div>
   }
 
   return (
     <>
-      <div className="mb-5 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#8b949e] flex gap-3 items-start">
+      <div className="mb-5 p-3 bg-gh-surface border border-gh-border rounded-lg text-xs text-gh-muted flex gap-3 items-start">
         <span className="text-lg mt-0.5">📮</span>
         <div>
           <div>{t('actions.organizeIntro')}</div>
-          <div className="mt-1 text-[#d29922]">{t('actions.serverWarning')}</div>
+          <div className="mt-1 text-gh-yellow">{t('actions.serverWarning')}</div>
         </div>
       </div>
 
@@ -113,7 +113,7 @@ export function OrganizeTab() {
         <button
           onClick={handlePropose}
           disabled={busy !== null}
-          className="px-3 py-1.5 text-sm rounded-md bg-[#21262d] text-[#e6edf3] border border-[#30363d] hover:bg-[#30363d] disabled:opacity-50"
+          className="px-3 py-1.5 text-sm rounded-md bg-[#21262d] text-gh-text border border-gh-border hover:bg-gh-border disabled:opacity-50"
         >
           {t('actions.propose')}
         </button>
@@ -127,36 +127,36 @@ export function OrganizeTab() {
         <button
           onClick={handleSkipAll}
           disabled={busy !== null || pending.length === 0}
-          className="px-3 py-1.5 text-sm rounded-md bg-[#21262d] text-[#8b949e] border border-[#30363d] hover:text-[#e6edf3] disabled:opacity-50"
+          className="px-3 py-1.5 text-sm rounded-md bg-[#21262d] text-gh-muted border border-gh-border hover:text-gh-text disabled:opacity-50"
         >
           {t('actions.skipAll')}
         </button>
         {applied.length > 0 && (
-          <span className="text-xs text-[#3fb950] ml-1">
+          <span className="text-xs text-gh-green ml-1">
             {applied.length} {t('actions.appliedLabel')}
           </span>
         )}
       </div>
 
       {notice && (
-        <div className="mb-4 p-3 bg-[#161b22] border border-[#30363d] rounded-lg text-xs text-[#e6edf3] flex justify-between gap-3">
+        <div className="mb-4 p-3 bg-gh-surface border border-gh-border rounded-lg text-xs text-gh-text flex justify-between gap-3">
           <span>{notice}</span>
-          <button onClick={() => setNotice(null)} className="text-[#8b949e] hover:text-[#e6edf3]">✕</button>
+          <button onClick={() => setNotice(null)} className="text-gh-muted hover:text-gh-text">✕</button>
         </div>
       )}
 
       {failed.length > 0 && (
         <div className="mb-4">
-          <div className="text-xs text-[#f85149] mb-2">{t('actions.failedLabel')} ({failed.length})</div>
+          <div className="text-xs text-gh-red mb-2">{t('actions.failedLabel')} ({failed.length})</div>
           {failed.map(a => (
-            <div key={a.id} className="mb-2 p-3 bg-[#161b22] border border-[#f85149]/40 rounded-lg">
-              <div className="text-sm text-[#e6edf3] truncate">{a.email_subject}</div>
-              <div className="text-xs text-[#8b949e] mt-0.5">{a.from_address}</div>
-              <div className="text-xs text-[#f85149] mt-1">{actionFailureReason(a.status)}</div>
+            <div key={a.id} className="mb-2 p-3 bg-gh-surface border border-gh-red/40 rounded-lg">
+              <div className="text-sm text-gh-text truncate">{a.email_subject}</div>
+              <div className="text-xs text-gh-muted mt-0.5">{a.from_address}</div>
+              <div className="text-xs text-gh-red mt-1">{actionFailureReason(a.status)}</div>
               <button
                 onClick={() => handleApply(a.id)}
                 disabled={busy !== null}
-                className="mt-2 px-2.5 py-1 text-xs rounded bg-[#21262d] text-[#e6edf3] border border-[#30363d] hover:bg-[#30363d] disabled:opacity-50"
+                className="mt-2 px-2.5 py-1 text-xs rounded-sm bg-[#21262d] text-gh-text border border-gh-border hover:bg-gh-border disabled:opacity-50"
               >
                 {t('actions.apply')}
               </button>
@@ -166,17 +166,17 @@ export function OrganizeTab() {
       )}
 
       {pending.length === 0 && failed.length === 0 ? (
-        <div className="text-sm text-[#8b949e] p-4 bg-[#161b22] border border-[#30363d] rounded-lg">
+        <div className="text-sm text-gh-muted p-4 bg-gh-surface border border-gh-border rounded-lg">
           {t('actions.noProposals')}
         </div>
       ) : (
         pending.map(a => (
-          <div key={a.id} className="mb-2 p-3 bg-[#161b22] border border-[#30363d] rounded-lg flex items-start justify-between gap-4">
+          <div key={a.id} className="mb-2 p-3 bg-gh-surface border border-gh-border rounded-lg flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <div className="text-sm text-[#e6edf3] truncate">{a.email_subject}</div>
-              <div className="text-xs text-[#8b949e] mt-0.5 truncate">{a.from_address}</div>
-              <div className="text-xs text-[#8b949e] mt-1">
-                {t('actions.moveTo')} <span className="text-[#58a6ff]">{a.target_folder}</span>
+              <div className="text-sm text-gh-text truncate">{a.email_subject}</div>
+              <div className="text-xs text-gh-muted mt-0.5 truncate">{a.from_address}</div>
+              <div className="text-xs text-gh-muted mt-1">
+                {t('actions.moveTo')} <span className="text-gh-blue">{a.target_folder}</span>
                 <span className="mx-1.5">·</span>
                 {a.reason}
               </div>
@@ -185,14 +185,14 @@ export function OrganizeTab() {
               <button
                 onClick={() => handleApply(a.id)}
                 disabled={busy !== null}
-                className="px-2.5 py-1 text-xs rounded bg-[#1f6feb] text-white hover:bg-[#388bfd] disabled:opacity-50"
+                className="px-2.5 py-1 text-xs rounded-sm bg-[#1f6feb] text-white hover:bg-[#388bfd] disabled:opacity-50"
               >
                 {t('actions.apply')}
               </button>
               <button
                 onClick={() => handleSkip(a.id)}
                 disabled={busy !== null}
-                className="px-2.5 py-1 text-xs rounded bg-[#21262d] text-[#8b949e] border border-[#30363d] hover:text-[#e6edf3] disabled:opacity-50"
+                className="px-2.5 py-1 text-xs rounded-sm bg-[#21262d] text-gh-muted border border-gh-border hover:text-gh-text disabled:opacity-50"
               >
                 {t('actions.skip')}
               </button>
