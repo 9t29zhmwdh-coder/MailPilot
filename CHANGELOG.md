@@ -5,6 +5,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.7.3] - 2026-08-05
+
+### Changed
+
+- The `glib` advisory GHSA-wrw7-89jp-8q8g is now recorded in `SECURITY.md` and its unreachable versions ignored in `dependabot.yml`, matching the six sibling repositories. It had been dismissed as tolerable risk here, which left it invisible while Dependabot kept attempting an update that cannot succeed: `tauri` 2.11.5 requires `gtk ^0.18`, `gtk` 0.18.2 requires `glib ^0.18`, and cargo rejects 0.20.0 outright. The dismissal has been withdrawn so the entry and the Security tab agree.
+
+---
+
 ## [1.7.2] - 2026-08-05
 
 ### Added
