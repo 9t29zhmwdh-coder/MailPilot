@@ -22,6 +22,20 @@ updates:
         patterns: ["*"]
         update-types: ["minor", "patch"]
 
+    ignore:
+      # glib 0.18.5 carries GHSA-wrw7-89jp-8q8g. The fix is in 0.20, and this
+      # project cannot get there: tauri 2.x pins gtk ^0.18, gtk 0.18 requires
+      # glib ^0.18, and no patched 0.18.x exists. Cargo rejects the upgrade
+      # outright rather than resolving it, so every attempt fails identically.
+      #
+      # Only the unreachable versions are ignored. A backported 0.18.x fix would
+      # still be proposed. Remove this block once Tauri moves to the gtk-rs 0.20
+      # stack, which is the condition recorded in SECURITY.md under "Known
+      # unfixable advisories".
+      #
+      # This silences the doomed update attempt, not the alert.
+      - dependency-name: "glib"
+        versions: [">= 0.20"]
   - package-ecosystem: "npm"
     directory: "/frontend"
     schedule:
