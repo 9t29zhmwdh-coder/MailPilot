@@ -5,6 +5,16 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.7.2] - 2026-08-05
+
+### Added
+
+- A smoke test in CI: the application is built, started, and checked to still be running five seconds later. Until now the pipeline only ever established that the code compiles. A program that builds cleanly and dies on launch would have passed every check and been discovered by whoever downloaded it.
+- It runs on Linux and macOS. The Linux job needs `xvfb`, since a GTK window closes immediately without an X server, and that would produce a failure the runner invents rather than one the code has.
+- The test also fails on a panic in the output even when the process survives, because a background task that dies quietly leaves the window open and useless.
+
+---
+
 ## [1.7.1] - 2026-08-04
 
 ### Changed

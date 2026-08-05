@@ -43,6 +43,91 @@ jobs:
       - name: cargo test
         run: cargo test --workspace
 
+  # Baut die App und startet sie einmal wirklich.
+  #
+  # Bis hierher prueft die CI ausschliesslich, ob sich alles uebersetzen laesst.
+  # Ein Programm, das compiliert und beim Start sofort abstuerzt, waere jede
+  # Pruefung gruen durchlaufen und erst beim Nutzer aufgefallen. Kein Klickpfad,
+  # keine Oberflaechenpruefung, nur die Frage, ob der Prozess nach ein paar
+  # Sekunden noch lebt.
+  smoke:
+    name: Smoke (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Install Linux system dependencies
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          # xvfb zusaetzlich zu den Build-Paketen: der Runner hat keinen
+          # Bildschirm, und ohne X-Server beendet sich ein GTK-Fenster sofort.
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf xvfb
+      - uses: dtolnay/rust-toolchain@4cda84d5c5c54efe2404f9d843567869ab1699d4 # stable
+        with:
+          components: clippy
+      - uses: Swatinem/rust-cache@c19371144df3bb44fab255c43d04cbc2ab54d1c4 # v2.9.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '20'
+      - name: Build frontend
+        run: npm ci && npm run build
+        working-directory: frontend
+      - name: Install sqlx-cli
+        run: cargo install sqlx-cli --no-default-features --features sqlite
+      - name: Prepare database
+        run: |
+          sqlx database create
+          sqlx migrate run --source crates/mp-core/src/db/migrations
+
+      - name: Build the application binary
+        run: cargo build --bin mailloom
+
+      - name: Start it and see whether it stays up
+        shell: bash
+        run: |
+          set -uo pipefail
+          bin=target/debug/mailloom
+
+          # Unter Linux braucht das Fenster einen X-Server, sonst beendet sich
+          # die App sofort und der Test meldete einen Fehler, den es ausserhalb
+          # der CI nicht gibt.
+          if [ "${{ matrix.os }}" = "ubuntu-latest" ]; then
+            xvfb-run -a "$bin" > start.log 2>&1 &
+          else
+            "$bin" > start.log 2>&1 &
+          fi
+          pid=$!
+
+          # Fuenf Sekunden: lange genug fuer Fenster, WebView und die
+          # Datenbankverbindung, kurz genug fuer die CI.
+          sleep 5
+
+          if ! kill -0 "$pid" 2>/dev/null; then
+            echo "Die Anwendung hat sich innerhalb von fuenf Sekunden beendet."
+            echo "--- Ausgabe ---"
+            cat start.log
+            exit 1
+          fi
+
+          echo "Laeuft nach fuenf Sekunden noch, PID $pid."
+          kill "$pid" 2>/dev/null || true
+          wait "$pid" 2>/dev/null || true
+
+          # Eine Panic waere auch dann ein Fehler, wenn der Prozess ueberlebt:
+          # ein abgestuerzter Hintergrund-Task faellt sonst nicht auf.
+          if grep -qiE "panicked at|thread .* panicked" start.log; then
+            echo "Panic beim Start:"
+            cat start.log
+            exit 1
+          fi
+          echo "--- Ausgabe ---"
+          cat start.log
+
   frontend:
     name: Frontend typecheck & build
     runs-on: ubuntu-latest
