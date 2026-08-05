@@ -5,6 +5,19 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ---
 
+## [1.8.0] - 2026-08-05
+
+### Changed
+
+- `recharts` 2 to 3. The dashboard uses it for a pie chart with a custom label render prop, which was rendered in a real DOM under both versions with the same data and produced the same four paths and two labels. Rendered in a DOM rather than server-side on purpose: version 3 builds the chart on the client and produces nothing server-side, which looks like a regression and is not.
+- `keyring` 4.1.5 to 4.1.6 and `thiserror` 2.0.18 to 2.0.19, both patch releases. `keyring` holds the IMAP password, so the eight tests over the credential path matter more here than the version numbers; they pass unchanged.
+
+### Removed
+
+- `date-fns`. Dependabot proposed a 3 to 4 bump; the package is declared in `package.json` and imported in no source file. The bundle dropped from 654 kB to 617 kB.
+
+---
+
 ## [1.7.3] - 2026-08-05
 
 ### Changed
